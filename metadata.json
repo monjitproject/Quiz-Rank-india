@@ -1,0 +1,6 @@
+{
+  "name": "QuizRank India",
+  "description": "Government Jobs Exam Quiz Portal, Mock Test Platform & Daily Updated Quiz Hub with AI automatic quiz generator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

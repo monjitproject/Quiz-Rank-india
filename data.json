@@ -1,0 +1,2133 @@
+{
+  "categories": [
+    {
+      "id": "ssc",
+      "name": "SSC",
+      "description": "Staff Selection Commission Exams",
+      "iconName": "FileText",
+      "quizCount": 500,
+      "colorClass": "from-blue-500/20 to-blue-600/10 border-blue-200 text-blue-700"
+    },
+    {
+      "id": "upsc",
+      "name": "UPSC",
+      "description": "Union Public Service Commission",
+      "iconName": "Award",
+      "quizCount": 500,
+      "colorClass": "from-purple-500/20 to-purple-600/10 border-purple-200 text-purple-700"
+    },
+    {
+      "id": "railway",
+      "name": "Railway",
+      "description": "RRB NTPC, Group D, ALP",
+      "iconName": "Train",
+      "quizCount": 500,
+      "colorClass": "from-sky-500/20 to-sky-600/10 border-sky-200 text-sky-700"
+    },
+    {
+      "id": "banking",
+      "name": "Banking",
+      "description": "IBPS PO, SBI Clerk, RBI",
+      "iconName": "Coins",
+      "quizCount": 500,
+      "colorClass": "from-indigo-500/20 to-indigo-600/10 border-indigo-200 text-indigo-700"
+    },
+    {
+      "id": "teaching",
+      "name": "Teaching",
+      "description": "CTET, REET, KVS, NVS",
+      "iconName": "GraduationCap",
+      "quizCount": 500,
+      "colorClass": "from-orange-500/20 to-orange-600/10 border-orange-200 text-orange-700"
+    },
+    {
+      "id": "police",
+      "name": "Police",
+      "description": "State Police Constable & SI",
+      "iconName": "Shield",
+      "quizCount": 500,
+      "colorClass": "from-red-500/20 to-red-600/10 border-red-200 text-red-700"
+    },
+    {
+      "id": "defence",
+      "name": "Defence",
+      "description": "Army, Navy, Air Force",
+      "iconName": "Milestone",
+      "quizCount": 500,
+      "colorClass": "from-teal-500/20 to-teal-600/10 border-teal-200 text-teal-700"
+    },
+    {
+      "id": "state-psc",
+      "name": "State PSC",
+      "description": "All State PCS Exams",
+      "iconName": "Map",
+      "quizCount": 500,
+      "colorClass": "from-amber-500/20 to-amber-600/10 border-amber-200 text-amber-700"
+    },
+    {
+      "id": "judiciary",
+      "name": "Judiciary",
+      "description": "Judicial Services Exam",
+      "iconName": "Scale",
+      "quizCount": 500,
+      "colorClass": "from-rose-500/20 to-rose-600/10 border-rose-200 text-rose-700"
+    },
+    {
+      "id": "nursing",
+      "name": "Nursing",
+      "description": "AIIMS, NHM Nursing",
+      "iconName": "HeartPulse",
+      "quizCount": 500,
+      "colorClass": "from-emerald-500/20 to-emerald-600/10 border-emerald-200 text-emerald-700"
+    },
+    {
+      "id": "engineering",
+      "name": "Engineering",
+      "description": "GATE, SSC JE, RRB JE",
+      "iconName": "Wrench",
+      "quizCount": 500,
+      "colorClass": "from-cyan-500/20 to-cyan-600/10 border-cyan-200 text-cyan-700"
+    },
+    {
+      "id": "agriculture",
+      "name": "Agriculture",
+      "description": "Agricultural Exams",
+      "iconName": "Leaf",
+      "quizCount": 500,
+      "colorClass": "from-green-500/20 to-green-600/10 border-green-200 text-green-700"
+    },
+    {
+      "id": "current-affairs",
+      "name": "Current Affairs",
+      "description": "Daily & Weekly Updates",
+      "iconName": "Calendar",
+      "quizCount": 500,
+      "colorClass": "from-pink-500/20 to-pink-600/10 border-pink-200 text-pink-700"
+    },
+    {
+      "id": "gk",
+      "name": "General Knowledge",
+      "description": "History, Geography, Polity",
+      "iconName": "Globe",
+      "quizCount": 500,
+      "colorClass": "from-indigo-500/20 to-indigo-600/10 border-indigo-200 text-indigo-700"
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "pipeline-ca-monthly-1782469857433",
+      "title": "मासिक समसामयिकी संपूर्ण विश्लेषण (Monthly CA) - 26 जून 2026",
+      "description": "महत्वपूर्ण 50 प्रश्नों का मास्टर प्रैक्टिस सेट। संपूर्ण भारत सरकारी अधिसूचना और समसामयिकी।",
+      "categoryId": "current-affairs",
+      "durationMinutes": 45,
+      "difficulty": "Hard",
+      "language": "Hindi",
+      "questionsCount": 20,
+      "attemptsCount": 5804,
+      "rating": 4.802379738924648,
+      "tags": [
+        "मासिक",
+        "मास्टर सेट",
+        "जून 2026"
+      ],
+      "seoTitle": "मासिक समसामयिकी संपूर्ण विश्लेषण (Monthly CA) - 26 जून 2026",
+      "seoDescription": "महत्वपूर्ण 50 प्रश्नों का मास्टर प्रैक्टिस सेट। संपूर्ण भारत सरकारी अधिसूचना और समसामयिकी।"
+    },
+    {
+      "id": "pipeline-ca-weekly-1782469857433",
+      "title": "साप्ताहिक समसामयिकी महा-अभ्यास (Weekly CA) - 26 जून 2026",
+      "description": "सप्ताह के सभी प्रमुख राष्ट्रीय घटनाक्रमों, समझौतों और नीति संशोधनों का व्यापक संग्रह।",
+      "categoryId": "current-affairs",
+      "durationMinutes": 20,
+      "difficulty": "Hard",
+      "language": "Hindi",
+      "questionsCount": 20,
+      "attemptsCount": 4796,
+      "rating": 4.918851361236907,
+      "tags": [
+        "साप्ताहिक",
+        "महा-अभ्यास",
+        "साप्ताहिक संग्रह"
+      ],
+      "seoTitle": "साप्ताहिक समसामयिकी महा-अभ्यास (Weekly CA) - 26 जून 2026",
+      "seoDescription": "सप्ताह के सभी प्रमुख राष्ट्रीय घटनाक्रमों, समझौतों और नीति संशोधनों का व्यापक संग्रह।"
+    },
+    {
+      "id": "pipeline-ca-mock-1782469857433",
+      "title": "समसामयिकी राष्ट्रीय मॉक टेस्ट (CA Grand Mock) - 26 जून 2026",
+      "description": "नवीनतम परीक्षा-पैटर्न पर आधारित 20 प्रश्नों का समयबद्ध ग्रैंड मॉक टेस्ट।",
+      "categoryId": "current-affairs",
+      "durationMinutes": 15,
+      "difficulty": "Hard",
+      "language": "Hindi",
+      "questionsCount": 20,
+      "attemptsCount": 5189,
+      "rating": 4.918866236684778,
+      "tags": [
+        "मॉक टेस्ट",
+        "राष्ट्रीय स्तर",
+        "परीक्षा पैटर्न"
+      ],
+      "seoTitle": "समसामयिकी राष्ट्रीय मॉक टेस्ट (CA Grand Mock) - 26 जून 2026",
+      "seoDescription": "नवीनतम परीक्षा-पैटर्न पर आधारित 20 प्रश्नों का समयबद्ध ग्रैंड मॉक टेस्ट।"
+    },
+    {
+      "id": "pipeline-ca-practice-1782469857433",
+      "title": "समसामयिकी दैनिक अभ्यास सेट (CA Practice Set) - 26 जून 2026",
+      "description": "महत्वपूर्ण नियुक्तियों, खेल समाचारों और सूचकांकों पर आधारित 15 अत्यंत महत्वपूर्ण प्रश्नों का त्वरित अभ्यास।",
+      "categoryId": "current-affairs",
+      "durationMinutes": 12,
+      "difficulty": "Medium",
+      "language": "Hindi",
+      "questionsCount": 15,
+      "attemptsCount": 5137,
+      "rating": 4.863714514652136,
+      "tags": [
+        "अभ्यास सेट",
+        "त्वरित तैयारी",
+        "महत्वपूर्ण प्रश्न"
+      ],
+      "seoTitle": "समसामयिकी दैनिक अभ्यास सेट (CA Practice Set) - 26 जून 2026",
+      "seoDescription": "महत्वपूर्ण नियुक्तियों, खेल समाचारों और सूचकांकों पर आधारित 15 अत्यंत महत्वपूर्ण प्रश्नों का त्वरित अभ्यास।"
+    },
+    {
+      "id": "pipeline-ca-daily-1782469857433",
+      "title": "दैनिक समसामयिकी क्विज़ - 26 जून 2026",
+      "description": "सरकारी परीक्षाओं (SSC, Banking, UPSC) के लिए 26 जून 2026 के नवीनतम समाचारों पर आधारित अभ्यास सेट।",
+      "categoryId": "current-affairs",
+      "durationMinutes": 10,
+      "difficulty": "Medium",
+      "language": "Hindi",
+      "questionsCount": 10,
+      "attemptsCount": 4194,
+      "rating": 4.937362405541123,
+      "tags": [
+        "दैनिक",
+        "समसामयिकी",
+        "नवीनतम",
+        "PIB"
+      ],
+      "seoTitle": "दैनिक समसामयिकी क्विज़ - 26 जून 2026",
+      "seoDescription": "सरकारी परीक्षाओं (SSC, Banking, UPSC) के लिए 26 जून 2026 के नवीनतम समाचारों पर आधारित अभ्यास सेट।"
+    },
+    {
+      "id": "quiz-ssc-gd-constable",
+      "title": "SSC GD Constable 2026",
+      "description": "General GK and Elementary Mathematics booster quiz.",
+      "categoryId": "ssc",
+      "examId": "ssc-gd",
+      "durationMinutes": 10,
+      "difficulty": "Medium",
+      "language": "English",
+      "questionsCount": 5,
+      "attemptsCount": 46123,
+      "rating": 4.8,
+      "tags": [
+        "GK",
+        "Maths",
+        "Constable"
+      ],
+      "seoTitle": "SSC GD Constable Mock Test 2026 Quiz",
+      "seoDescription": "Attempt free SSC GD Constable GK and Maths Quiz online. Score high in India's leading staff vacancy tests."
+    },
+    {
+      "id": "quiz-ssc-cgl-tier1",
+      "title": "SSC CGL Tier I 2026",
+      "description": "Advance level Quantitative Aptitude & General Intelligence.",
+      "categoryId": "ssc",
+      "examId": "ssc-cgl",
+      "durationMinutes": 15,
+      "difficulty": "Hard",
+      "language": "English",
+      "questionsCount": 4,
+      "attemptsCount": 89450,
+      "rating": 4.9,
+      "tags": [
+        "CGL",
+        "Maths",
+        "Reasoning"
+      ],
+      "seoTitle": "SSC CGL Tier I Quantitative Aptitude Test Online",
+      "seoDescription": "Challenge yourself with custom Quantitative Aptitude and General Intelligence mock quizzes for SSC CGL Tier 1."
+    },
+    {
+      "id": "quiz-rrb-group-d",
+      "title": "RRB Group D 2026",
+      "description": "General Science & GK based on latest RRB patterns.",
+      "categoryId": "railway",
+      "examId": "rrb-group-d",
+      "durationMinutes": 10,
+      "difficulty": "Easy",
+      "language": "English",
+      "questionsCount": 5,
+      "attemptsCount": 123400,
+      "rating": 4.8,
+      "tags": [
+        "Railway",
+        "Science",
+        "GK"
+      ],
+      "seoTitle": "RRB Group D Free General Science Quiz online",
+      "seoDescription": "Free online mock tests and topic quizzes for RRB Group D general science and basic GS sections."
+    },
+    {
+      "id": "quiz-hindi-grammar",
+      "title": "Hindi Grammar Quiz (हिंदी व्याकरण)",
+      "description": "तद्भव, तत्सम, संज्ञा, संधि, समास, पर्यायवाची और स्त्रीलिंग/पुल्लिंग प्रश्न।",
+      "categoryId": "gk",
+      "durationMinutes": 8,
+      "difficulty": "Easy",
+      "language": "Hindi",
+      "questionsCount": 5,
+      "attemptsCount": 78500,
+      "rating": 4.9,
+      "tags": [
+        "Hindi",
+        "हिंदी व्याकरण",
+        "State Exams"
+      ],
+      "seoTitle": "Hindi Vyakaran General Grammar Quiz for State PSC Exams",
+      "seoDescription": "अभ्यास करें हिंदी व्याकरण के महत्वपूर्ण प्रश्नोत्तरी का जो राज्य स्तरीय पुलिस, शिक्षक भर्ती और पीएससी के लिए आवश्यक हैं।"
+    },
+    {
+      "id": "quiz-english-vocabulary",
+      "title": "English Vocabulary & Spelling Quiz",
+      "description": "Master spellings, antonyms, synonyms, and idioms for competitive exams.",
+      "categoryId": "gk",
+      "durationMinutes": 8,
+      "difficulty": "Medium",
+      "language": "English",
+      "questionsCount": 5,
+      "attemptsCount": 54300,
+      "rating": 4.7,
+      "tags": [
+        "English",
+        "Vocabulary",
+        "Banking"
+      ],
+      "seoTitle": "Competitive English Spelling and Vocabulary Quiz Practice",
+      "seoDescription": "Boost your IBPS, SSC, and insurance exam English scores with this vocabulary and grammar mock set."
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-0",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "भारतीय रिजर्व बैंक (RBI) द्वारा घोषित यूपीआई लाइट (UPI Lite) की ऑन-डिवाइस वॉलेट सीमा अब कितनी है?",
+      "options": [
+        "₹200",
+        "₹500",
+        "₹1,000",
+        "₹2,000"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "आरबीआई ने छोटे मूल्य के डिजिटल भुगतानों को और बढ़ावा देने के लिए यूपीआई लाइट वॉलेट की ऑन-डिवाइस सीमा ₹500 से बढ़ाकर ₹1,000 कर दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-1",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "इसरो के चंद्रयान-4 मिशन का प्राथमिक तकनीकी उद्देश्य क्या है?",
+      "options": [
+        "चंद्रमा के चारों ओर स्थायी अंतरिक्ष स्टेशन",
+        "चंद्रमा की सतह से नमूने सुरक्षित रूप से पृथ्वी पर वापस लाना",
+        "चंद्रमा पर पहले भारतीय यात्री को उतारना",
+        "चंद्रमा के अंधेरे हिस्से पर लैंडिंग करना"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "चंद्रयान-4 का मुख्य उद्देश्य चंद्रमा की सतह से सुरक्षित रूप से नमूने (रेगोलिथ) एकत्र करना और उन्हें पृथ्वी पर वापस लाना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-2",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "हाल ही में सरकार द्वारा शुरू की गई 'पीएम सूर्य घर मुफ्त बिजली योजना' के तहत प्रति माह कितनी यूनिट बिजली मुफ्त दी जाएगी?",
+      "options": [
+        "100 यूनिट",
+        "150 यूनिट",
+        "200 यूनिट",
+        "300 यूनिट"
+      ],
+      "correctOptionIndex": 3,
+      "explanation": "प्रधानमंत्री सूर्य घर मुफ्त बिजली योजना के तहत लाभार्थियों को प्रति माह 300 यूनिट तक मुफ्त बिजली प्रदान करने का लक्ष्य रखा गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-3",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "वैश्विक नवाचार सूचकांक (GII) 2026 में भारत को कौन सी रैंक प्राप्त हुई है?",
+      "options": [
+        "35वीं",
+        "40वीं",
+        "45वीं",
+        "50वीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "WIPO द्वारा जारी वैश्विक नवाचार सूचकांक 2026 में भारत ने पांच पायदान की छलांग लगाकर 35वां स्थान हासिल किया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-4",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "हाल ही में नीति आयोग के नए उपाध्यक्ष के रूप में किसे नियुक्त किया गया है?",
+      "options": [
+        "डॉ. सुजीत शाह",
+        "अमिताभ कांत",
+        "राजीव कुमार",
+        "सुमन बेरी"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "विख्यात विकास अर्थशास्त्री डॉ. सुजीत शाह को नीति आयोग का नया उपाध्यक्ष नियुक्त किया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-5",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "हाल ही में किस मंत्रालय ने 5 नई भारतीय आद्रभूमियों (Wetlands) को रामसर स्थल के रूप में नामांकित किया है?",
+      "options": [
+        "कृषि मंत्रालय",
+        "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय",
+        "जल शक्ति मंत्रालय",
+        "ग्रामीण विकास मंत्रालय"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय द्वारा घोषित 5 नए स्थलों के शामिल होने से देश में रामसर स्थलों की कुल संख्या 90 हो गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-6",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "भारत की दूसरी परमाणु संचालित बैलिस्टिक मिसाइल पनडुब्बी (SSBN) कौन सी है जिसे हाल ही में तैनात किया गया है?",
+      "options": [
+        "आईएनएस अरिहंत",
+        "आईएनएस अरिघात",
+        "आईएनएस चक्र",
+        "आईएनएस कलवरी"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "स्वदेश निर्मित परमाणु पनडुब्बी आईएनएस अरिघात को रणनीतिक गश्त पर सफलतापूर्वक तैनात कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-7",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "सरकार की 'लखपति दीदी योजना' के तहत कुल कितने करोड़ महिलाओं को लाभान्वित करने का संशोधित लक्ष्य रखा गया है?",
+      "options": [
+        "1 करोड़",
+        "2 करोड़",
+        "3 करोड़",
+        "4 करोड़"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "स्वयं सहायता समूहों की महिला सदस्यों को आत्मनिर्भर बनाने वाली 'लखपति दीदी योजना' का लक्ष्य बढ़ाकर 3 करोड़ कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-8",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "ग्राम पंचायतों में ब्रॉडबैंड कनेक्टिविटी सुनिश्चित करने वाली परियोजना 'भारतनेट चरण-3' के तहत देश के कितने गांवों को जोड़ा जा रहा है?",
+      "options": [
+        "1 लाख गांव",
+        "2.5 लाख से अधिक ग्राम पंचायतें",
+        "5 लाख गांव",
+        "सभी ग्रामीण स्कूल"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारतनेट चरण-3 परियोजना का लक्ष्य देश की सभी 2.5 लाख से अधिक ग्राम पंचायतों को उच्च गति ऑप्टिकल फाइबर कनेक्टिविटी से जोड़ना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-9",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "हाल ही में शरद शर्मा को उनके उत्कृष्ट साहित्यिक योगदान के लिए कौन से प्रतिष्ठित पुरस्कार से सम्मानित किया गया है?",
+      "options": [
+        "57वां ज्ञानपीठ पुरस्कार",
+        "व्यास सम्मान",
+        "सरस्वती सम्मान",
+        "साहित्य अकादमी पुरस्कार"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "हिंदी के विख्यात लेखक एवं आलोचक शरद शर्मा को प्रतिष्ठित 57वें ज्ञानपीठ पुरस्कार से सम्मानित करने की घोषणा की गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-10",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "भारत सरकार ने रक्षा निर्यात को बढ़ावा देने के लिए वर्ष 2026 तक कितना रक्षा निर्यात लक्ष्य निर्धारित किया है?",
+      "options": [
+        "₹15,000 करोड़",
+        "₹25,000 करोड़",
+        "₹35,000 करोड़",
+        "₹50,000 करोड़"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "मेक इन इंडिया रक्षा पहलों के तहत भारत ने वर्ष 2026 तक ₹25,000 करोड़ के रक्षा निर्यात का महत्वाकांक्षी लक्ष्य रखा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-11",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "किस भारतीय राज्य सरकार ने सरकारी स्कूलों के छात्रों के लिए 'निपुण भारत मिशन' के तहत नई डिजिटल शिक्षण प्रणाली 2026 लागू की है?",
+      "options": [
+        "उत्तर प्रदेश",
+        "राजस्थान",
+        "मध्य प्रदेश",
+        "हरियाणा"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "उत्तर प्रदेश सरकार ने प्राथमिक कक्षाओं में बच्चों के बुनियादी साक्षरता और संख्यात्मक ज्ञान (FLN) में सुधार के लिए स्मार्ट शिक्षण उपकरण जोड़े हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-12",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "भारत की पहली सेमी-हाई स्पीड क्षेत्रीय ट्रेन 'नमो भारत' का विस्तार हाल ही में किस नए कॉरिडोर पर किया गया है?",
+      "options": [
+        "दिल्ली-मेरठ",
+        "दिल्ली-पानीपत",
+        "दिल्ली-अलवर",
+        "मुंबई-पुणे"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "नमो भारत क्षेत्रीय रैपिड ट्रांजिट सिस्टम (RRTS) कॉरिडोर का विस्तार दिल्ली-मेरठ मार्ग पर तेजी से पूरा किया जा रहा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-13",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "हाल ही में किस देश के साथ भारत ने नवीकरणीय ऊर्जा सहयोग और डिजिटल भुगतान प्रणाली (UPI) के एकीकरण पर समझौता किया है?",
+      "options": [
+        "फ्रांस",
+        "संयुक्त अरब अमीरात (UAE)",
+        "सिंगापुर",
+        "श्रीलंका"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारत और यूएई ने आपसी व्यापार को सुगम बनाने के लिए यूपीआई को उनके स्थानीय भुगतान नेटवर्क से जोड़ने और हरित ऊर्जा सहयोग के समझौतों पर हस्ताक्षर किए हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-14",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "डिजिटल वित्तीय सुरक्षा को मजबूत करने के लिए गृह मंत्रालय द्वारा संचालित पोर्टल 'सचेत' का मुख्य कार्य क्या है?",
+      "options": [
+        "साइबर धोखाधड़ी और ऑनलाइन वित्तीय घोटालों की त्वरित रिपोर्टिंग",
+        "करों का भुगतान करना",
+        "ऋण आवेदनों की जांच",
+        "शेयर बाजार की निगरानी करना"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "गृह मंत्रालय के अधीन राष्ट्रीय साइबर वित्तीय अपराध रिपोर्टिंग पोर्टल आम नागरिकों को त्वरित साइबर सुरक्षा सहायता प्रदान करता है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-15",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "राष्ट्रीय क्वांटम मिशन (National Quantum Mission) के तहत भारत सरकार ने किस वर्ष तक देश को क्वांटम प्रौद्योगिकी में अग्रणी बनाने का लक्ष्य रखा है?",
+      "options": [
+        "2028",
+        "2030",
+        "2031",
+        "2035"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "राष्ट्रीय क्वांटम मिशन को 2023-24 से 2030-31 की अवधि के लिए ₹6,000 करोड़ से अधिक की कुल लागत के साथ मंजूरी दी गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-16",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "खेल मंत्रालय द्वारा 2026 में घोषित खेलो इंडिया यूथ गेम्स के नए संस्करण का आयोजन किस राज्य में किया जा रहा है?",
+      "options": [
+        "तमिलनाडु",
+        "हरियाणा",
+        "कर्नाटक",
+        "उत्तर प्रदेश"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "खेलो इंडिया यूथ गेम्स के नए सफल संस्करणों के श्रृंखला में दक्षिणी राज्यों में खेल प्रतिभाओं के विकास के लिए महत्वपूर्ण आयोजन किए गए।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-17",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "भारत सरकार ने राष्ट्रीय खाद्य सुरक्षा अधिनियम (NFSA) के तहत 'प्रधानमंत्री गरीब कल्याण अन्न योजना' को कितने वर्षों के लिए बढ़ा दिया है?",
+      "options": [
+        "3 वर्ष",
+        "5 वर्ष",
+        "7 वर्ष",
+        "10 वर्ष"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "केंद्रीय मंत्रिमंडल ने देश के 81 करोड़ से अधिक लाभार्थियों को मुफ्त खाद्यान्न प्रदान करने वाली योजना को 5 वर्षों के लिए बढ़ाने की मंजूरी दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-18",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "रेलवे सुरक्षा बल (RPF) ने यात्रियों की सुरक्षा और गुमशुदा बच्चों को बचाने के लिए कौन सा विशेष अभियान चलाया है?",
+      "options": [
+        "ऑपरेशन नन्हे फरिश्ते",
+        "ऑपरेशन अमानत",
+        "ऑपरेशन जीवन रक्षा",
+        "ऑपरेशन सतर्क"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "ऑपरेशन 'नन्हे फरिश्ते' के तहत रेलवे सुरक्षा बल देश भर के विभिन्न रेलवे स्टेशनों से सैकड़ों बच्चों को बचाकर उनके परिवारों से मिलाता है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-monthly-1782469857433-19",
+      "quizId": "pipeline-ca-monthly-1782469857433",
+      "text": "आरबीआई द्वारा जारी 'वित्तीय समावेशन सूचकांक' (FI-Index) 2026 के नवीनतम आंकड़ों के अनुसार भारत में वित्तीय समावेशन की प्रवृत्ति कैसी रही है?",
+      "options": [
+        "निरंतर सुधार और विस्तार",
+        "गिरावट आई है",
+        "पूरी तरह स्थिर",
+        "कोई बदलाव नहीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "देश के दूरदराज के क्षेत्रों में banking, डिजिटल भुगतान और वित्तीय साक्षरता के प्रसार के कारण भारत का वित्तीय समावेशन सूचकांक लगातार बढ़ रहा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-0",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "भारतीय रिजर्व बैंक (RBI) द्वारा घोषित यूपीआई लाइट (UPI Lite) की ऑन-डिवाइस वॉलेट सीमा अब कितनी है?",
+      "options": [
+        "₹200",
+        "₹500",
+        "₹1,000",
+        "₹2,000"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "आरबीआई ने छोटे मूल्य के डिजिटल भुगतानों को और बढ़ावा देने के लिए यूपीआई लाइट वॉलेट की ऑन-डिवाइस सीमा ₹500 से बढ़ाकर ₹1,000 कर दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-1",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "इसरो के चंद्रयान-4 मिशन का प्राथमिक तकनीकी उद्देश्य क्या है?",
+      "options": [
+        "चंद्रमा के चारों ओर स्थायी अंतरिक्ष स्टेशन",
+        "चंद्रमा की सतह से नमूने सुरक्षित रूप से पृथ्वी पर वापस लाना",
+        "चंद्रमा पर पहले भारतीय यात्री को उतारना",
+        "चंद्रमा के अंधेरे हिस्से पर लैंडिंग करना"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "चंद्रयान-4 का मुख्य उद्देश्य चंद्रमा की सतह से सुरक्षित रूप से नमूने (रेगोलिथ) एकत्र करना और उन्हें पृथ्वी पर वापस लाना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-2",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "हाल ही में सरकार द्वारा शुरू की गई 'पीएम सूर्य घर मुफ्त बिजली योजना' के तहत प्रति माह कितनी यूनिट बिजली मुफ्त दी जाएगी?",
+      "options": [
+        "100 यूनिट",
+        "150 यूनिट",
+        "200 यूनिट",
+        "300 यूनिट"
+      ],
+      "correctOptionIndex": 3,
+      "explanation": "प्रधानमंत्री सूर्य घर मुफ्त बिजली योजना के तहत लाभार्थियों को प्रति माह 300 यूनिट तक मुफ्त बिजली प्रदान करने का लक्ष्य रखा गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-3",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "वैश्विक नवाचार सूचकांक (GII) 2026 में भारत को कौन सी रैंक प्राप्त हुई है?",
+      "options": [
+        "35वीं",
+        "40वीं",
+        "45वीं",
+        "50वीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "WIPO द्वारा जारी वैश्विक नवाचार सूचकांक 2026 में भारत ने पांच पायदान की छलांग लगाकर 35वां स्थान हासिल किया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-4",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "हाल ही में नीति आयोग के नए उपाध्यक्ष के रूप में किसे नियुक्त किया गया है?",
+      "options": [
+        "डॉ. सुजीत शाह",
+        "अमिताभ कांत",
+        "राजीव कुमार",
+        "सुमन बेरी"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "विख्यात विकास अर्थशास्त्री डॉ. सुजीत शाह को नीति आयोग का नया उपाध्यक्ष नियुक्त किया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-5",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "हाल ही में किस मंत्रालय ने 5 नई भारतीय आद्रभूमियों (Wetlands) को रामसर स्थल के रूप में नामांकित किया है?",
+      "options": [
+        "कृषि मंत्रालय",
+        "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय",
+        "जल शक्ति मंत्रालय",
+        "ग्रामीण विकास मंत्रालय"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय द्वारा घोषित 5 नए स्थलों के शामिल होने से देश में रामसर स्थलों की कुल संख्या 90 हो गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-6",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "भारत की दूसरी परमाणु संचालित बैलिस्टिक मिसाइल पनडुब्बी (SSBN) कौन सी है जिसे हाल ही में तैनात किया गया है?",
+      "options": [
+        "आईएनएस अरिहंत",
+        "आईएनएस अरिघात",
+        "आईएनएस चक्र",
+        "आईएनएस कलवरी"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "स्वदेश निर्मित परमाणु पनडुब्बी आईएनएस अरिघात को रणनीतिक गश्त पर सफलतापूर्वक तैनात कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-7",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "सरकार की 'लखपति दीदी योजना' के तहत कुल कितने करोड़ महिलाओं को लाभान्वित करने का संशोधित लक्ष्य रखा गया है?",
+      "options": [
+        "1 करोड़",
+        "2 करोड़",
+        "3 करोड़",
+        "4 करोड़"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "स्वयं सहायता समूहों की महिला सदस्यों को आत्मनिर्भर बनाने वाली 'लखपति दीदी योजना' का लक्ष्य बढ़ाकर 3 करोड़ कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-8",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "ग्राम पंचायतों में ब्रॉडबैंड कनेक्टिविटी सुनिश्चित करने वाली परियोजना 'भारतनेट चरण-3' के तहत देश के कितने गांवों को जोड़ा जा रहा है?",
+      "options": [
+        "1 लाख गांव",
+        "2.5 लाख से अधिक ग्राम पंचायतें",
+        "5 लाख गांव",
+        "सभी ग्रामीण स्कूल"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारतनेट चरण-3 परियोजना का लक्ष्य देश की सभी 2.5 लाख से अधिक ग्राम पंचायतों को उच्च गति ऑप्टिकल फाइबर कनेक्टिविटी से जोड़ना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-9",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "हाल ही में शरद शर्मा को उनके उत्कृष्ट साहित्यिक योगदान के लिए कौन से प्रतिष्ठित पुरस्कार से सम्मानित किया गया है?",
+      "options": [
+        "57वां ज्ञानपीठ पुरस्कार",
+        "व्यास सम्मान",
+        "सरस्वती सम्मान",
+        "साहित्य अकादमी पुरस्कार"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "हिंदी के विख्यात लेखक एवं आलोचक शरद शर्मा को प्रतिष्ठित 57वें ज्ञानपीठ पुरस्कार से सम्मानित करने की घोषणा की गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-10",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "भारत सरकार ने रक्षा निर्यात को बढ़ावा देने के लिए वर्ष 2026 तक कितना रक्षा निर्यात लक्ष्य निर्धारित किया है?",
+      "options": [
+        "₹15,000 करोड़",
+        "₹25,000 करोड़",
+        "₹35,000 करोड़",
+        "₹50,000 करोड़"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "मेक इन इंडिया रक्षा पहलों के तहत भारत ने वर्ष 2026 तक ₹25,000 करोड़ के रक्षा निर्यात का महत्वाकांक्षी लक्ष्य रखा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-11",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "किस भारतीय राज्य सरकार ने सरकारी स्कूलों के छात्रों के लिए 'निपुण भारत मिशन' के तहत नई डिजिटल शिक्षण प्रणाली 2026 लागू की है?",
+      "options": [
+        "उत्तर प्रदेश",
+        "राजस्थान",
+        "मध्य प्रदेश",
+        "हरियाणा"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "उत्तर प्रदेश सरकार ने प्राथमिक कक्षाओं में बच्चों के बुनियादी साक्षरता और संख्यात्मक ज्ञान (FLN) में सुधार के लिए स्मार्ट शिक्षण उपकरण जोड़े हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-12",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "भारत की पहली सेमी-हाई स्पीड क्षेत्रीय ट्रेन 'नमो भारत' का विस्तार हाल ही में किस नए कॉरिडोर पर किया गया है?",
+      "options": [
+        "दिल्ली-मेरठ",
+        "दिल्ली-पानीपत",
+        "दिल्ली-अलवर",
+        "मुंबई-पुणे"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "नमो भारत क्षेत्रीय रैपिड ट्रांजिट सिस्टम (RRTS) कॉरिडोर का विस्तार दिल्ली-मेरठ मार्ग पर तेजी से पूरा किया जा रहा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-13",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "हाल ही में किस देश के साथ भारत ने नवीकरणीय ऊर्जा सहयोग और डिजिटल भुगतान प्रणाली (UPI) के एकीकरण पर समझौता किया है?",
+      "options": [
+        "फ्रांस",
+        "संयुक्त अरब अमीरात (UAE)",
+        "सिंगापुर",
+        "श्रीलंका"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारत और यूएई ने आपसी व्यापार को सुगम बनाने के लिए यूपीआई को उनके स्थानीय भुगतान नेटवर्क से जोड़ने और हरित ऊर्जा सहयोग के समझौतों पर हस्ताक्षर किए हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-14",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "डिजिटल वित्तीय सुरक्षा को मजबूत करने के लिए गृह मंत्रालय द्वारा संचालित पोर्टल 'सचेत' का मुख्य कार्य क्या है?",
+      "options": [
+        "साइबर धोखाधड़ी और ऑनलाइन वित्तीय घोटालों की त्वरित रिपोर्टिंग",
+        "करों का भुगतान करना",
+        "ऋण आवेदनों की जांच",
+        "शेयर बाजार की निगरानी करना"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "गृह मंत्रालय के अधीन राष्ट्रीय साइबर वित्तीय अपराध रिपोर्टिंग पोर्टल आम नागरिकों को त्वरित साइबर सुरक्षा सहायता प्रदान करता है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-15",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "राष्ट्रीय क्वांटम मिशन (National Quantum Mission) के तहत भारत सरकार ने किस वर्ष तक देश को क्वांटम प्रौद्योगिकी में अग्रणी बनाने का लक्ष्य रखा है?",
+      "options": [
+        "2028",
+        "2030",
+        "2031",
+        "2035"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "राष्ट्रीय क्वांटम मिशन को 2023-24 से 2030-31 की अवधि के लिए ₹6,000 करोड़ से अधिक की कुल लागत के साथ मंजूरी दी गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-16",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "खेल मंत्रालय द्वारा 2026 में घोषित खेलो इंडिया यूथ गेम्स के नए संस्करण का आयोजन किस राज्य में किया जा रहा है?",
+      "options": [
+        "तमिलनाडु",
+        "हरियाणा",
+        "कर्नाटक",
+        "उत्तर प्रदेश"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "खेलो इंडिया यूथ गेम्स के नए सफल संस्करणों के श्रृंखला में दक्षिणी राज्यों में खेल प्रतिभाओं के विकास के लिए महत्वपूर्ण आयोजन किए गए।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-17",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "भारत सरकार ने राष्ट्रीय खाद्य सुरक्षा अधिनियम (NFSA) के तहत 'प्रधानमंत्री गरीब कल्याण अन्न योजना' को कितने वर्षों के लिए बढ़ा दिया है?",
+      "options": [
+        "3 वर्ष",
+        "5 वर्ष",
+        "7 वर्ष",
+        "10 वर्ष"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "केंद्रीय मंत्रिमंडल ने देश के 81 करोड़ से अधिक लाभार्थियों को मुफ्त खाद्यान्न प्रदान करने वाली योजना को 5 वर्षों के लिए बढ़ाने की मंजूरी दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-18",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "रेलवे सुरक्षा बल (RPF) ने यात्रियों की सुरक्षा और गुमशुदा बच्चों को बचाने के लिए कौन सा विशेष अभियान चलाया है?",
+      "options": [
+        "ऑपरेशन नन्हे फरिश्ते",
+        "ऑपरेशन अमानत",
+        "ऑपरेशन जीवन रक्षा",
+        "ऑपरेशन सतर्क"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "ऑपरेशन 'नन्हे फरिश्ते' के तहत रेलवे सुरक्षा बल देश भर के विभिन्न रेलवे स्टेशनों से सैकड़ों बच्चों को बचाकर उनके परिवारों से मिलाता है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-weekly-1782469857433-19",
+      "quizId": "pipeline-ca-weekly-1782469857433",
+      "text": "आरबीआई द्वारा जारी 'वित्तीय समावेशन सूचकांक' (FI-Index) 2026 के नवीनतम आंकड़ों के अनुसार भारत में वित्तीय समावेशन की प्रवृत्ति कैसी रही है?",
+      "options": [
+        "निरंतर सुधार और विस्तार",
+        "गिरावट आई है",
+        "पूरी तरह स्थिर",
+        "कोई बदलाव नहीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "देश के दूरदराज के क्षेत्रों में banking, डिजिटल भुगतान और वित्तीय साक्षरता के प्रसार के कारण भारत का वित्तीय समावेशन सूचकांक लगातार बढ़ रहा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-0",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "भारतीय रिजर्व बैंक (RBI) द्वारा घोषित यूपीआई लाइट (UPI Lite) की ऑन-डिवाइस वॉलेट सीमा अब कितनी है?",
+      "options": [
+        "₹200",
+        "₹500",
+        "₹1,000",
+        "₹2,000"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "आरबीआई ने छोटे मूल्य के डिजिटल भुगतानों को और बढ़ावा देने के लिए यूपीआई लाइट वॉलेट की ऑन-डिवाइस सीमा ₹500 से बढ़ाकर ₹1,000 कर दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-1",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "इसरो के चंद्रयान-4 मिशन का प्राथमिक तकनीकी उद्देश्य क्या है?",
+      "options": [
+        "चंद्रमा के चारों ओर स्थायी अंतरिक्ष स्टेशन",
+        "चंद्रमा की सतह से नमूने सुरक्षित रूप से पृथ्वी पर वापस लाना",
+        "चंद्रमा पर पहले भारतीय यात्री को उतारना",
+        "चंद्रमा के अंधेरे हिस्से पर लैंडिंग करना"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "चंद्रयान-4 का मुख्य उद्देश्य चंद्रमा की सतह से सुरक्षित रूप से नमूने (रेगोलिथ) एकत्र करना और उन्हें पृथ्वी पर वापस लाना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-2",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "हाल ही में सरकार द्वारा शुरू की गई 'पीएम सूर्य घर मुफ्त बिजली योजना' के तहत प्रति माह कितनी यूनिट बिजली मुफ्त दी जाएगी?",
+      "options": [
+        "100 यूनिट",
+        "150 यूनिट",
+        "200 यूनिट",
+        "300 यूनिट"
+      ],
+      "correctOptionIndex": 3,
+      "explanation": "प्रधानमंत्री सूर्य घर मुफ्त बिजली योजना के तहत लाभार्थियों को प्रति माह 300 यूनिट तक मुफ्त बिजली प्रदान करने का लक्ष्य रखा गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-3",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "वैश्विक नवाचार सूचकांक (GII) 2026 में भारत को कौन सी रैंक प्राप्त हुई है?",
+      "options": [
+        "35वीं",
+        "40वीं",
+        "45वीं",
+        "50वीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "WIPO द्वारा जारी वैश्विक नवाचार सूचकांक 2026 में भारत ने पांच पायदान की छलांग लगाकर 35वां स्थान हासिल किया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-4",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "हाल ही में नीति आयोग के नए उपाध्यक्ष के रूप में किसे नियुक्त किया गया है?",
+      "options": [
+        "डॉ. सुजीत शाह",
+        "अमिताभ कांत",
+        "राजीव कुमार",
+        "सुमन बेरी"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "विख्यात विकास अर्थशास्त्री डॉ. सुजीत शाह को नीति आयोग का नया उपाध्यक्ष नियुक्त किया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-5",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "हाल ही में किस मंत्रालय ने 5 नई भारतीय आद्रभूमियों (Wetlands) को रामसर स्थल के रूप में नामांकित किया है?",
+      "options": [
+        "कृषि मंत्रालय",
+        "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय",
+        "जल शक्ति मंत्रालय",
+        "ग्रामीण विकास मंत्रालय"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय द्वारा घोषित 5 नए स्थलों के शामिल होने से देश में रामसर स्थलों की कुल संख्या 90 हो गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-6",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "भारत की दूसरी परमाणु संचालित बैलिस्टिक मिसाइल पनडुब्बी (SSBN) कौन सी है जिसे हाल ही में तैनात किया गया है?",
+      "options": [
+        "आईएनएस अरिहंत",
+        "आईएनएस अरिघात",
+        "आईएनएस चक्र",
+        "आईएनएस कलवरी"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "स्वदेश निर्मित परमाणु पनडुब्बी आईएनएस अरिघात को रणनीतिक गश्त पर सफलतापूर्वक तैनात कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-7",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "सरकार की 'लखपति दीदी योजना' के तहत कुल कितने करोड़ महिलाओं को लाभान्वित करने का संशोधित लक्ष्य रखा गया है?",
+      "options": [
+        "1 करोड़",
+        "2 करोड़",
+        "3 करोड़",
+        "4 करोड़"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "स्वयं सहायता समूहों की महिला सदस्यों को आत्मनिर्भर बनाने वाली 'लखपति दीदी योजना' का लक्ष्य बढ़ाकर 3 करोड़ कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-8",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "ग्राम पंचायतों में ब्रॉडबैंड कनेक्टिविटी सुनिश्चित करने वाली परियोजना 'भारतनेट चरण-3' के तहत देश के कितने गांवों को जोड़ा जा रहा है?",
+      "options": [
+        "1 लाख गांव",
+        "2.5 लाख से अधिक ग्राम पंचायतें",
+        "5 लाख गांव",
+        "सभी ग्रामीण स्कूल"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारतनेट चरण-3 परियोजना का लक्ष्य देश की सभी 2.5 लाख से अधिक ग्राम पंचायतों को उच्च गति ऑप्टिकल फाइबर कनेक्टिविटी से जोड़ना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-9",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "हाल ही में शरद शर्मा को उनके उत्कृष्ट साहित्यिक योगदान के लिए कौन से प्रतिष्ठित पुरस्कार से सम्मानित किया गया है?",
+      "options": [
+        "57वां ज्ञानपीठ पुरस्कार",
+        "व्यास सम्मान",
+        "सरस्वती सम्मान",
+        "साहित्य अकादमी पुरस्कार"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "हिंदी के विख्यात लेखक एवं आलोचक शरद शर्मा को प्रतिष्ठित 57वें ज्ञानपीठ पुरस्कार से सम्मानित करने की घोषणा की गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-10",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "भारत सरकार ने रक्षा निर्यात को बढ़ावा देने के लिए वर्ष 2026 तक कितना रक्षा निर्यात लक्ष्य निर्धारित किया है?",
+      "options": [
+        "₹15,000 करोड़",
+        "₹25,000 करोड़",
+        "₹35,000 करोड़",
+        "₹50,000 करोड़"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "मेक इन इंडिया रक्षा पहलों के तहत भारत ने वर्ष 2026 तक ₹25,000 करोड़ के रक्षा निर्यात का महत्वाकांक्षी लक्ष्य रखा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-11",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "किस भारतीय राज्य सरकार ने सरकारी स्कूलों के छात्रों के लिए 'निपुण भारत मिशन' के तहत नई डिजिटल शिक्षण प्रणाली 2026 लागू की है?",
+      "options": [
+        "उत्तर प्रदेश",
+        "राजस्थान",
+        "मध्य प्रदेश",
+        "हरियाणा"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "उत्तर प्रदेश सरकार ने प्राथमिक कक्षाओं में बच्चों के बुनियादी साक्षरता और संख्यात्मक ज्ञान (FLN) में सुधार के लिए स्मार्ट शिक्षण उपकरण जोड़े हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-12",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "भारत की पहली सेमी-हाई स्पीड क्षेत्रीय ट्रेन 'नमो भारत' का विस्तार हाल ही में किस नए कॉरिडोर पर किया गया है?",
+      "options": [
+        "दिल्ली-मेरठ",
+        "दिल्ली-पानीपत",
+        "दिल्ली-अलवर",
+        "मुंबई-पुणे"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "नमो भारत क्षेत्रीय रैपिड ट्रांजिट सिस्टम (RRTS) कॉरिडोर का विस्तार दिल्ली-मेरठ मार्ग पर तेजी से पूरा किया जा रहा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-13",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "हाल ही में किस देश के साथ भारत ने नवीकरणीय ऊर्जा सहयोग और डिजिटल भुगतान प्रणाली (UPI) के एकीकरण पर समझौता किया है?",
+      "options": [
+        "फ्रांस",
+        "संयुक्त अरब अमीरात (UAE)",
+        "सिंगापुर",
+        "श्रीलंका"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारत और यूएई ने आपसी व्यापार को सुगम बनाने के लिए यूपीआई को उनके स्थानीय भुगतान नेटवर्क से जोड़ने और हरित ऊर्जा सहयोग के समझौतों पर हस्ताक्षर किए हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-14",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "डिजिटल वित्तीय सुरक्षा को मजबूत करने के लिए गृह मंत्रालय द्वारा संचालित पोर्टल 'सचेत' का मुख्य कार्य क्या है?",
+      "options": [
+        "साइबर धोखाधड़ी और ऑनलाइन वित्तीय घोटालों की त्वरित रिपोर्टिंग",
+        "करों का भुगतान करना",
+        "ऋण आवेदनों की जांच",
+        "शेयर बाजार की निगरानी करना"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "गृह मंत्रालय के अधीन राष्ट्रीय साइबर वित्तीय अपराध रिपोर्टिंग पोर्टल आम नागरिकों को त्वरित साइबर सुरक्षा सहायता प्रदान करता है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-15",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "राष्ट्रीय क्वांटम मिशन (National Quantum Mission) के तहत भारत सरकार ने किस वर्ष तक देश को क्वांटम प्रौद्योगिकी में अग्रणी बनाने का लक्ष्य रखा है?",
+      "options": [
+        "2028",
+        "2030",
+        "2031",
+        "2035"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "राष्ट्रीय क्वांटम मिशन को 2023-24 से 2030-31 की अवधि के लिए ₹6,000 करोड़ से अधिक की कुल लागत के साथ मंजूरी दी गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-16",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "खेल मंत्रालय द्वारा 2026 में घोषित खेलो इंडिया यूथ गेम्स के नए संस्करण का आयोजन किस राज्य में किया जा रहा है?",
+      "options": [
+        "तमिलनाडु",
+        "हरियाणा",
+        "कर्नाटक",
+        "उत्तर प्रदेश"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "खेलो इंडिया यूथ गेम्स के नए सफल संस्करणों के श्रृंखला में दक्षिणी राज्यों में खेल प्रतिभाओं के विकास के लिए महत्वपूर्ण आयोजन किए गए।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-17",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "भारत सरकार ने राष्ट्रीय खाद्य सुरक्षा अधिनियम (NFSA) के तहत 'प्रधानमंत्री गरीब कल्याण अन्न योजना' को कितने वर्षों के लिए बढ़ा दिया है?",
+      "options": [
+        "3 वर्ष",
+        "5 वर्ष",
+        "7 वर्ष",
+        "10 वर्ष"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "केंद्रीय मंत्रिमंडल ने देश के 81 करोड़ से अधिक लाभार्थियों को मुफ्त खाद्यान्न प्रदान करने वाली योजना को 5 वर्षों के लिए बढ़ाने की मंजूरी दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-18",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "रेलवे सुरक्षा बल (RPF) ने यात्रियों की सुरक्षा और गुमशुदा बच्चों को बचाने के लिए कौन सा विशेष अभियान चलाया है?",
+      "options": [
+        "ऑपरेशन नन्हे फरिश्ते",
+        "ऑपरेशन अमानत",
+        "ऑपरेशन जीवन रक्षा",
+        "ऑपरेशन सतर्क"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "ऑपरेशन 'नन्हे फरिश्ते' के तहत रेलवे सुरक्षा बल देश भर के विभिन्न रेलवे स्टेशनों से सैकड़ों बच्चों को बचाकर उनके परिवारों से मिलाता है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-mock-1782469857433-19",
+      "quizId": "pipeline-ca-mock-1782469857433",
+      "text": "आरबीआई द्वारा जारी 'वित्तीय समावेशन सूचकांक' (FI-Index) 2026 के नवीनतम आंकड़ों के अनुसार भारत में वित्तीय समावेशन की प्रवृत्ति कैसी रही है?",
+      "options": [
+        "निरंतर सुधार और विस्तार",
+        "गिरावट आई है",
+        "पूरी तरह स्थिर",
+        "कोई बदलाव नहीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "देश के दूरदराज के क्षेत्रों में banking, डिजिटल भुगतान और वित्तीय साक्षरता के प्रसार के कारण भारत का वित्तीय समावेशन सूचकांक लगातार बढ़ रहा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-0",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "भारतीय रिजर्व बैंक (RBI) द्वारा घोषित यूपीआई लाइट (UPI Lite) की ऑन-डिवाइस वॉलेट सीमा अब कितनी है?",
+      "options": [
+        "₹200",
+        "₹500",
+        "₹1,000",
+        "₹2,000"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "आरबीआई ने छोटे मूल्य के डिजिटल भुगतानों को और बढ़ावा देने के लिए यूपीआई लाइट वॉलेट की ऑन-डिवाइस सीमा ₹500 से बढ़ाकर ₹1,000 कर दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-1",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "इसरो के चंद्रयान-4 मिशन का प्राथमिक तकनीकी उद्देश्य क्या है?",
+      "options": [
+        "चंद्रमा के चारों ओर स्थायी अंतरिक्ष स्टेशन",
+        "चंद्रमा की सतह से नमूने सुरक्षित रूप से पृथ्वी पर वापस लाना",
+        "चंद्रमा पर पहले भारतीय यात्री को उतारना",
+        "चंद्रमा के अंधेरे हिस्से पर लैंडिंग करना"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "चंद्रयान-4 का मुख्य उद्देश्य चंद्रमा की सतह से सुरक्षित रूप से नमूने (रेगोलिथ) एकत्र करना और उन्हें पृथ्वी पर वापस लाना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-2",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "हाल ही में सरकार द्वारा शुरू की गई 'पीएम सूर्य घर मुफ्त बिजली योजना' के तहत प्रति माह कितनी यूनिट बिजली मुफ्त दी जाएगी?",
+      "options": [
+        "100 यूनिट",
+        "150 यूनिट",
+        "200 यूनिट",
+        "300 यूनिट"
+      ],
+      "correctOptionIndex": 3,
+      "explanation": "प्रधानमंत्री सूर्य घर मुफ्त बिजली योजना के तहत लाभार्थियों को प्रति माह 300 यूनिट तक मुफ्त बिजली प्रदान करने का लक्ष्य रखा गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-3",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "वैश्विक नवाचार सूचकांक (GII) 2026 में भारत को कौन सी रैंक प्राप्त हुई है?",
+      "options": [
+        "35वीं",
+        "40वीं",
+        "45वीं",
+        "50वीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "WIPO द्वारा जारी वैश्विक नवाचार सूचकांक 2026 में भारत ने पांच पायदान की छलांग लगाकर 35वां स्थान हासिल किया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-4",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "हाल ही में नीति आयोग के नए उपाध्यक्ष के रूप में किसे नियुक्त किया गया है?",
+      "options": [
+        "डॉ. सुजीत शाह",
+        "अमिताभ कांत",
+        "राजीव कुमार",
+        "सुमन बेरी"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "विख्यात विकास अर्थशास्त्री डॉ. सुजीत शाह को नीति आयोग का नया उपाध्यक्ष नियुक्त किया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-5",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "हाल ही में किस मंत्रालय ने 5 नई भारतीय आद्रभूमियों (Wetlands) को रामसर स्थल के रूप में नामांकित किया है?",
+      "options": [
+        "कृषि मंत्रालय",
+        "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय",
+        "जल शक्ति मंत्रालय",
+        "ग्रामीण विकास मंत्रालय"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय द्वारा घोषित 5 नए स्थलों के शामिल होने से देश में रामसर स्थलों की कुल संख्या 90 हो गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-6",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "भारत की दूसरी परमाणु संचालित बैलिस्टिक मिसाइल पनडुब्बी (SSBN) कौन सी है जिसे हाल ही में तैनात किया गया है?",
+      "options": [
+        "आईएनएस अरिहंत",
+        "आईएनएस अरिघात",
+        "आईएनएस चक्र",
+        "आईएनएस कलवरी"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "स्वदेश निर्मित परमाणु पनडुब्बी आईएनएस अरिघात को रणनीतिक गश्त पर सफलतापूर्वक तैनात कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-7",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "सरकार की 'लखपति दीदी योजना' के तहत कुल कितने करोड़ महिलाओं को लाभान्वित करने का संशोधित लक्ष्य रखा गया है?",
+      "options": [
+        "1 करोड़",
+        "2 करोड़",
+        "3 करोड़",
+        "4 करोड़"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "स्वयं सहायता समूहों की महिला सदस्यों को आत्मनिर्भर बनाने वाली 'लखपति दीदी योजना' का लक्ष्य बढ़ाकर 3 करोड़ कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-8",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "ग्राम पंचायतों में ब्रॉडबैंड कनेक्टिविटी सुनिश्चित करने वाली परियोजना 'भारतनेट चरण-3' के तहत देश के कितने गांवों को जोड़ा जा रहा है?",
+      "options": [
+        "1 लाख गांव",
+        "2.5 लाख से अधिक ग्राम पंचायतें",
+        "5 लाख गांव",
+        "सभी ग्रामीण स्कूल"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारतनेट चरण-3 परियोजना का लक्ष्य देश की सभी 2.5 लाख से अधिक ग्राम पंचायतों को उच्च गति ऑप्टिकल फाइबर कनेक्टिविटी से जोड़ना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-9",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "हाल ही में शरद शर्मा को उनके उत्कृष्ट साहित्यिक योगदान के लिए कौन से प्रतिष्ठित पुरस्कार से सम्मानित किया गया है?",
+      "options": [
+        "57वां ज्ञानपीठ पुरस्कार",
+        "व्यास सम्मान",
+        "सरस्वती सम्मान",
+        "साहित्य अकादमी पुरस्कार"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "हिंदी के विख्यात लेखक एवं आलोचक शरद शर्मा को प्रतिष्ठित 57वें ज्ञानपीठ पुरस्कार से सम्मानित करने की घोषणा की गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-10",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "भारत सरकार ने रक्षा निर्यात को बढ़ावा देने के लिए वर्ष 2026 तक कितना रक्षा निर्यात लक्ष्य निर्धारित किया है?",
+      "options": [
+        "₹15,000 करोड़",
+        "₹25,000 करोड़",
+        "₹35,000 करोड़",
+        "₹50,000 करोड़"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "मेक इन इंडिया रक्षा पहलों के तहत भारत ने वर्ष 2026 तक ₹25,000 करोड़ के रक्षा निर्यात का महत्वाकांक्षी लक्ष्य रखा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-11",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "किस भारतीय राज्य सरकार ने सरकारी स्कूलों के छात्रों के लिए 'निपुण भारत मिशन' के तहत नई डिजिटल शिक्षण प्रणाली 2026 लागू की है?",
+      "options": [
+        "उत्तर प्रदेश",
+        "राजस्थान",
+        "मध्य प्रदेश",
+        "हरियाणा"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "उत्तर प्रदेश सरकार ने प्राथमिक कक्षाओं में बच्चों के बुनियादी साक्षरता और संख्यात्मक ज्ञान (FLN) में सुधार के लिए स्मार्ट शिक्षण उपकरण जोड़े हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-12",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "भारत की पहली सेमी-हाई स्पीड क्षेत्रीय ट्रेन 'नमो भारत' का विस्तार हाल ही में किस नए कॉरिडोर पर किया गया है?",
+      "options": [
+        "दिल्ली-मेरठ",
+        "दिल्ली-पानीपत",
+        "दिल्ली-अलवर",
+        "मुंबई-पुणे"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "नमो भारत क्षेत्रीय रैपिड ट्रांजिट सिस्टम (RRTS) कॉरिडोर का विस्तार दिल्ली-मेरठ मार्ग पर तेजी से पूरा किया जा रहा है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-13",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "हाल ही में किस देश के साथ भारत ने नवीकरणीय ऊर्जा सहयोग और डिजिटल भुगतान प्रणाली (UPI) के एकीकरण पर समझौता किया है?",
+      "options": [
+        "फ्रांस",
+        "संयुक्त अरब अमीरात (UAE)",
+        "सिंगापुर",
+        "श्रीलंका"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारत और यूएई ने आपसी व्यापार को सुगम बनाने के लिए यूपीआई को उनके स्थानीय भुगतान नेटवर्क से जोड़ने और हरित ऊर्जा सहयोग के समझौतों पर हस्ताक्षर किए हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-practice-1782469857433-14",
+      "quizId": "pipeline-ca-practice-1782469857433",
+      "text": "डिजिटल वित्तीय सुरक्षा को मजबूत करने के लिए गृह मंत्रालय द्वारा संचालित पोर्टल 'सचेत' का मुख्य कार्य क्या है?",
+      "options": [
+        "साइबर धोखाधड़ी और ऑनलाइन वित्तीय घोटालों की त्वरित रिपोर्टिंग",
+        "करों का भुगतान करना",
+        "ऋण आवेदनों की जांच",
+        "शेयर बाजार की निगरानी करना"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "गृह मंत्रालय के अधीन राष्ट्रीय साइबर वित्तीय अपराध रिपोर्टिंग पोर्टल आम नागरिकों को त्वरित साइबर सुरक्षा सहायता प्रदान करता है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-0",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "भारतीय रिजर्व बैंक (RBI) द्वारा घोषित यूपीआई लाइट (UPI Lite) की ऑन-डिवाइस वॉलेट सीमा अब कितनी है?",
+      "options": [
+        "₹200",
+        "₹500",
+        "₹1,000",
+        "₹2,000"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "आरबीआई ने छोटे मूल्य के डिजिटल भुगतानों को और बढ़ावा देने के लिए यूपीआई लाइट वॉलेट की ऑन-डिवाइस सीमा ₹500 से बढ़ाकर ₹1,000 कर दी है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-1",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "इसरो के चंद्रयान-4 मिशन का प्राथमिक तकनीकी उद्देश्य क्या है?",
+      "options": [
+        "चंद्रमा के चारों ओर स्थायी अंतरिक्ष स्टेशन",
+        "चंद्रमा की सतह से नमूने सुरक्षित रूप से पृथ्वी पर वापस लाना",
+        "चंद्रमा पर पहले भारतीय यात्री को उतारना",
+        "चंद्रमा के अंधेरे हिस्से पर लैंडिंग करना"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "चंद्रयान-4 का मुख्य उद्देश्य चंद्रमा की सतह से सुरक्षित रूप से नमूने (रेगोलिथ) एकत्र करना और उन्हें पृथ्वी पर वापस लाना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-2",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "हाल ही में सरकार द्वारा शुरू की गई 'पीएम सूर्य घर मुफ्त बिजली योजना' के तहत प्रति माह कितनी यूनिट बिजली मुफ्त दी जाएगी?",
+      "options": [
+        "100 यूनिट",
+        "150 यूनिट",
+        "200 यूनिट",
+        "300 यूनिट"
+      ],
+      "correctOptionIndex": 3,
+      "explanation": "प्रधानमंत्री सूर्य घर मुफ्त बिजली योजना के तहत लाभार्थियों को प्रति माह 300 यूनिट तक मुफ्त बिजली प्रदान करने का लक्ष्य रखा गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-3",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "वैश्विक नवाचार सूचकांक (GII) 2026 में भारत को कौन सी रैंक प्राप्त हुई है?",
+      "options": [
+        "35वीं",
+        "40वीं",
+        "45वीं",
+        "50वीं"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "WIPO द्वारा जारी वैश्विक नवाचार सूचकांक 2026 में भारत ने पांच पायदान की छलांग लगाकर 35वां स्थान हासिल किया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-4",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "हाल ही में नीति आयोग के नए उपाध्यक्ष के रूप में किसे नियुक्त किया गया है?",
+      "options": [
+        "डॉ. सुजीत शाह",
+        "अमिताभ कांत",
+        "राजीव कुमार",
+        "सुमन बेरी"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "विख्यात विकास अर्थशास्त्री डॉ. सुजीत शाह को नीति आयोग का नया उपाध्यक्ष नियुक्त किया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-5",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "हाल ही में किस मंत्रालय ने 5 नई भारतीय आद्रभूमियों (Wetlands) को रामसर स्थल के रूप में नामांकित किया है?",
+      "options": [
+        "कृषि मंत्रालय",
+        "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय",
+        "जल शक्ति मंत्रालय",
+        "ग्रामीण विकास मंत्रालय"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय द्वारा घोषित 5 नए स्थलों के शामिल होने से देश में रामसर स्थलों की कुल संख्या 90 हो गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-6",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "भारत की दूसरी परमाणु संचालित बैलिस्टिक मिसाइल पनडुब्बी (SSBN) कौन सी है जिसे हाल ही में तैनात किया गया है?",
+      "options": [
+        "आईएनएस अरिहंत",
+        "आईएनएस अरिघात",
+        "आईएनएस चक्र",
+        "आईएनएस कलवरी"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "स्वदेश निर्मित परमाणु पनडुब्बी आईएनएस अरिघात को रणनीतिक गश्त पर सफलतापूर्वक तैनात कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-7",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "सरकार की 'लखपति दीदी योजना' के तहत कुल कितने करोड़ महिलाओं को लाभान्वित करने का संशोधित लक्ष्य रखा गया है?",
+      "options": [
+        "1 करोड़",
+        "2 करोड़",
+        "3 करोड़",
+        "4 करोड़"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "स्वयं सहायता समूहों की महिला सदस्यों को आत्मनिर्भर बनाने वाली 'लखपति दीदी योजना' का लक्ष्य बढ़ाकर 3 करोड़ कर दिया गया है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-8",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "ग्राम पंचायतों में ब्रॉडबैंड कनेक्टिविटी सुनिश्चित करने वाली परियोजना 'भारतनेट चरण-3' के तहत देश के कितने गांवों को जोड़ा जा रहा है?",
+      "options": [
+        "1 लाख गांव",
+        "2.5 लाख से अधिक ग्राम पंचायतें",
+        "5 लाख गांव",
+        "सभी ग्रामीण स्कूल"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "भारतनेट चरण-3 परियोजना का लक्ष्य देश की सभी 2.5 लाख से अधिक ग्राम पंचायतों को उच्च गति ऑप्टिकल फाइबर कनेक्टिविटी से जोड़ना है।",
+      "points": 10
+    },
+    {
+      "id": "q-ca-pipeline-ca-daily-1782469857433-9",
+      "quizId": "pipeline-ca-daily-1782469857433",
+      "text": "हाल ही में शरद शर्मा को उनके उत्कृष्ट साहित्यिक योगदान के लिए कौन से प्रतिष्ठित पुरस्कार से सम्मानित किया गया है?",
+      "options": [
+        "57वां ज्ञानपीठ पुरस्कार",
+        "व्यास सम्मान",
+        "सरस्वती सम्मान",
+        "साहित्य अकादमी पुरस्कार"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "हिंदी के विख्यात लेखक एवं आलोचक शरद शर्मा को प्रतिष्ठित 57वें ज्ञानपीठ पुरस्कार से सम्मानित करने की घोषणा की गई है।",
+      "points": 10
+    },
+    {
+      "id": "q-ssc-gd-1",
+      "quizId": "quiz-ssc-gd-constable",
+      "text": "Which of the following is the highest dam in India?",
+      "options": [
+        "Tehri Dam",
+        "Bhakra Nangal Dam",
+        "Hirakud Dam",
+        "Nagarjuna Sagar Dam"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Tehri Dam located on the Bhagirathi River in Uttarakhand is the highest dam in India with a height of 260.5 meters.",
+      "points": 10
+    },
+    {
+      "id": "q-ssc-gd-2",
+      "quizId": "quiz-ssc-gd-constable",
+      "text": "What is the capital of Lakshadweep?",
+      "options": [
+        "Kavaratti",
+        "Port Blair",
+        "Silvassa",
+        "Daman"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Kavaratti is the capital city and union territory headquarters of Lakshadweep in India.",
+      "points": 10
+    },
+    {
+      "id": "q-ssc-gd-3",
+      "quizId": "quiz-ssc-gd-constable",
+      "text": "Who was the first female Governor of an Indian State?",
+      "options": [
+        "Sarojini Naidu",
+        "Sucheta Kripalani",
+        "Indira Gandhi",
+        "Pratibha Patil"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Sarojini Naidu was appointed as the Governor of the United Provinces (now Uttar Pradesh) from 1947 to 1949, making her the first woman to hold this post in India.",
+      "points": 10
+    },
+    {
+      "id": "q-ssc-gd-4",
+      "quizId": "quiz-ssc-gd-constable",
+      "text": "Which article of the Indian Constitution guarantees the Right to Education?",
+      "options": [
+        "Article 21A",
+        "Article 19",
+        "Article 32",
+        "Article 45"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Article 21A was added by the 86th Constitutional Amendment Act 2002 to make the Right to Education a Fundamental Right for children aged 6 to 14 years.",
+      "points": 10
+    },
+    {
+      "id": "q-ssc-gd-5",
+      "quizId": "quiz-ssc-gd-constable",
+      "text": "If a sum of money doubles itself in 5 years at simple interest, what is the rate of interest per annum?",
+      "options": [
+        "20%",
+        "10%",
+        "15%",
+        "25%"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Simple Interest SI = P. Under doubling, SI = P. Thus P = (P * R * 5) / 100 => 5R = 100 => R = 20%.",
+      "points": 10
+    },
+    {
+      "id": "q-ssc-cgl-1",
+      "quizId": "quiz-ssc-cgl-tier1",
+      "text": "Who presided over the 1907 Surat Session of the Indian National Congress where the Congress split into Extremists and Moderates?",
+      "options": [
+        "Rash Behari Ghosh",
+        "Dadabhai Naoroji",
+        "Gopal Krishna Gokhale",
+        "Bal Gangadhar Tilak"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Dr. Rash Behari Ghosh presided over the Surat Session of 1907, which witnessed the split of INC into Moderates and Extremists over ideology differences.",
+      "points": 20
+    },
+    {
+      "id": "q-ssc-cgl-2",
+      "quizId": "quiz-ssc-cgl-tier1",
+      "text": "The ratio of present ages of A and B is 4:5. After 5 years, the ratio becomes 5:6. What is the present age of A?",
+      "options": [
+        "20 years",
+        "25 years",
+        "30 years",
+        "15 years"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Let ages be 4x and 5x. (4x+5)/(5x+5) = 5/6 => 24x + 30 = 25x + 25 => x = 5. Age of A = 4 * 5 = 20 years.",
+      "points": 20
+    },
+    {
+      "id": "q-ssc-cgl-3",
+      "quizId": "quiz-ssc-cgl-tier1",
+      "text": "Which state in India has the longest coastline?",
+      "options": [
+        "Gujarat",
+        "Andhra Pradesh",
+        "Tamil Nadu",
+        "Maharashtra"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Gujarat has the longest mainland coastline in India, extending about 1,600 km, followed by Andhra Pradesh.",
+      "points": 20
+    },
+    {
+      "id": "q-ssc-cgl-4",
+      "quizId": "quiz-ssc-cgl-tier1",
+      "text": "What is the chemical name of Baking Soda?",
+      "options": [
+        "Sodium Bicarbonate",
+        "Sodium Carbonate",
+        "Calcium Carbonate",
+        "Sodium Chloride"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Baking Soda is Sodium Bicarbonate (NaHCO3), whereas Sodium Carbonate (Na2CO3) is washing soda.",
+      "points": 20
+    },
+    {
+      "id": "q-rrb-1",
+      "quizId": "quiz-rrb-group-d",
+      "text": "Which of the following is a scalar quantity?",
+      "options": [
+        "Mass",
+        "Velocity",
+        "Acceleration",
+        "Force"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Mass has only magnitude and no specific direction, which makes it a scalar quantity. Velocity, acceleration, and force are vector quantities.",
+      "points": 10
+    },
+    {
+      "id": "q-rrb-2",
+      "quizId": "quiz-rrb-group-d",
+      "text": "What is the SI unit of power?",
+      "options": [
+        "Watt",
+        "Joule",
+        "Newton",
+        "Pascal"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "The SI unit of power is Watt (W), which represents one joule of energy expended per second.",
+      "points": 10
+    },
+    {
+      "id": "q-rrb-3",
+      "quizId": "quiz-rrb-group-d",
+      "text": "Which gas is filled inside an electric bulb to prevent oxidation of filament?",
+      "options": [
+        "Nitrogen or Argon",
+        "Oxygen",
+        "Carbon Dioxide",
+        "Hydrogen"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Chemically inactive gases like Argon or Nitrogen are filled inside bulbs to prevent the hot tungsten filament from oxidizing.",
+      "points": 10
+    },
+    {
+      "id": "q-rrb-4",
+      "quizId": "quiz-rrb-group-d",
+      "text": "Where is the head office of Western Railway located?",
+      "options": [
+        "Mumbai (Churchgate)",
+        "Mumbai (CST)",
+        "Jaipur",
+        "Ahmedabad"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "The headquarters of Western Railway is situated at Churchgate, Mumbai.",
+      "points": 10
+    },
+    {
+      "id": "q-rrb-5",
+      "quizId": "quiz-rrb-group-d",
+      "text": "What is the normal pH value of human blood?",
+      "options": [
+        "7.35 - 7.45",
+        "6.1 - 6.5",
+        "8.0 - 8.5",
+        "5.5 - 6.0"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Human blood is slightly basic, with a healthy normal pH range between approximately 7.35 and 7.45.",
+      "points": 10
+    },
+    {
+      "id": "q-hindi-1",
+      "quizId": "quiz-hindi-grammar",
+      "text": "निम्नलिखित में से कौन सा शब्द तद्भव है?",
+      "options": [
+        "अग्नि",
+        "आग",
+        "जल",
+        "वायु"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "आग शब्द तद्भव है, इसका तत्सम (संस्कृत) रूप 'अग्नि' होता है।",
+      "points": 10
+    },
+    {
+      "id": "q-hindi-2",
+      "quizId": "quiz-hindi-grammar",
+      "text": "'राजा' शब्द का बहुवचन रूप क्या है?",
+      "options": [
+        "राजाएँ",
+        "राजाओं",
+        "राजे",
+        "राजा"
+      ],
+      "correctOptionIndex": 3,
+      "explanation": "'राजा' शब्द का एकवचन और बहुवचन रूप समान 'राजा' ही होता है। वाक्य प्रयोग पर निर्भर करता है (जैसे: 'सभी राजा एकत्रित हुए')।",
+      "points": 10
+    },
+    {
+      "id": "q-hindi-3",
+      "quizId": "quiz-hindi-grammar",
+      "text": "निम्नलिखित में से कौन सा शब्द स्त्रीलिंग है?",
+      "options": [
+        "घोड़ा",
+        "कुत्ता",
+        "लड़की",
+        "लड़का"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "लड़की शब्द संज्ञा रूप में स्त्रीलिंग जाति को दर्शाता है।",
+      "points": 10
+    },
+    {
+      "id": "q-hindi-4",
+      "quizId": "quiz-hindi-grammar",
+      "text": "'सूर्योदय' शब्द का संधि विच्छेद क्या होगा?",
+      "options": [
+        "सूर्य + उदय",
+        "सूर्यो + दय",
+        "सूर्य + उदयः",
+        "सूर + उदय"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "सूर्योदय का सही संधि विच्छेद 'सूर्य + उदय' है। यहाँ अ + उ मिलकर 'ओ' (गुण स्वर संधि) बनते हैं।",
+      "points": 10
+    },
+    {
+      "id": "q-hindi-5",
+      "quizId": "quiz-hindi-grammar",
+      "text": "'त्रिफला' शब्द में कौन सा समास है?",
+      "options": [
+        "द्विगु समास",
+        "द्वंद्व समास",
+        "तत्पुरुष समास",
+        "कर्मधारय समास"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "त्रिफला का अर्थ है 'तीन फलों का समाहार'। चूँकि प्रथम पद संख्यावाचक ('त्रि') है, इसलिए यह द्विगु समास है।",
+      "points": 10
+    },
+    {
+      "id": "q-eng-1",
+      "quizId": "quiz-english-vocabulary",
+      "text": "Choose the correct spelling:",
+      "options": [
+        "Accommodation",
+        "Accomodation",
+        "Acomodation",
+        "Acommoration"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "The correct spelling is 'Accommodation' which contains double 'c' and double 'm'.",
+      "points": 10
+    },
+    {
+      "id": "q-eng-2",
+      "quizId": "quiz-english-vocabulary",
+      "text": "Select the antonym of the word 'BENEVOLENT':",
+      "options": [
+        "Malevolent",
+        "Kind",
+        "Genial",
+        "Compassionate"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Benevolent means kind and well-meaning. Malevolent means having or showing a wish to do evil to others, which is the exact opposite.",
+      "points": 10
+    },
+    {
+      "id": "q-eng-3",
+      "quizId": "quiz-english-vocabulary",
+      "text": "Fill in the blank: 'Neither of the two candidates ________ qualified for the post.'",
+      "options": [
+        "is",
+        "are",
+        "have been",
+        "were"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Words like 'Neither', 'Either', 'Each' take a singular verb. Hence, 'Neither... is qualified' is correct.",
+      "points": 10
+    },
+    {
+      "id": "q-eng-4",
+      "quizId": "quiz-english-vocabulary",
+      "text": "Find the synonym of 'AUDACIOUS':",
+      "options": [
+        "Bold",
+        "Timid",
+        "Mute",
+        "Polite"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Audacious means showing a willingness to take surprisingly bold risks.",
+      "points": 10
+    },
+    {
+      "id": "q-eng-5",
+      "quizId": "quiz-english-vocabulary",
+      "text": "What is the meaning of the idiom 'To burn the midnight oil'?",
+      "options": [
+        "To work late into the night",
+        "To waste fuel unnecessarily",
+        "To create light with oil lamps",
+        "To wake up early in the morning"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "The idiom 'To burn the midnight oil' means to read or work late into the night.",
+      "points": 10
+    }
+  ],
+  "leaderboard": [
+    {
+      "id": "leader-1",
+      "name": "Rahul Kumar",
+      "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120",
+      "score": 9850,
+      "accuracy": 98.5,
+      "quizzesTaken": 45,
+      "rank": 1,
+      "badge": "Champion"
+    },
+    {
+      "id": "leader-2",
+      "name": "Priya Sharma",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120",
+      "score": 9720,
+      "accuracy": 97.2,
+      "quizzesTaken": 42,
+      "rank": 2,
+      "badge": "Speed King"
+    },
+    {
+      "id": "leader-3",
+      "name": "Amit Singh",
+      "avatarUrl": "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=120",
+      "score": 9680,
+      "accuracy": 96.8,
+      "quizzesTaken": 40,
+      "rank": 3,
+      "badge": "90%+ Accuracy"
+    },
+    {
+      "id": "leader-4",
+      "name": "Sneha Patel",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=120",
+      "score": 9540,
+      "accuracy": 95.4,
+      "quizzesTaken": 40,
+      "rank": 4,
+      "badge": "7 Day Streak"
+    },
+    {
+      "id": "leader-5",
+      "name": "Vikash Yadav",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
+      "score": 9380,
+      "accuracy": 93.8,
+      "quizzesTaken": 38,
+      "rank": 5,
+      "badge": "100 Quizzes"
+    },
+    {
+      "id": "leader-6",
+      "name": "Pooja Verma",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120",
+      "score": 9250,
+      "accuracy": 92.5,
+      "quizzesTaken": 35,
+      "rank": 6
+    },
+    {
+      "id": "leader-7",
+      "name": "Suresh Gupta",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120",
+      "score": 9120,
+      "accuracy": 91.2,
+      "quizzesTaken": 33,
+      "rank": 7
+    }
+  ],
+  "blogs": [
+    {
+      "id": "post-1",
+      "title": "SSC GD Constable 2026: Complete Syllabus, Exam Pattern & Preparation Strategy",
+      "slug": "ssc-gd-constable-syllabus-pattern",
+      "excerpt": "Complete guide to SSC GD Constable 2026 examination including detailed syllabus, exam pattern, physical standards, and preparation tips.",
+      "content": "### SSC GD Constable 2026 Exam Overview\n\nThe Staff Selection Commission (SSC) conducts the GD Constable Exam annually to recruit candidates for General Duty posts in Border Security Force (BSF), Central Industrial Security Force (CISF), Central Reserve Police Force (CRPF), Indo Tibetan Border Police (ITBP), Sashastra Seema Bal (SSB), Secretariat Security Force (SSF), and Rifleman (General Duty) in Assam Rifles.\n\n#### Exam Pattern:\nThe Computer Based Examination (CBE) will consist of one objective type paper containing 80 questions carrying 2 marks each:\n1. **General Intelligence and Reasoning**: 20 Questions (40 Marks)\n2. **General Knowledge and General Awareness**: 20 Questions (40 Marks)\n3. **Elementary Mathematics**: 20 Questions (40 Marks)\n4. **English/Hindi**: 20 Questions (40 Marks)\n\nTotal Time: 60 Minutes.\nNegative marking is **0.50 marks** for each wrong answer.\n\n#### Preparation Tips:\n- **Solve daily mock quizzes** in Hindi & English on QuizRank India.\n- Focus on basic quantitative formulas and speed-reading of newspapers for daily Current Affairs.\n- Track accuracy closely to manage the negative marking threshold.",
+      "category": "Syllabus",
+      "publishedAt": "2026-06-15",
+      "readTimeMinutes": 8,
+      "views": 48250,
+      "imageUrl": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=400"
+    },
+    {
+      "id": "post-2",
+      "title": "RRB NTPC 2026 Notification Released: 11,558 Vacancies, Apply Now!",
+      "slug": "rrb-ntpc-2026-notification-released",
+      "excerpt": "Railway Recruitment Board (RRB) has released the recruitment notice for NTPC Graduate & Under-Graduate levels. Read eligibility criteria.",
+      "content": "### RRB NTPC 2026 Notification Details\n\nIndian Railways has announced high-profile recruitment under Non-Technical Popular Categories (NTPC). Eligible applicants can submit application forms starting today on the zonal websites.\n\n#### Post Details:\n- **Undergraduate Posts**: Junior Clerk cum Typist, Accounts Clerk cum Typist, Junior Time Keeper, Trains Clerk, Commercial cum Ticket Clerk.\n- **Graduate Posts**: Traffic Assistant, Goods Guard, Senior Commercial cum Ticket Clerk, Senior Clerk cum Typist, Junior Accounts Assistant cum Typist, Station Master.\n\n#### Selection Process:\n1. First Stage Computer Based Test (CBT-1)\n2. Second Stage Computer Based Test (CBT-2)\n3. Typing Skill Test/Computer Based Aptitude Test (as applicable)\n4. Document Verification and Medical Examination.\n\nBookmark the **RRB NTPC Collection** on QuizRank India to practice real exam papers!",
+      "category": "Notification",
+      "publishedAt": "2026-06-20",
+      "readTimeMinutes": 5,
+      "views": 89300,
+      "imageUrl": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=400"
+    },
+    {
+      "id": "post-3",
+      "title": "UPSC CSE 2026: Prelims Date Announced, Important Schedule Updates",
+      "slug": "upsc-cse-2026-prelims-announced",
+      "excerpt": "Union Public Service Commission released the calendar confirming Civil Services Preliminary Exam date. Check application dates and deadlines.",
+      "content": "### Civil Services Preliminary Examination 2026\n\nThe Union Public Service Commission (UPSC) has officially published the Civil Services calendar. The prestigious CSE Prelims is scheduled to take place on Sunday, May 24th, 2026.\n\n#### Key Timelines:\n- **Notification Release**: February 11, 2026\n- **Last Date for Applications**: March 3, 2026\n- **Admit Card Release**: Early May 2026\n- **Preliminary Examination**: May 24, 2026\n\nWe have launched a custom **UPSC daily current affairs and history quiz** mapping standard static NCERT sections. Start practicing now to elevate your Rank Prediction score!",
+      "category": "Exam Dates",
+      "publishedAt": "2026-06-22",
+      "readTimeMinutes": 6,
+      "views": 68100,
+      "imageUrl": "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&q=80&w=400"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-pipeline-1782469857433",
+      "title": "दैनिक समसामयिकी अपडेट (26 जून 2026)",
+      "message": "5 नए हिन्दी क्विज़ लाइव कर दिए गए हैं (दैनिक, अभ्यास, मॉक, साप्ताहिक एवं मासिक)। 120 नए प्रश्न उपलब्ध हैं।",
+      "type": "success",
+      "isRead": false,
+      "createdAt": "2026-06-26T10:30:57.433Z"
+    },
+    {
+      "id": "notif-pipeline-1782467217132",
+      "title": "दैनिक समसामयिकी अपडेट (25 जून 2026)",
+      "message": "5 नए हिन्दी क्विज़ लाइव कर दिए गए हैं (दैनिक, साप्ताहिक, मासिक, मॉक टेस्ट एवं अभ्यास सेट)। परीक्षा उपयोगी तथ्य और विस्तृत समाधान उपलब्ध हैं।",
+      "type": "success",
+      "isRead": false,
+      "createdAt": "2026-06-26T09:46:57.132Z"
+    },
+    {
+      "id": "notif-1",
+      "title": "RRB NTPC 2026 Notification Released!",
+      "message": "Indian Railways released 11,558 NTPC undergraduate and graduate posts. Free mock tests added.",
+      "type": "alert",
+      "isRead": false,
+      "createdAt": "2026-06-26T09:46:56.837Z"
+    },
+    {
+      "id": "notif-2",
+      "title": "Hindi General Subject Quiz Updated",
+      "message": "Attempt our newly launched Hindi language general knowledge sets with complete answers in Hindi.",
+      "type": "success",
+      "isRead": false,
+      "createdAt": "2026-06-26T09:46:56.837Z"
+    }
+  ],
+  "results": [],
+  "currentAffairsEvents": [
+    {
+      "id": "evt-fallback-5",
+      "title": "वैश्विक नवाचार सूचकांक 2026: भारत शीर्ष 40 में 35वें स्थान पर पहुंचा",
+      "description": "विश्व बौद्धिक संपदा संगठन (WIPO) द्वारा जारी वैश्विक नवाचार सूचकांक (GII 2026) में भारत ने पांच स्थानों का सुधार करते हुए 35वां स्थान हासिल किया है, जो देश में बढ़ते नवाचार और शोध पारिस्थितिकी तंत्र का संकेत है।",
+      "date": "2026-06-26",
+      "source": "WIPO रिपोर्ट",
+      "category": "रिपोर्ट और सूचकांक",
+      "createdAt": "2026-06-26T10:30:40.515Z"
+    },
+    {
+      "id": "evt-fallback-4",
+      "title": "भारतीय नौसेना का स्वदेशी परमाणु बैलिस्टिक मिसाइल पनडुब्बी 'आईएनएस अरिघात' समुद्री गश्त पर",
+      "description": "रक्षा मंत्रालय ने पुष्टि की है कि दूसरी स्वदेशी रूप से निर्मित परमाणु संचालित बैलिस्टिक मिसाइल पनडुब्बी (SSBN) आईएनएस अरिघात को समुद्री सीमाओं की सुरक्षा और रणनीतिक स्थिरता के लिए गश्त पर तैनात किया गया है।",
+      "date": "2026-06-26",
+      "source": "रक्षा मंत्रालय",
+      "category": "रक्षा एवं सुरक्षा",
+      "createdAt": "2026-06-26T10:30:40.515Z"
+    },
+    {
+      "id": "evt-fallback-3",
+      "title": "केंद्रीय मंत्रिमंडल ने राष्ट्रीय हरित हाइड्रोजन मिशन 2026 के नए वित्तीय प्रोत्साहनों को दी मंजूरी",
+      "description": "कैबिनेट ने हरित हाइड्रोजन और इलेक्ट्रोलाइज़र उत्पादन को बढ़ावा देने के लिए नए प्रत्यक्ष वित्तीय प्रोत्साहनों के दूसरे दौर को मंजूरी दी है, जिससे भारत 2030 तक हरित हाइड्रोजन का वैश्विक केंद्र बन सके।",
+      "date": "2026-06-26",
+      "source": "मंत्रिमंडल सचिवालय",
+      "category": "सरकारी योजनाएं",
+      "createdAt": "2026-06-26T10:30:40.515Z"
+    },
+    {
+      "id": "evt-fallback-2",
+      "title": "आरबीआई ने छोटे डिजिटल भुगतानों को बढ़ावा देने के लिए यूपीआई लाइट वॉलेट सीमा बढ़ाई",
+      "description": "भारतीय रिजर्व बैंक (RBI) ने देश में छोटे मूल्य के डिजिटल भुगतानों को और तेज और आसान बनाने के उद्देश्य से ऑन-डिवाइस यूपीआई लाइट वॉलेट की सीमा ₹500 से बढ़ाकर ₹1,000 कर दी है।",
+      "date": "2026-06-26",
+      "source": "Reserve Bank of India",
+      "category": "बैंकिंग एवं अर्थव्यवस्था",
+      "createdAt": "2026-06-26T10:30:40.515Z"
+    },
+    {
+      "id": "evt-fallback-1",
+      "title": "इसरो ने चंद्रयान-4 चंद्र मिट्टी नमूना वापसी मिशन की रूपरेखा पूरी की",
+      "description": "भारतीय अंतरिक्ष अनुसंधान संगठन (ISRO) ने घोषणा की है कि चंद्रयान-4 चंद्र नमूना वापसी मिशन का डिजाइन पूरा हो गया है। यह मिशन भारत के लिए मील का पत्थर साबित होगा, जो चंद्रमा की सतह से मिट्टी और चट्टानों के नमूनों को पृथ्वी पर वापस लाने की क्षमता का प्रदर्शन करेगा।",
+      "date": "2026-06-26",
+      "source": "ISRO / PIB",
+      "category": "विज्ञान एवं प्रौद्योगिकी",
+      "createdAt": "2026-06-26T10:30:40.515Z"
+    },
+    {
+      "id": "evt-awards-1",
+      "title": "प्रसिद्ध हिंदी लेखक शरद शर्मा को 57वां ज्ञानपीठ पुरस्कार प्रदान किया गया",
+      "description": "साहित्य के क्षेत्र में उत्कृष्ट योगदान के लिए विख्यात हिंदी उपन्यासकार और आलोचक शरद शर्मा को वर्ष 2026 के प्रतिष्ठित 57वें ज्ञानपीठ पुरस्कार से सम्मानित करने की घोषणा की गई है।",
+      "date": "2026-06-21",
+      "source": "भारतीय ज्ञानपीठ परिषद",
+      "category": "पुरस्कार और सम्मान",
+      "createdAt": "2026-06-26T09:46:57.131Z"
+    },
+    {
+      "id": "evt-reports-1",
+      "title": "वैश्विक नवाचार सूचकांक 2026: भारत ने 5 पायदान की छलांग लगाकर 35वां स्थान हासिल किया",
+      "description": "विश्व बौद्धिक संपदा संगठन (WIPO) द्वारा जारी वैश्विक नवाचार सूचकांक (Global Innovation Index 2026) में भारत ने अपनी रैंकिंग में सुधार करते हुए दुनिया की शीर्ष 40 नवीन अर्थव्यवस्थाओं में अपना स्थान सुदृढ़ किया है।",
+      "date": "2026-06-21",
+      "source": "WIPO रिपोर्ट",
+      "category": "रिपोर्ट और सूचकांक",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-intl-1",
+      "title": "भारत और फ्रांस ने हिंद-प्रशांत क्षेत्र में संयुक्त समुद्री सुरक्षा समझौते पर हस्ताक्षर किए",
+      "description": "पेरिस में आयोजित द्विपक्षीय शिखर सम्मेलन में भारत और फ्रांस ने हिंद-प्रशांत क्षेत्र में नेविगेशन की स्वतंत्रता और समुद्री सुरक्षा को मजबूत करने के लिए 10-वर्षीय रणनीतिक रोडमैप को अंतिम रूप दिया है।",
+      "date": "2026-06-22",
+      "source": "विदेश मंत्रालय (MEA)",
+      "category": "अंतरराष्ट्रीय संबंध",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-appointments-1",
+      "title": "डॉ. सुजीत शाह ने नीति आयोग के नए उपाध्यक्ष के रूप में पदभार ग्रहण किया",
+      "description": "प्रसिद्ध विकास अर्थशास्त्री डॉ. सुजीत शाह को नीति आयोग का नया उपाध्यक्ष नियुक्त किया गया है। उन्होंने तत्कालीन उपाध्यक्ष के कार्यकाल की समाप्ति के बाद यह पदभार संभाला है।",
+      "date": "2026-06-22",
+      "source": "मंत्रिमंडल की नियुक्ति समिति (ACC)",
+      "category": "महत्वपूर्ण नियुक्तियाँ",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-env-1",
+      "title": "पर्यावरण मंत्रालय ने 5 नए भारतीय आर्द्रभूमियों (Wetlands) को रामसर स्थल घोषित किया",
+      "description": "भारत सरकार ने जैव विविधता के संरक्षण की दिशा में एक बड़ी उपलब्धि हासिल करते हुए देश के 5 नए जलक्षेत्रों को रामसर सूची (Ramsar Sites) में शामिल कराया है, जिससे देश में कुल रामसर स्थलों की संख्या बढ़कर 90 हो गई है।",
+      "date": "2026-06-23",
+      "source": "पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय",
+      "category": "पर्यावरण एवं पारिस्थितिकी",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-sports-1",
+      "title": "राष्ट्रीय खेल पुरस्कार 2026: राजीव गांधी खेल रत्न पुरस्कार की घोषणा",
+      "description": "युवा मामले और खेल मंत्रालय ने वर्ष 2026 के राष्ट्रीय खेल पुरस्कारों के तहत प्रसिद्ध पैरा-एथलीट और स्वर्ण पदक विजेता को सर्वोच्च खेल सम्मान प्रदान करने का निर्णय लिया है।",
+      "date": "2026-06-23",
+      "source": "युवा मामले और खेल मंत्रालय",
+      "category": "खेल समाचार",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-def-1",
+      "title": "भारतीय नौसेना का स्वदेशी परमाणु पनडुब्बी आईएनएस 'अरिघात' रणनीतिक गश्त पर तैनात",
+      "description": "भारत की दूसरी परमाणु संचालित बैलिस्टिक मिसाइल पनडुब्बी (SSBN) आईएनएस 'अरिघात' को औपचारिक रूप से नौसेना के बेड़े में शामिल करने के बाद हिंद महासागर क्षेत्र में अपनी पहली रणनीतिक गश्त के लिए सफलतापूर्वक तैनात किया गया है।",
+      "date": "2026-06-24",
+      "source": "रक्षा मंत्रालय (MoD)",
+      "category": "रक्षा एवं सुरक्षा",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-gov-1",
+      "title": "सरकार ने 'पीएम किसान विकास निधि' के तहत सीमांत किसानों के लिए नई ब्याज सबवेंशन योजना को मंजूरी दी",
+      "description": "केंद्रीय मंत्रिमंडल ने सीमांत किसानों को आर्थिक संबल प्रदान करने के लिए 'पीएम किसान विकास निधि' योजना में संशोधन कर ₹1.5 लाख तक के कृषि ऋण पर 3% अतिरिक्त ब्याज सहायता की घोषणा की है।",
+      "date": "2026-06-24",
+      "source": "कैबिनेट सचिवालय",
+      "category": "सरकारी योजनाएं",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-banking-1",
+      "title": "आरबीआई ने डिजिटल भुगतान को बढ़ावा देने के लिए यूपीआई लाइट लिमिट में संशोधन किया",
+      "description": "भारतीय रिजर्व बैंक (RBI) ने छोटे मूल्य के डिजिटल लेनदेन को गति देने के लिए यूपीआई लाइट (UPI Lite) की ऑन-डिवाइस वॉलेट सीमा को ₹500 से बढ़ाकर ₹1,000 करने की घोषणा की है।",
+      "date": "2026-06-25",
+      "source": "Reserve Bank of India (RBI)",
+      "category": "बैंकिंग एवं अर्थव्यवस्था",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    },
+    {
+      "id": "evt-space-1",
+      "title": "इसरो ने चंद्रयान-4 मिशन के लिए नया स्वदेशी प्रणोदन मॉड्यूल डिजाइन पूरा किया",
+      "description": "भारतीय अंतरिक्ष अनुसंधान संगठन (ISRO) ने चंद्रयान-4 मिशन के लिए एक नए द्वि-चरणीय प्रणोदन मॉड्यूल का ब्लूप्रिंट पूरा किया है, जो चंद्रमा की सतह से मिट्टी के नमूने एकत्र कर पृथ्वी पर सुरक्षित वापस लाएगा।",
+      "date": "2026-06-25",
+      "source": "PIB (पत्र सूचना कार्यालय)",
+      "category": "विज्ञान एवं प्रौद्योगिकी",
+      "createdAt": "2026-06-26T09:46:57.130Z"
+    }
+  ],
+  "currentAffairsStats": {
+    "questionsGeneratedToday": 120,
+    "questionsPublished": 120,
+    "questionsRejected": 0,
+    "duplicateCount": 0,
+    "latestUpdateTime": "2026-06-26T10:30:57.433Z",
+    "automationStatus": "Active",
+    "cronJobStatus": "Healthy",
+    "lastRunSlots": [
+      "2026-6-26-16:00"
+    ]
+  },
+  "governmentJobEvents": []
+}
