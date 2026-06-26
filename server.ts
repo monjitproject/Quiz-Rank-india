@@ -47,17 +47,56 @@ interface LocalDB {
 }
 
 // Ensure database file exists
-function loadDB(): LocalDB {
-  let db: LocalDB;
-  if (fs.existsSync(DATA_FILE)) {
-    try {
-      const data = fs.readFileSync(DATA_FILE, "utf-8");
-      db = JSON.parse(data);
-    } catch (e) {
-      console.error("Failed to read DB, initializing empty:", e);
-      db = {} as any;
+// Startup Environment Validation System
+function validateEnvironment() {
+  const missingVars: string[] = [];
+  if (!process.env.GEMINI_API_KEY) {
+    missingVars.push("GEMINI_API_KEY");
+  }
+
+  const separator = "=".repeat(72);
+  if (missingVars.length > 0) {
+    const errorMsg = `
+${separator}
+🚨 STARTUP ENVIRONMENT VALIDATION ERROR 🚨
+The following required environment variable(s) are missing:
+${missingVars.map(v => `   - ${v}`).join("\n")}
+
+Please configure these variables in your settings:
+- In Google AI Studio: Add them in Settings -> Secrets.
+- In Production (Cloudflare/Netlify/Vercel): Add them in the dashboard.
+${separator}
+`;
+    console.error(errorMsg);
+    
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(`Production Startup Failure: Missing environment variables: ${missingVars.join(", ")}`);
     }
   } else {
+    console.log("✅ Environment validation succeeded! Required secrets are loaded.");
+  }
+}
+
+validateEnvironment();
+
+// Ensure database file exists
+let inMemoryDB: LocalDB | null = null;
+
+function loadDB(): LocalDB {
+  if (inMemoryDB) {
+    return inMemoryDB;
+  }
+
+  let db: LocalDB;
+  try {
+    if (fs && typeof fs.existsSync === "function" && fs.existsSync(DATA_FILE)) {
+      const data = fs.readFileSync(DATA_FILE, "utf-8");
+      db = JSON.parse(data);
+    } else {
+      db = {} as any;
+    }
+  } catch (e) {
+    console.warn("Failed to read DB from fs (using empty default DB):", e);
     db = {} as any;
   }
   
@@ -137,12 +176,27 @@ function loadDB(): LocalDB {
   const activeQuizIds = new Set(db.quizzes.map(q => q.id));
   db.questions = db.questions.filter(q => activeQuizIds.has(q.quizId) || q.quizId.startsWith("cron-ca-") || q.quizId.startsWith("pipeline-ca-"));
 
-  fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), "utf-8");
+  try {
+    if (fs && typeof fs.writeFileSync === "function") {
+      fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), "utf-8");
+    }
+  } catch (e) {
+    console.warn("Failed to write updated DB to fs:", e);
+  }
+
+  inMemoryDB = db;
   return db;
 }
 
 function saveDB(db: LocalDB) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), "utf-8");
+  inMemoryDB = db;
+  try {
+    if (fs && typeof fs.writeFileSync === "function") {
+      fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), "utf-8");
+    }
+  } catch (e) {
+    console.warn("Failed to write DB to fs (falling back to memory):", e);
+  }
 }
 
 const dbData = loadDB();
@@ -167,6 +221,33 @@ if (ai) {
 }
 
 app.use(express.json());
+
+// API: Health Check and Diagnostics
+app.get("/api/health", (req: Request, res: Response) => {
+  res.json({
+    status: "healthy",
+    environment: process.env.NODE_ENV || "development",
+    hasGeminiKey: !!process.env.GEMINI_API_KEY,
+    database: "JSON_InMemory_Resilient",
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get("/api/diagnostics", (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    diagnostics: {
+      geminiApiKeyConfigured: !!process.env.GEMINI_API_KEY,
+      nodeEnv: process.env.NODE_ENV || "development",
+      port: PORT,
+      databaseFileExists: fs.existsSync(DATA_FILE),
+      inMemoryActive: !!inMemoryDB,
+      registeredCategories: loadDB().categories?.length || 0,
+      registeredQuizzes: loadDB().quizzes?.length || 0,
+      registeredBlogs: loadDB().blogs?.length || 0,
+    }
+  });
+});
 
 // API: Get categories
 app.get("/api/categories", (req: Request, res: Response) => {
