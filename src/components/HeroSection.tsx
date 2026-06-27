@@ -642,7 +642,15 @@ export function HeroSection({
         <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
           <span className="text-[11px] font-extrabold text-white/70 uppercase tracking-wider mr-1.5">Shortcuts:</span>
           <button
-            onClick={() => onSelectCategory(null)}
+            onClick={() => {
+              onSelectCategory(null);
+              setTimeout(() => {
+                const element = document.getElementById("active-quizzes-section");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }, 100);
+            }}
             className={`px-4 py-1.5 rounded-full text-xs font-extrabold transition-all border cursor-pointer ${
               selectedCategory === null
                 ? "bg-white text-indigo-800 border-white font-black scale-105 shadow-md"
@@ -654,7 +662,15 @@ export function HeroSection({
           {categories.slice(0, 5).map((cat) => (
             <button
               key={cat.id}
-              onClick={() => onSelectCategory(cat.id)}
+              onClick={() => {
+                onSelectCategory(cat.id);
+                setTimeout(() => {
+                  const element = document.getElementById("active-quizzes-section");
+                  if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                  }
+                }, 100);
+              }}
               className={`px-4 py-1.5 rounded-full text-xs font-extrabold transition-all border cursor-pointer ${
                 selectedCategory === cat.id
                   ? "bg-white text-indigo-800 border-white font-black scale-105 shadow-md"
@@ -669,7 +685,15 @@ export function HeroSection({
         {/* Visual CTA Buttons */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto pt-6">
           <button
-            onClick={() => onSelectCategory(null)}
+            onClick={() => {
+              onSelectCategory(null);
+              setTimeout(() => {
+                const element = document.getElementById("active-quizzes-section");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }, 100);
+            }}
             className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-slate-950 hover:-translate-y-0.5 font-extrabold text-xs py-3 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all cursor-pointer border border-amber-300"
           >
             <span>🚀</span> Start Quiz Now

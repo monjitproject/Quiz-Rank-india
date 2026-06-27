@@ -125,7 +125,10 @@ export function Header({ userName, onSetUserName, onNavigate, onSelectCategory, 
           {/* Logo & Brand Identity */}
           <div className="flex items-center gap-6 shrink-0">
             <button
-              onClick={() => onNavigate("home")}
+              onClick={() => {
+                onSelectCategory?.(null);
+                onNavigate("home");
+              }}
               className="flex items-center gap-2.5 text-left cursor-pointer group"
             >
               <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center font-black text-white text-lg shadow-md ring-2 ring-indigo-500/10 group-hover:scale-105 transition-transform">
@@ -211,21 +214,39 @@ export function Header({ userName, onSetUserName, onNavigate, onSelectCategory, 
 
               {/* Subjects Toggle */}
               <button
-                onClick={() => onNavigate("home")}
+                onClick={() => {
+                  onNavigate("home");
+                  setTimeout(() => {
+                    const el = document.getElementById("subject-practice-section");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
                 className="text-slate-600 hover:text-indigo-600 font-bold text-xs cursor-pointer transition-colors"
               >
                 Subjects
               </button>
 
               <button
-                onClick={() => onNavigate("home")}
+                onClick={() => {
+                  onNavigate("home");
+                  setTimeout(() => {
+                    const el = document.getElementById("active-quizzes-section");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
                 className="text-slate-600 hover:text-indigo-600 font-bold text-xs cursor-pointer transition-colors"
               >
                 Mock Tests
               </button>
 
               <button
-                onClick={() => onNavigate("home")}
+                onClick={() => {
+                  onNavigate("home");
+                  setTimeout(() => {
+                    const el = document.getElementById("daily-current-affairs-section");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
                 className="text-slate-600 hover:text-indigo-600 font-bold text-xs cursor-pointer transition-colors"
               >
                 Daily Quiz

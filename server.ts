@@ -213,55 +213,73 @@ function cleanAndParseJSON(text: string): any {
   }
   let cleaned = text.trim();
   
-  // Strip Markdown code block wrappers
-  if (cleaned.startsWith("```")) {
-    cleaned = cleaned.replace(/^```(?:json)?\s*/i, "");
-    cleaned = cleaned.replace(/```\s*$/g, "");
-    cleaned = cleaned.trim();
+  // Try to extract content inside ```json ... ``` or ``` ... ```
+  const fenceRegex = /```(?:json)?\s*([\s\S]*?)\s*```/i;
+  const fenceMatch = cleaned.match(fenceRegex);
+  if (fenceMatch) {
+    cleaned = fenceMatch[1].trim();
   }
   
   try {
     return JSON.parse(cleaned);
   } catch (err: any) {
-    // Attempt to extract the primary JSON structure from any surrounding conversational text
-    const firstBrace = cleaned.indexOf("{");
-    const lastBrace = cleaned.lastIndexOf("}");
-    const firstBracket = cleaned.indexOf("[");
-    const lastBracket = cleaned.lastIndexOf("]");
+    // Find all start positions for { and [
+    const startPositions: { idx: number; closingChar: string }[] = [];
     
-    let start = -1;
-    let end = -1;
-    
-    if (firstBrace !== -1 && lastBrace !== -1) {
-      if (firstBracket !== -1 && firstBracket < firstBrace && lastBracket !== -1 && lastBracket > lastBrace) {
-        start = firstBracket;
-        end = lastBracket;
-      } else {
-        start = firstBrace;
-        end = lastBrace;
-      }
-    } else if (firstBracket !== -1 && lastBracket !== -1) {
-      start = firstBracket;
-      end = lastBracket;
+    let braceIdx = cleaned.indexOf("{");
+    while (braceIdx !== -1) {
+      startPositions.push({ idx: braceIdx, closingChar: "}" });
+      braceIdx = cleaned.indexOf("{", braceIdx + 1);
     }
     
-    if (start !== -1 && end !== -1 && end > start) {
-      const candidate = cleaned.slice(start, end + 1);
-      try {
-        return JSON.parse(candidate);
-      } catch (innerErr: any) {
-        // Clean trailing commas inside lists or objects, a common LLM mistake
-        const withoutTrailingCommas = candidate.replace(/,\s*([\]}])/g, "$1");
+    let bracketIdx = cleaned.indexOf("[");
+    while (bracketIdx !== -1) {
+      startPositions.push({ idx: bracketIdx, closingChar: "]" });
+      bracketIdx = cleaned.indexOf("[", bracketIdx + 1);
+    }
+    
+    // Sort starting positions ascending so we try the earliest ones first
+    startPositions.sort((a, b) => a.idx - b.idx);
+    
+    let lastInnerError: any = null;
+    let lastFinalError: any = null;
+    
+    for (const start of startPositions) {
+      const startIdx = start.idx;
+      const closingChar = start.closingChar;
+      
+      // Find all closing positions after startIdx
+      const closingIndices: number[] = [];
+      let idx = cleaned.indexOf(closingChar, startIdx);
+      while (idx !== -1) {
+        closingIndices.push(idx);
+        idx = cleaned.indexOf(closingChar, idx + 1);
+      }
+      
+      // Try from the last closing index to the first closing index
+      for (let i = closingIndices.length - 1; i >= 0; i--) {
+        const endIdx = closingIndices[i];
+        if (endIdx <= startIdx) continue;
+        const candidate = cleaned.slice(startIdx, endIdx + 1);
+        
         try {
-          return JSON.parse(withoutTrailingCommas);
-        } catch (finalErr: any) {
-          throw new Error(
-            `JSON clean-and-parse failed. Original: ${err.message}. Substring: ${innerErr.message}. Sanitized: ${finalErr.message}`
-          );
+          return JSON.parse(candidate);
+        } catch (innerErr: any) {
+          lastInnerError = innerErr;
+          // Clean trailing commas inside lists or objects, a common LLM mistake
+          const withoutTrailingCommas = candidate.replace(/,\s*([\]}])/g, "$1");
+          try {
+            return JSON.parse(withoutTrailingCommas);
+          } catch (finalErr: any) {
+            lastFinalError = finalErr;
+          }
         }
       }
     }
-    throw err;
+    
+    throw new Error(
+      `JSON clean-and-parse failed. Original: ${err.message}. Substring: ${lastInnerError?.message || "none"}. Sanitized: ${lastFinalError?.message || "none"}`
+    );
   }
 }
 
@@ -620,8 +638,8 @@ app.post("/api/blogs/generate", async (req: Request, res: Response) => {
 
   const db = loadDB();
 
-  if (!ai) {
-    console.warn("Gemini Client is missing. Serving high-quality local fallback blog post.");
+  if (!ai || isGeminiSuspended()) {
+    console.warn("Gemini Client is suspended or missing. Serving high-quality local fallback blog post.");
     const fallbackPost = generateFallbackBlogPost(topic);
     db.blogs.unshift(fallbackPost);
     saveDB(db);
@@ -686,7 +704,11 @@ Ensure the article is original, highly useful, and fact-based. Deliver only the 
 
     res.json({ success: true, post: newPost });
   } catch (err: any) {
-    console.error("Gemini blog generation failed, using local fallback generator:", err);
+    if (isQuotaError(err)) {
+      console.warn("Gemini API Quota/Rate Limit Exceeded (429) during blog generation. Falling back immediately.");
+    } else {
+      console.error("Gemini blog generation failed, using local fallback generator:", err);
+    }
     try {
       const fallbackPost = generateFallbackBlogPost(topic);
       db.blogs.unshift(fallbackPost);
@@ -795,7 +817,7 @@ function validateGeneratedQuiz(parsedData: any, categoryId: string, difficulty: 
 
 // Generate Fresh Quiz Replacement for Corrupted Quizzes
 async function generateFreshQuizReplacement(title: string, categoryId: string, difficulty: string, language: string): Promise<{ quiz: Quiz; questions: Question[] } | null> {
-  if (!ai) return null;
+  if (!ai || isGeminiSuspended()) return null;
   
   const isHindi = language.toLowerCase() === "hindi";
   const isEnglishCat = categoryId.toLowerCase() === "english" || title.toLowerCase().includes("english");
@@ -925,8 +947,12 @@ JSON Structure:
     });
 
     return { quiz: newQuiz, questions: newQuestions };
-  } catch (err) {
-    console.error("Replacement generation error:", err);
+  } catch (err: any) {
+    if (isQuotaError(err)) {
+      console.warn("Gemini API Quota/Rate Limit Exceeded (429) during replacement generation.");
+    } else {
+      console.error("Replacement generation error:", err);
+    }
     return null;
   }
 }
@@ -1122,13 +1148,13 @@ function fallbackToLocalQuiz(topic: string, categoryId: string): { quiz: Quiz; q
 app.post("/api/generate-quiz", async (req: Request, res: Response) => {
   const { topic, difficulty, language, categoryId } = req.body;
 
-  if (!ai) {
-    console.warn("Gemini API Client not configured. Routing directly to resilient local fallback engine.");
+  if (!ai || isGeminiSuspended()) {
+    console.warn("Gemini API Client is suspended or not configured. Routing directly to resilient local fallback engine.");
     const fallback = fallbackToLocalQuiz(topic, categoryId);
     if (fallback) {
       res.json(fallback);
     } else {
-      res.status(503).json({ error: "Gemini API key is not configured and no fallback quizzes are available in database." });
+      res.status(503).json({ error: "Gemini API key is suspended/not configured and no fallback quizzes are available in database." });
     }
     return;
   }
@@ -1240,6 +1266,16 @@ JSON Structure:
         prompt += `\n\nCRITICAL QUALITY REJECTION: Your last output failed validation on the following rules. Correct them completely on this retry:\n${errors.join("\n")}`;
       }
     } catch (e: any) {
+      if (isQuotaError(e)) {
+        console.warn("Gemini API Quota/Rate Limit Exceeded (429) during interactive quiz generation. Falling back immediately.");
+        const fallback = fallbackToLocalQuiz(topic, categoryId);
+        if (fallback) {
+          res.json(fallback);
+        } else {
+          res.status(503).json({ error: "Gemini API is exhausted and no local fallback is available." });
+        }
+        return;
+      }
       console.error(`Attempt ${attempt} error:`, e);
       errors = [e.message || "Failed to parse JSON response from Gemini API."];
     }
@@ -1777,11 +1813,17 @@ function isDuplicateQuestion(text: string, existingQuestions: Question[]): boole
   });
 }
 
+let geminiRateLimitedUntil = 0;
+
+function isGeminiSuspended(): boolean {
+  return Date.now() < geminiRateLimitedUntil;
+}
+
 function isQuotaError(err: any): boolean {
   if (!err) return false;
   const errStr = typeof err === "string" ? err : (err.message || "") + " " + JSON.stringify(err);
   const normalized = errStr.toLowerCase();
-  return (
+  const isQuota = (
     err.status === 429 ||
     err.statusCode === 429 ||
     err.code === 429 ||
@@ -1790,6 +1832,10 @@ function isQuotaError(err: any): boolean {
     normalized.includes("limit") ||
     normalized.includes("resource_exhausted")
   );
+  if (isQuota) {
+    geminiRateLimitedUntil = Date.now() + 5 * 60 * 1000; // Suspend Gemini for 5 minutes
+  }
+  return isQuota;
 }
 
 async function generateUniqueQuestionsViaGemini(
@@ -1876,7 +1922,12 @@ async function generateUniqueQuestionsViaGemini(
 
 async function generateQuizViaGemini(testType: string, qCount: number, currentDate: Date, retries = 3): Promise<any[]> {
   if (!ai) {
-    throw new Error("Gemini AI client is not initialized");
+    console.warn("Gemini AI client is not initialized. Using local fallback generator.");
+    return generateDynamicFallbackQuestions(testType, qCount, currentDate);
+  }
+  if (isGeminiSuspended()) {
+    console.warn(`Gemini AI is suspended due to recent rate limit/quota limits. Falling back immediately for ${testType}.`);
+    return generateDynamicFallbackQuestions(testType, qCount, currentDate);
   }
 
   const dateStr = currentDate.toISOString().split("T")[0];
@@ -1957,11 +2008,11 @@ Return the data STRICTLY as a JSON object matching this schema:
         throw new Error("Parsed JSON did not contain questions array");
       }
     } catch (err: any) {
-      console.error(`Attempt ${attempt} failed for ${testType} generation:`, err);
       if (isQuotaError(err)) {
         console.warn(`Gemini API Quota/Rate Limit Exceeded (429) during ${testType} generation. Falling back immediately.`);
         return generateDynamicFallbackQuestions(testType, qCount, currentDate);
       }
+      console.error(`Attempt ${attempt} failed for ${testType} generation:`, err);
       if (attempt === retries) {
         throw err;
       }
@@ -1974,7 +2025,12 @@ Return the data STRICTLY as a JSON object matching this schema:
 
 async function generateEventsViaGemini(currentDate: Date, retries = 3): Promise<any[]> {
   if (!ai) {
-    throw new Error("Gemini AI client is not initialized");
+    console.warn("Gemini AI client is not initialized for events. Using fallback.");
+    return generateDynamicFallbackEvents(currentDate);
+  }
+  if (isGeminiSuspended()) {
+    console.warn("Gemini AI is suspended due to recent rate limit/quota limits. Falling back immediately for events.");
+    return generateDynamicFallbackEvents(currentDate);
   }
 
   const dateStrHindi = `${currentDate.getDate()} ${getMonthNameHindi(currentDate.getMonth())} ${currentDate.getFullYear()}`;
@@ -2025,11 +2081,11 @@ Return the data STRICTLY as a JSON object matching this schema:
         throw new Error("Parsed JSON did not contain events array");
       }
     } catch (err: any) {
-      console.error(`Attempt ${attempt} failed for events generation:`, err);
       if (isQuotaError(err)) {
         console.warn(`Gemini API Quota/Rate Limit Exceeded (429) during events generation. Falling back immediately.`);
         return generateDynamicFallbackEvents(currentDate);
       }
+      console.error(`Attempt ${attempt} failed for events generation:`, err);
       if (attempt === retries) {
         throw err;
       }
@@ -2514,7 +2570,12 @@ function parseRssFeed(xmlText: string): Array<{ title: string; link: string; pub
 // Helper: Call Gemini AI to generate custom exam-ready questions based on real news context
 async function generateQuizFromRssViaGemini(newsItems: any[], currentDate: Date, retries = 3): Promise<any[]> {
   if (!ai) {
-    throw new Error("Gemini AI client is not initialized");
+    console.warn("Gemini AI client is not initialized for RSS quiz. Using fallback.");
+    return generateDynamicFallbackQuestions("rss", 5, currentDate);
+  }
+  if (isGeminiSuspended()) {
+    console.warn("Gemini AI is suspended due to recent rate limit/quota limits. Falling back immediately for RSS quiz.");
+    return generateDynamicFallbackQuestions("rss", 5, currentDate);
   }
 
   const newsContext = newsItems.map((item, idx) => `[News ${idx + 1}]
@@ -2584,11 +2645,11 @@ Return the data STRICTLY as a JSON object matching this schema:
       }
       throw new Error("Parsed RSS JSON did not contain questions array");
     } catch (err: any) {
-      console.error(`Attempt ${attempt} failed for RSS quiz generation:`, err);
       if (isQuotaError(err)) {
         console.warn(`Gemini API Quota/Rate Limit Exceeded (429) during RSS quiz generation. Falling back immediately.`);
         return generateDynamicFallbackQuestions("rss", 5, currentDate);
       }
+      console.error(`Attempt ${attempt} failed for RSS quiz generation:`, err);
       if (attempt === retries) {
         throw err;
       }

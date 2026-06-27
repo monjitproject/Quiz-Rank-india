@@ -68,8 +68,19 @@ export default function App() {
       setActiveViewArg(slug);
     } else if (pathname.startsWith("/category/")) {
       const category = decodeURIComponent(pathname.replace("/category/", ""));
-      setActiveView("blog-category");
-      setActiveViewArg(category);
+      const quizCategories = [
+        "ssc", "upsc", "railway", "banking", "teaching", "police", "defence",
+        "state-psc", "judiciary", "nursing", "engineering", "agriculture", "current-affairs", "gk"
+      ];
+      if (quizCategories.includes(category.toLowerCase())) {
+        setSelectedCategory(category.toLowerCase());
+        setActiveView("home");
+        setActiveViewArg(null);
+      } else {
+        setSelectedCategory(null);
+        setActiveView("blog-category");
+        setActiveViewArg(category);
+      }
     } else if (pathname === "/latest") {
       setActiveView("blog-latest");
       setActiveViewArg(null);
@@ -175,6 +186,15 @@ export default function App() {
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, [quizzes]);
+
+  useEffect(() => {
+    if (activeView === "home") {
+      const path = selectedCategory ? `/category/${selectedCategory}` : "/";
+      if (typeof window !== "undefined" && window.location.pathname !== path) {
+        window.history.pushState(null, "", path);
+      }
+    }
+  }, [selectedCategory, activeView]);
 
   useEffect(() => {
     try {
