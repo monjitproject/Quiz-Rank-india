@@ -689,39 +689,63 @@ export function AdminPanel({ quizzes, onAddQuiz, onDeleteQuiz, onRefreshQuizzes 
             </div>
 
             {/* Core Stats Overview */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
-                <div className="p-3 bg-blue-50 rounded-2xl text-blue-600">
-                  <Database className="w-5 h-5" />
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+              <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-3">
+                <div className="p-2.5 bg-blue-50 rounded-2xl text-blue-600">
+                  <Database className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">AUTOMATION ENGINE</span>
-                  <span className="text-sm font-bold text-slate-800">
+                  <span className="text-[9px] font-bold text-slate-400 block uppercase">AUTOMATION STATUS</span>
+                  <span className="text-xs font-extrabold text-slate-800">
                     {caStats?.automationStatus || "Active"}
                   </span>
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
-                <div className="p-3 bg-emerald-50 rounded-2xl text-emerald-600">
-                  <CheckCircle2 className="w-5 h-5" />
+              <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-3">
+                <div className="p-2.5 bg-emerald-50 rounded-2xl text-emerald-600">
+                  <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">CRON JOB HEALTH</span>
-                  <span className="text-sm font-bold text-slate-800">
-                    {caStats?.cronJobStatus || "Healthy"}
+                  <span className="text-[9px] font-bold text-slate-400 block uppercase">LAST SUCCESSFUL UPDATE</span>
+                  <span className="text-xs font-extrabold text-slate-800 truncate block max-w-[150px]">
+                    {caStats?.lastSuccessfulUpdate ? new Date(caStats.lastSuccessfulUpdate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) + " (" + new Date(caStats.lastSuccessfulUpdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ")" : "Never"}
                   </span>
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
-                <div className="p-3 bg-indigo-50 rounded-2xl text-indigo-600">
-                  <Clock className="w-5 h-5" />
+              <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-3">
+                <div className="p-2.5 bg-rose-50 rounded-2xl text-rose-600">
+                  <AlertCircle className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">LAST BATCH RUN</span>
-                  <span className="text-[11px] font-bold text-slate-800 line-clamp-1">
-                    {caStats?.latestUpdateTime ? new Date(caStats.latestUpdateTime).toLocaleTimeString() : "No Runs Yet"}
+                  <span className="text-[9px] font-bold text-slate-400 block uppercase">LAST FAILED UPDATE</span>
+                  <span className="text-xs font-extrabold text-slate-800 truncate block max-w-[150px]">
+                    {caStats?.lastFailedUpdate ? new Date(caStats.lastFailedUpdate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) + " (" + new Date(caStats.lastFailedUpdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ")" : "No failures"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-3">
+                <div className="p-2.5 bg-indigo-50 rounded-2xl text-indigo-600">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[9px] font-bold text-slate-400 block uppercase">GENERATED TODAY</span>
+                  <span className="text-sm font-extrabold text-slate-800">
+                    {caStats?.questionsGeneratedToday ?? 0} Questions
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-3">
+                <div className="p-2.5 bg-amber-50 rounded-2xl text-amber-600">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[9px] font-bold text-slate-400 block uppercase">NEXT SCHEDULED RUN</span>
+                  <span className="text-xs font-extrabold text-slate-800">
+                    {caStats?.nextScheduledRun || "05:00 AM IST"}
                   </span>
                 </div>
               </div>

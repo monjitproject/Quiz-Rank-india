@@ -11,11 +11,12 @@ interface HeaderProps {
   userName: string;
   onSetUserName: (name: string) => void;
   onNavigate: (view: string, arg?: any) => void;
+  onSelectCategory?: (catId: string | null) => void;
   quizzes: Quiz[];
   onSelectQuiz: (quizId: string) => void;
 }
 
-export function Header({ userName, onSetUserName, onNavigate, quizzes, onSelectQuiz }: HeaderProps) {
+export function Header({ userName, onSetUserName, onNavigate, onSelectCategory, quizzes, onSelectQuiz }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -162,13 +163,46 @@ export function Header({ userName, onSetUserName, onNavigate, quizzes, onSelectQ
                     <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider pb-1.5 border-b border-slate-50 mb-1">
                       Choose Exam Board
                     </span>
-                    <button onClick={() => { setMegaMenuOpen(false); onNavigate("home"); }} className="text-left py-1.5 px-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700">
+                    <button
+                      onClick={() => {
+                        setMegaMenuOpen(false);
+                        onSelectCategory?.("ssc");
+                        onNavigate("home");
+                        setTimeout(() => {
+                          const el = document.getElementById("active-quizzes-section");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }, 100);
+                      }}
+                      className="text-left py-1.5 px-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer"
+                    >
                       SSC Exams (GD/CGL/CHSL)
                     </button>
-                    <button onClick={() => { setMegaMenuOpen(false); onNavigate("home"); }} className="text-left py-1.5 px-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700">
+                    <button
+                      onClick={() => {
+                        setMegaMenuOpen(false);
+                        onSelectCategory?.("railway");
+                        onNavigate("home");
+                        setTimeout(() => {
+                          const el = document.getElementById("active-quizzes-section");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }, 100);
+                      }}
+                      className="text-left py-1.5 px-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer"
+                    >
                       Railways NTPC & Group D
                     </button>
-                    <button onClick={() => { setMegaMenuOpen(false); onNavigate("home"); }} className="text-left py-1.5 px-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700">
+                    <button
+                      onClick={() => {
+                        setMegaMenuOpen(false);
+                        onSelectCategory?.("upsc");
+                        onNavigate("home");
+                        setTimeout(() => {
+                          const el = document.getElementById("active-quizzes-section");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }, 100);
+                      }}
+                      className="text-left py-1.5 px-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer"
+                    >
                       UPSC Central Services
                     </button>
                   </div>
@@ -425,6 +459,70 @@ export function Header({ userName, onSetUserName, onNavigate, quizzes, onSelectQ
               <button onClick={() => { setMobileMenuOpen(false); onNavigate("blog"); }} className="text-left py-1">Notice Blog</button>
               <button onClick={() => { setMobileMenuOpen(false); onNavigate("dashboard"); }} className="text-left py-1 text-blue-600">My Dashboard</button>
               <button onClick={() => { setMobileMenuOpen(false); onNavigate("admin"); }} className="text-left py-1 text-indigo-600">Admin Console</button>
+              
+              <div className="border-t border-slate-100 pt-3 mt-1">
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mb-2">
+                  Browse Exam Boards
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onSelectCategory?.("ssc");
+                      onNavigate("home");
+                      setTimeout(() => {
+                        const el = document.getElementById("active-quizzes-section");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    className="text-left py-1.5 px-2.5 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl text-xs font-semibold text-slate-700 transition-colors"
+                  >
+                    SSC Exams
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onSelectCategory?.("railway");
+                      onNavigate("home");
+                      setTimeout(() => {
+                        const el = document.getElementById("active-quizzes-section");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    className="text-left py-1.5 px-2.5 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl text-xs font-semibold text-slate-700 transition-colors"
+                  >
+                    Railways NTPC
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onSelectCategory?.("upsc");
+                      onNavigate("home");
+                      setTimeout(() => {
+                        const el = document.getElementById("active-quizzes-section");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    className="text-left py-1.5 px-2.5 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl text-xs font-semibold text-slate-700 transition-colors"
+                  >
+                    UPSC Central
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onSelectCategory?.("current-affairs");
+                      onNavigate("home");
+                      setTimeout(() => {
+                        const el = document.getElementById("active-quizzes-section");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    className="text-left py-1.5 px-2.5 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl text-xs font-semibold text-slate-700 transition-colors"
+                  >
+                    Current Affairs
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

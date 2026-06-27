@@ -43,6 +43,14 @@ interface LocalDB {
     automationStatus: string;
     cronJobStatus: string;
     lastRunSlots: string[];
+    lastSuccessfulUpdate?: string;
+    lastFailedUpdate?: string;
+    nextScheduledRun?: string;
+    executionLogs?: Array<{
+      timestamp: string;
+      status: "success" | "failed";
+      message: string;
+    }>;
   };
 }
 
@@ -199,6 +207,64 @@ function saveDB(db: LocalDB) {
   }
 }
 
+function cleanAndParseJSON(text: string): any {
+  if (!text) {
+    throw new Error("Cannot parse empty JSON input");
+  }
+  let cleaned = text.trim();
+  
+  // Strip Markdown code block wrappers
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*/i, "");
+    cleaned = cleaned.replace(/```\s*$/g, "");
+    cleaned = cleaned.trim();
+  }
+  
+  try {
+    return JSON.parse(cleaned);
+  } catch (err: any) {
+    // Attempt to extract the primary JSON structure from any surrounding conversational text
+    const firstBrace = cleaned.indexOf("{");
+    const lastBrace = cleaned.lastIndexOf("}");
+    const firstBracket = cleaned.indexOf("[");
+    const lastBracket = cleaned.lastIndexOf("]");
+    
+    let start = -1;
+    let end = -1;
+    
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      if (firstBracket !== -1 && firstBracket < firstBrace && lastBracket !== -1 && lastBracket > lastBrace) {
+        start = firstBracket;
+        end = lastBracket;
+      } else {
+        start = firstBrace;
+        end = lastBrace;
+      }
+    } else if (firstBracket !== -1 && lastBracket !== -1) {
+      start = firstBracket;
+      end = lastBracket;
+    }
+    
+    if (start !== -1 && end !== -1 && end > start) {
+      const candidate = cleaned.slice(start, end + 1);
+      try {
+        return JSON.parse(candidate);
+      } catch (innerErr: any) {
+        // Clean trailing commas inside lists or objects, a common LLM mistake
+        const withoutTrailingCommas = candidate.replace(/,\s*([\]}])/g, "$1");
+        try {
+          return JSON.parse(withoutTrailingCommas);
+        } catch (finalErr: any) {
+          throw new Error(
+            `JSON clean-and-parse failed. Original: ${err.message}. Substring: ${innerErr.message}. Sanitized: ${finalErr.message}`
+          );
+        }
+      }
+    }
+    throw err;
+  }
+}
+
 const dbData = loadDB();
 
 // Initialize Gemini Client
@@ -265,6 +331,10 @@ app.get("/api/categories", (req: Request, res: Response) => {
 
 // API: Get quizzes
 app.get("/api/quizzes", (req: Request, res: Response) => {
+  // Trigger passive scheduled check in background
+  checkAndRunScheduledPipeline().catch(err => {
+    console.error("Passive scheduled pipeline trigger error on quizzes query:", err);
+  });
   const db = loadDB();
   res.json(db.quizzes);
 });
@@ -594,7 +664,7 @@ Ensure the article is original, highly useful, and fact-based. Deliver only the 
     });
 
     const text = response.text || "";
-    const parsedData = JSON.parse(text.trim());
+    const parsedData = cleanAndParseJSON(text);
 
     const newPost: BlogPost = {
       id: "gen-" + Date.now(),
@@ -815,7 +885,7 @@ JSON Structure:
     });
 
     const text = response.text || "";
-    const parsedData = JSON.parse(text.trim());
+    const parsedData = cleanAndParseJSON(text);
     
     // Validate
     const validationResult = validateGeneratedQuiz(parsedData, categoryId, difficulty, language);
@@ -1157,7 +1227,7 @@ JSON Structure:
       });
 
       const text = response.text || "";
-      parsedData = JSON.parse(text.trim());
+      parsedData = cleanAndParseJSON(text);
 
       const validationResult = validateGeneratedQuiz(parsedData, categoryId, difficulty, language);
       if (validationResult.isValid) {
@@ -1697,6 +1767,113 @@ function getMonthNameHindi(monthIdx: number): string {
   return months[monthIdx] || "जून";
 }
 
+function isDuplicateQuestion(text: string, existingQuestions: Question[]): boolean {
+  if (!text) return false;
+  const normalized = text.trim().toLowerCase().replace(/[^a-z0-9\u0900-\u097F]+/g, "");
+  return existingQuestions.some(eq => {
+    if (!eq.text) return false;
+    const eqNormalized = eq.text.trim().toLowerCase().replace(/[^a-z0-9\u0900-\u097F]+/g, "");
+    return normalized === eqNormalized;
+  });
+}
+
+function isQuotaError(err: any): boolean {
+  if (!err) return false;
+  const errStr = typeof err === "string" ? err : (err.message || "") + " " + JSON.stringify(err);
+  const normalized = errStr.toLowerCase();
+  return (
+    err.status === 429 ||
+    err.statusCode === 429 ||
+    err.code === 429 ||
+    normalized.includes("429") ||
+    normalized.includes("quota") ||
+    normalized.includes("limit") ||
+    normalized.includes("resource_exhausted")
+  );
+}
+
+async function generateUniqueQuestionsViaGemini(
+  testType: string,
+  targetCount: number,
+  currentDate: Date,
+  db: LocalDB,
+  additionalExistingQuestions: any[] = []
+): Promise<any[]> {
+  const acceptedQuestions: any[] = [];
+  let attempts = 0;
+  const maxAttempts = 3;
+  
+  // Combine db.questions with additional existing questions to check against
+  const existingQuestions = [...(db.questions || []), ...additionalExistingQuestions];
+  
+  while (acceptedQuestions.length < targetCount && attempts < maxAttempts) {
+    attempts++;
+    const needed = targetCount - acceptedQuestions.length;
+    console.log(`Generating ${needed} unique questions for ${testType} (Attempt ${attempts})...`);
+    
+    let batch: any[] = [];
+    try {
+      batch = await generateQuizViaGemini(testType, needed, currentDate);
+    } catch (err) {
+      console.error(`Gemini failed to generate batch of ${needed} for ${testType}:`, err);
+      // Fallback to local fallback generator
+      const fallbackBatch = generateDynamicFallbackQuestions(testType, needed, currentDate);
+      batch = fallbackBatch;
+    }
+    
+    for (const q of batch) {
+      const isDbDup = isDuplicateQuestion(q.text, existingQuestions);
+      const isBatchDup = acceptedQuestions.some(aq => {
+        const aqNorm = aq.text.trim().toLowerCase().replace(/[^a-z0-9\u0900-\u097F]+/g, "");
+        const qNorm = q.text.trim().toLowerCase().replace(/[^a-z0-9\u0900-\u097F]+/g, "");
+        return aqNorm === qNorm;
+      });
+      
+      if (isDbDup || isBatchDup) {
+        console.log(`Duplicate question detected: "${q.text}". Rejecting and generating a new one.`);
+        if (!db.currentAffairsStats) {
+          db.currentAffairsStats = {
+            questionsGeneratedToday: 0,
+            questionsPublished: 0,
+            questionsRejected: 0,
+            duplicateCount: 0,
+            latestUpdateTime: new Date().toISOString(),
+            automationStatus: "Active",
+            cronJobStatus: "Healthy",
+            lastRunSlots: []
+          };
+        }
+        db.currentAffairsStats.questionsRejected = (db.currentAffairsStats.questionsRejected || 0) + 1;
+        db.currentAffairsStats.duplicateCount = (db.currentAffairsStats.duplicateCount || 0) + 1;
+      } else {
+        acceptedQuestions.push(q);
+      }
+    }
+  }
+  
+  // If we couldn't get enough unique questions, fill the rest using fallbacks
+  if (acceptedQuestions.length < targetCount) {
+    const needed = targetCount - acceptedQuestions.length;
+    console.log(`Could not get enough unique questions from Gemini, filling ${needed} with fallback questions...`);
+    const fallbackBatch = generateDynamicFallbackQuestions(testType, needed, currentDate);
+    for (const q of fallbackBatch) {
+      if (acceptedQuestions.length < targetCount) {
+        const isDbDup = isDuplicateQuestion(q.text, existingQuestions);
+        const isBatchDup = acceptedQuestions.some(aq => {
+          const aqNorm = aq.text.trim().toLowerCase().replace(/[^a-z0-9\u0900-\u097F]+/g, "");
+          const qNorm = q.text.trim().toLowerCase().replace(/[^a-z0-9\u0900-\u097F]+/g, "");
+          return aqNorm === qNorm;
+        });
+        if (!isDbDup && !isBatchDup) {
+          acceptedQuestions.push(q);
+        }
+      }
+    }
+  }
+  
+  return acceptedQuestions.slice(0, targetCount);
+}
+
 async function generateQuizViaGemini(testType: string, qCount: number, currentDate: Date, retries = 3): Promise<any[]> {
   if (!ai) {
     throw new Error("Gemini AI client is not initialized");
@@ -1759,7 +1936,7 @@ Return the data STRICTLY as a JSON object matching this schema:
         throw new Error("Empty response text from Gemini");
       }
 
-      const parsed = JSON.parse(text);
+      const parsed = cleanAndParseJSON(text);
       if (parsed && Array.isArray(parsed.questions) && parsed.questions.length > 0) {
         const validatedQuestions = parsed.questions.map((q: any) => {
           if (!q.text || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correctOptionIndex !== "number") {
@@ -1779,8 +1956,12 @@ Return the data STRICTLY as a JSON object matching this schema:
       } else {
         throw new Error("Parsed JSON did not contain questions array");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(`Attempt ${attempt} failed for ${testType} generation:`, err);
+      if (isQuotaError(err)) {
+        console.warn(`Gemini API Quota/Rate Limit Exceeded (429) during ${testType} generation. Falling back immediately.`);
+        return generateDynamicFallbackQuestions(testType, qCount, currentDate);
+      }
       if (attempt === retries) {
         throw err;
       }
@@ -1837,14 +2018,18 @@ Return the data STRICTLY as a JSON object matching this schema:
         throw new Error("Empty response from Gemini for events");
       }
 
-      const parsed = JSON.parse(text);
+      const parsed = cleanAndParseJSON(text);
       if (parsed && Array.isArray(parsed.events) && parsed.events.length > 0) {
         return parsed.events;
       } else {
         throw new Error("Parsed JSON did not contain events array");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(`Attempt ${attempt} failed for events generation:`, err);
+      if (isQuotaError(err)) {
+        console.warn(`Gemini API Quota/Rate Limit Exceeded (429) during events generation. Falling back immediately.`);
+        return generateDynamicFallbackEvents(currentDate);
+      }
       if (attempt === retries) {
         throw err;
       }
@@ -2116,11 +2301,11 @@ export async function runCurrentAffairsPipeline(manual = false): Promise<any> {
     try {
       if (target.type === "monthly") {
         // Generate in 2 batches of 25 to avoid tokens/timeouts limits
-        const b1 = await generateQuizViaGemini("monthly", 25, currentDate);
-        const b2 = await generateQuizViaGemini("monthly", 25, currentDate);
+        const b1 = await generateUniqueQuestionsViaGemini("monthly", 25, currentDate, db);
+        const b2 = await generateUniqueQuestionsViaGemini("monthly", 25, currentDate, db, b1);
         questions = [...b1, ...b2];
       } else {
-        questions = await generateQuizViaGemini(target.type, target.count, currentDate);
+        questions = await generateUniqueQuestionsViaGemini(target.type, target.count, currentDate, db);
       }
     } catch (err) {
       console.error(`Gemini generation failed for ${target.type}, running dynamic 2026 initiatives fallback:`, err);
@@ -2233,10 +2418,11 @@ export async function runCurrentAffairsPipeline(manual = false): Promise<any> {
 
   // 5. Update system statistics
   db.currentAffairsStats = {
+    ...db.currentAffairsStats,
     questionsGeneratedToday: totalQuestionsCount,
-    questionsPublished: totalQuestionsCount,
-    questionsRejected: 0,
-    duplicateCount: 0,
+    questionsPublished: (db.currentAffairsStats?.questionsPublished || 0) + totalQuestionsCount,
+    questionsRejected: db.currentAffairsStats?.questionsRejected || 0,
+    duplicateCount: db.currentAffairsStats?.duplicateCount || 0,
     latestUpdateTime: new Date().toISOString(),
     automationStatus: "Active",
     cronJobStatus: "Healthy",
@@ -2267,6 +2453,10 @@ export async function runCurrentAffairsPipeline(manual = false): Promise<any> {
 
 // Current Affairs Automation Endpoints
 app.get("/api/current-affairs/stats", (req: Request, res: Response) => {
+  // Trigger passive scheduled check in background
+  checkAndRunScheduledPipeline().catch(err => {
+    console.log("Passive scheduled pipeline trigger error on stats query:", err);
+  });
   const db = loadDB();
   res.json(db.currentAffairsStats || {
     questionsGeneratedToday: 0,
@@ -2287,7 +2477,7 @@ app.get("/api/current-affairs/events", (req: Request, res: Response) => {
 
 app.post("/api/current-affairs/trigger", async (req: Request, res: Response) => {
   try {
-    const result = await runCurrentAffairsPipeline(true);
+    const result = await runCurrentAffairsPipelineWithRetry(true);
     res.json(result);
   } catch (err: any) {
     console.error("Manual pipeline trigger error:", err);
@@ -2377,7 +2567,7 @@ Return the data STRICTLY as a JSON object matching this schema:
         throw new Error("Empty response text from Gemini for RSS quiz");
       }
 
-      const parsed = JSON.parse(text);
+      const parsed = cleanAndParseJSON(text);
       if (parsed && Array.isArray(parsed.questions) && parsed.questions.length > 0) {
         return parsed.questions.map((q: any) => {
           if (!q.text || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correctOptionIndex !== "number") {
@@ -2393,8 +2583,12 @@ Return the data STRICTLY as a JSON object matching this schema:
         });
       }
       throw new Error("Parsed RSS JSON did not contain questions array");
-    } catch (err) {
+    } catch (err: any) {
       console.error(`Attempt ${attempt} failed for RSS quiz generation:`, err);
+      if (isQuotaError(err)) {
+        console.warn(`Gemini API Quota/Rate Limit Exceeded (429) during RSS quiz generation. Falling back immediately.`);
+        return generateDynamicFallbackQuestions("rss", 5, currentDate);
+      }
       if (attempt === retries) {
         throw err;
       }
@@ -2814,57 +3008,238 @@ app.get("/api/current-affairs/cron-status", (req: Request, res: Response) => {
 });
 
 // Automated Daily Background Scheduler (Cron Daemon checking every 60 seconds)
+let isPipelineRunning = false;
+
+export async function runCurrentAffairsPipelineWithRetry(manual = false, retries = 3): Promise<any> {
+  let attempt = 0;
+  while (attempt < retries) {
+    attempt++;
+    try {
+      console.log(`Running current affairs pipeline... Attempt ${attempt}/${retries}`);
+      const result = await runCurrentAffairsPipeline(manual);
+      
+      // Update successful stats
+      const db = loadDB();
+      if (!db.currentAffairsStats) {
+        db.currentAffairsStats = {
+          questionsGeneratedToday: 0,
+          questionsPublished: 0,
+          questionsRejected: 0,
+          duplicateCount: 0,
+          latestUpdateTime: new Date().toISOString(),
+          automationStatus: "Active",
+          cronJobStatus: "Healthy",
+          lastRunSlots: []
+        };
+      }
+      db.currentAffairsStats.lastSuccessfulUpdate = new Date().toISOString();
+      db.currentAffairsStats.automationStatus = "Active";
+      db.currentAffairsStats.cronJobStatus = "Healthy";
+      
+      // Add execution log
+      if (!db.currentAffairsStats.executionLogs) {
+        db.currentAffairsStats.executionLogs = [];
+      }
+      db.currentAffairsStats.executionLogs.unshift({
+        timestamp: new Date().toISOString(),
+        status: "success",
+        message: `Pipeline completed successfully on attempt ${attempt}. ${result.publishedCount || 120} questions published.`
+      });
+      db.currentAffairsStats.executionLogs = db.currentAffairsStats.executionLogs.slice(0, 50);
+      
+      saveDB(db);
+      return result;
+    } catch (err: any) {
+      console.error(`Pipeline attempt ${attempt} failed:`, err);
+      
+      // Update stats on failure
+      const db = loadDB();
+      if (!db.currentAffairsStats) {
+        db.currentAffairsStats = {
+          questionsGeneratedToday: 0,
+          questionsPublished: 0,
+          questionsRejected: 0,
+          duplicateCount: 0,
+          latestUpdateTime: new Date().toISOString(),
+          automationStatus: "Active",
+          cronJobStatus: "Healthy",
+          lastRunSlots: []
+        };
+      }
+      
+      db.currentAffairsStats.lastFailedUpdate = new Date().toISOString();
+      db.currentAffairsStats.cronJobStatus = "Degraded";
+      
+      if (!db.currentAffairsStats.executionLogs) {
+        db.currentAffairsStats.executionLogs = [];
+      }
+      db.currentAffairsStats.executionLogs.unshift({
+        timestamp: new Date().toISOString(),
+        status: "failed",
+        message: `Pipeline failed on attempt ${attempt}: ${err.message || err}`
+      });
+      db.currentAffairsStats.executionLogs = db.currentAffairsStats.executionLogs.slice(0, 50);
+      
+      // Send notification to admin dashboard
+      if (!db.notifications) {
+        db.notifications = [];
+      }
+      db.notifications.unshift({
+        id: "notif-failure-" + Date.now() + "-" + attempt,
+        title: `🚨 Automation Pipeline Failure (Attempt ${attempt}/${retries})`,
+        message: `Current affairs automation failed to execute: ${err.message || "Unknown error"}.`,
+        type: "alert",
+        isRead: false,
+        createdAt: new Date().toISOString()
+      });
+      
+      saveDB(db);
+      
+      if (attempt === retries) {
+        const finalDB = loadDB();
+        if (finalDB.currentAffairsStats) {
+          finalDB.currentAffairsStats.automationStatus = "Failed";
+          saveDB(finalDB);
+        }
+        throw new Error(`Pipeline failed after ${retries} attempts: ${err.message || err}`);
+      }
+      // Delay before next attempt
+      await new Promise(resolve => setTimeout(resolve, 5000 * attempt));
+    }
+  }
+}
+
+export async function checkAndRunScheduledPipeline(): Promise<void> {
+  if (isPipelineRunning) {
+    console.log("[Scheduler] Pipeline is already running. Skipping trigger.");
+    return;
+  }
+  isPipelineRunning = true;
+  try {
+    const db = loadDB();
+    const now = new Date();
+    // Indian Standard Time calculation (UTC+5:30)
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istTime = new Date(now.getTime() + istOffset);
+
+    const year = istTime.getUTCFullYear();
+    const month = istTime.getUTCMonth() + 1;
+    const date = istTime.getUTCDate();
+    const hour = istTime.getUTCHours();
+    
+    // We target 05:00 AM IST.
+    // If current time >= 05:00 AM IST, today's slot is the target.
+    // If current time < 05:00 AM IST, yesterday's slot is target.
+    let targetYear = year;
+    let targetMonth = month;
+    let targetDate = date;
+    
+    if (hour < 5) {
+      const yesterdayIST = new Date(istTime.getTime() - 24 * 60 * 60 * 1000);
+      targetYear = yesterdayIST.getUTCFullYear();
+      targetMonth = yesterdayIST.getUTCMonth() + 1;
+      targetDate = yesterdayIST.getUTCDate();
+    }
+    
+    const slotId = `daily-05:00-${targetYear}-${targetMonth.toString().padStart(2, '0')}-${targetDate.toString().padStart(2, '0')}`;
+    
+    if (!db.currentAffairsStats) {
+      db.currentAffairsStats = {
+        questionsGeneratedToday: 0,
+        questionsPublished: 0,
+        questionsRejected: 0,
+        duplicateCount: 0,
+        latestUpdateTime: new Date().toISOString(),
+        automationStatus: "Active",
+        cronJobStatus: "Healthy",
+        lastRunSlots: []
+      };
+    }
+    
+    const lastRunSlots = db.currentAffairsStats.lastRunSlots || [];
+    
+    // Calculate Next Scheduled Run (today's or tomorrow's 05:00 AM IST)
+    let nextScheduledRunStr = "";
+    if (hour < 5) {
+      nextScheduledRunStr = `${year}-${month.toString().padStart(2, '0')}-${date.toString().padStart(2, '0')} 05:00 AM IST`;
+    } else {
+      const tomorrowIST = new Date(istTime.getTime() + 24 * 60 * 60 * 1000);
+      const ty = tomorrowIST.getUTCFullYear();
+      const tm = tomorrowIST.getUTCMonth() + 1;
+      const td = tomorrowIST.getUTCDate();
+      nextScheduledRunStr = `${ty}-${tm.toString().padStart(2, '0')}-${td.toString().padStart(2, '0')} 05:00 AM IST`;
+    }
+    
+    db.currentAffairsStats.nextScheduledRun = nextScheduledRunStr;
+    saveDB(db);
+    
+    if (!lastRunSlots.includes(slotId)) {
+      console.log(`[Scheduler] Slot ${slotId} is due and has not run. Triggering daily pipeline...`);
+      
+      // Update status to Generating
+      const genDB = loadDB();
+      if (genDB.currentAffairsStats) {
+        genDB.currentAffairsStats.automationStatus = "Generating";
+        saveDB(genDB);
+      }
+      
+      try {
+        await runCurrentAffairsPipelineWithRetry(false);
+        
+        // Reload to safely log success
+        const updatedDB = loadDB();
+        if (!updatedDB.currentAffairsStats) {
+          updatedDB.currentAffairsStats = {
+            questionsGeneratedToday: 0,
+            questionsPublished: 0,
+            questionsRejected: 0,
+            duplicateCount: 0,
+            latestUpdateTime: new Date().toISOString(),
+            automationStatus: "Active",
+            cronJobStatus: "Healthy",
+            lastRunSlots: []
+          };
+        }
+        if (!updatedDB.currentAffairsStats.lastRunSlots) {
+          updatedDB.currentAffairsStats.lastRunSlots = [];
+        }
+        updatedDB.currentAffairsStats.lastRunSlots.push(slotId);
+        updatedDB.currentAffairsStats.automationStatus = "Active";
+        updatedDB.currentAffairsStats.cronJobStatus = "Healthy";
+        updatedDB.currentAffairsStats.lastSuccessfulUpdate = new Date().toISOString();
+        saveDB(updatedDB);
+        console.log(`[Scheduler] Daily pipeline successfully executed and logged for slot ${slotId}`);
+      } catch (pipelineErr: any) {
+        console.error(`[Scheduler] Daily pipeline failed for slot ${slotId}:`, pipelineErr);
+        
+        const updatedDB = loadDB();
+        if (updatedDB.currentAffairsStats) {
+          updatedDB.currentAffairsStats.automationStatus = "Active";
+          updatedDB.currentAffairsStats.cronJobStatus = "Degraded";
+          updatedDB.currentAffairsStats.lastFailedUpdate = new Date().toISOString();
+          saveDB(updatedDB);
+        }
+      }
+    }
+  } catch (err) {
+    console.error("[Scheduler] Error in checkAndRunScheduledPipeline:", err);
+  } finally {
+    isPipelineRunning = false;
+  }
+}
+
 function startCurrentAffairsCron() {
   console.log("Current Affairs Daily Background Scheduler is active & running.");
   
+  // Initial check on boot (delayed to let DB initialize fully)
+  setTimeout(() => {
+    checkAndRunScheduledPipeline().catch(err => console.error("Initial check pipeline failed:", err));
+  }, 10000);
+  
   // Check schedule every minute
   setInterval(async () => {
-    try {
-      const db = loadDB();
-      const now = new Date();
-      // Indian Standard Time calculation (UTC+5:30)
-      const istOffset = 5.5 * 60 * 60 * 1000;
-      const istTime = new Date(now.getTime() + istOffset);
-
-      const hour = istTime.getUTCHours();
-      const minute = istTime.getUTCMinutes();
-      const dayStr = `${istTime.getUTCFullYear()}-${istTime.getUTCMonth() + 1}-${istTime.getUTCDate()}`;
-
-      // Schedules: 05:00 AM, 10:00 AM, 04:00 PM, 09:00 PM IST
-      const isScheduledHour = (hour === 5 || hour === 10 || hour === 16 || hour === 21) && (minute === 0);
-      if (isScheduledHour) {
-        const slotId = `${dayStr}-${hour.toString().padStart(2, "0")}:00`;
-        const lastRunSlots = db.currentAffairsStats?.lastRunSlots || [];
-
-        if (!lastRunSlots.includes(slotId)) {
-          console.log(`Cron scheduler matched target slot: ${slotId} IST. Triggering automated current affairs update...`);
-          
-          // Execute pipeline
-          await runCurrentAffairsPipeline(false);
-          
-          // Re-load to append run slot cleanly
-          const updatedDB = loadDB();
-          if (!updatedDB.currentAffairsStats) {
-            updatedDB.currentAffairsStats = {
-              questionsGeneratedToday: 0,
-              questionsPublished: 0,
-              questionsRejected: 0,
-              duplicateCount: 0,
-              latestUpdateTime: new Date().toISOString(),
-              automationStatus: "Active",
-              cronJobStatus: "Healthy",
-              lastRunSlots: []
-            };
-          }
-          updatedDB.currentAffairsStats.lastRunSlots.push(slotId);
-          saveDB(updatedDB);
-          console.log(`Scheduler run logged successfully for slot: ${slotId}`);
-        }
-      }
-    } catch (err) {
-      console.error("Daily background scheduler ticking error:", err);
-    }
-  }, 60000); // Check every minute
+    await checkAndRunScheduledPipeline();
+  }, 60000);
 }
 
 // Start current affairs background automation daemon

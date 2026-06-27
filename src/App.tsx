@@ -555,6 +555,7 @@ export default function App() {
           onNavigate={(view, arg) => {
             changeView(view, arg);
           }}
+          onSelectCategory={setSelectedCategory}
           quizzes={quizzes}
           onSelectQuiz={handleSelectQuiz}
         />
