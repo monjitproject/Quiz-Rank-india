@@ -1,0 +1,3 @@
+# Single Page Application redirect rule for Netlify and Cloudflare Pages
+# Directs all non-file sub-requests to index.html for frontend HTML5 client-side routing
+/*    /index.html   200
