@@ -320,33 +320,53 @@ export function Header({ userName, onSetUserName, onNavigate, quizzes, onSelectQ
               {isDarkMode ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
             </button>
 
-            {/* Login & Register Buttons */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => {
-                  setAuthType("login");
-                  setAuthModalOpen(true);
-                  setAuthSuccessMsg("");
-                  setNotifDropdownOpen(false);
-                  setProfileDropdownOpen(false);
-                }}
-                className="text-slate-700 hover:text-indigo-600 font-extrabold text-xs px-3 py-2 cursor-pointer transition-colors"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => {
-                  setAuthType("register");
-                  setAuthModalOpen(true);
-                  setAuthSuccessMsg("");
-                  setNotifDropdownOpen(false);
-                  setProfileDropdownOpen(false);
-                }}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs px-4 py-2 rounded-full cursor-pointer transition-all shadow-sm shadow-indigo-600/10 hover:-translate-y-0.5 shrink-0"
-              >
-                Register
-              </button>
-            </div>
+            {/* Candidate Profile Avatar / Auth Buttons */}
+            {userName ? (
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setProfileDropdownOpen(!profileDropdownOpen);
+                    setNotifDropdownOpen(false);
+                  }}
+                  className="flex items-center gap-1.5 p-1 hover:bg-slate-50 rounded-full transition-colors cursor-pointer text-slate-700 border border-slate-100 pr-3"
+                >
+                  <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xs uppercase shadow-sm">
+                    {userName.charAt(0)}
+                  </div>
+                  <span className="hidden sm:inline text-xs font-black truncate max-w-[90px] text-slate-700">
+                    {userName}
+                  </span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setAuthType("login");
+                    setAuthModalOpen(true);
+                    setAuthSuccessMsg("");
+                    setNotifDropdownOpen(false);
+                    setProfileDropdownOpen(false);
+                  }}
+                  className="text-slate-700 hover:text-indigo-600 font-extrabold text-xs px-3 py-2 cursor-pointer transition-colors"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => {
+                    setAuthType("register");
+                    setAuthModalOpen(true);
+                    setAuthSuccessMsg("");
+                    setNotifDropdownOpen(false);
+                    setProfileDropdownOpen(false);
+                  }}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs px-4 py-2 rounded-full cursor-pointer transition-all shadow-sm shadow-indigo-600/10 hover:-translate-y-0.5 shrink-0"
+                >
+                  Register
+                </button>
+              </div>
+            )}
 
             {/* Candidate Identity configuration drawer trigger if clicked */}
             {profileDropdownOpen && (
@@ -372,6 +392,15 @@ export function Header({ userName, onSetUserName, onNavigate, quizzes, onSelectQ
                   className="w-full text-left p-2 hover:bg-slate-50 rounded-xl text-xs font-semibold text-slate-700 inline-flex items-center gap-2 cursor-pointer border-t border-slate-50"
                 >
                   <ShieldCheck className="w-4 h-4 text-blue-500" /> Admin Console
+                </button>
+                <button
+                  onClick={() => {
+                    setProfileDropdownOpen(false);
+                    onSetUserName("");
+                  }}
+                  className="w-full text-left p-2 hover:bg-rose-50 text-rose-600 rounded-xl text-xs font-semibold inline-flex items-center gap-2 cursor-pointer border-t border-slate-50"
+                >
+                  <LogOut className="w-4 h-4 text-rose-500" /> Logout Profile
                 </button>
               </div>
             )}

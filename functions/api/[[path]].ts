@@ -1,4 +1,5 @@
 import dbData from "../../data.json";
+import { getVirtualQuiz, getVirtualQuestions } from "../../src/data/virtualGenerator";
 
 // In-memory clone of database to simulate writes
 const db: any = JSON.parse(JSON.stringify(dbData));
@@ -68,13 +69,28 @@ export const onRequest = async (context: {
       return new Response(JSON.stringify(db.quizzes || []), { headers });
     }
     
-    const quiz = db.quizzes.find((q: any) => q.id === id);
+    let quiz = db.quizzes.find((q: any) => q.id === id);
+    if (!quiz && id && id.startsWith("virtual-")) {
+      const parts = id.split("-");
+      const testNumber = parseInt(parts.pop() || "1", 10);
+      const categoryId = parts.slice(1).join("-");
+      quiz = getVirtualQuiz(categoryId, testNumber);
+    }
+    
     if (!quiz) {
       return new Response(JSON.stringify({ error: "Quiz not found" }), { status: 404, headers });
     }
 
     if (pathSegments[2] === "questions") {
-      const questions = db.questions.filter((q: any) => q.quizId === id);
+      let questions = [];
+      if (id && id.startsWith("virtual-")) {
+        const parts = id.split("-");
+        const testNumber = parseInt(parts.pop() || "1", 10);
+        const categoryId = parts.slice(1).join("-");
+        questions = getVirtualQuestions(categoryId, testNumber);
+      } else {
+        questions = db.questions.filter((q: any) => q.quizId === id);
+      }
       return new Response(JSON.stringify(questions), { headers });
     }
 
@@ -84,7 +100,16 @@ export const onRequest = async (context: {
         const answers = body.answers || {}; 
         const userName = body.userName || "Aspirant";
         
-        const questions = db.questions.filter((q: any) => q.quizId === id);
+        let questions = [];
+        if (id && id.startsWith("virtual-")) {
+          const parts = id.split("-");
+          const testNumber = parseInt(parts.pop() || "1", 10);
+          const categoryId = parts.slice(1).join("-");
+          questions = getVirtualQuestions(categoryId, testNumber);
+        } else {
+          questions = db.questions.filter((q: any) => q.quizId === id);
+        }
+
         let correctCount = 0;
         const questionResults = questions.map((q: any) => {
           const selected = answers[q.id];
