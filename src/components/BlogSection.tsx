@@ -3,7 +3,7 @@
  * Fully compliant with AdSense Policies, Google Helpful Content Guidelines, and E-E-A-T Principles.
  */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { BlogPost } from "../types";
 import { PREMIUM_BLOG_POSTS } from "../data/premiumBlogs";
 import { 
@@ -132,7 +132,17 @@ function RichMarkdownRenderer({ content }: { content: string }) {
   return <div className="space-y-1">{elements}</div>;
 }
 
-export function BlogSection() {
+export function BlogSection({
+  initialSlug,
+  initialCategory,
+  initialFilter,
+  onViewChange
+}: {
+  initialSlug?: string | null;
+  initialCategory?: string | null;
+  initialFilter?: "latest" | "trending" | null;
+  onViewChange?: (view: string, arg?: any) => void;
+} = {}) {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
@@ -169,6 +179,59 @@ export function BlogSection() {
   useEffect(() => {
     fetchBlogs();
   }, []);
+
+  // Sync initialSlug and initialCategory
+  useEffect(() => {
+    if (blogs && blogs.length > 0) {
+      if (initialSlug) {
+        const post = blogs.find(b => b.slug === initialSlug || encodeURIComponent(b.slug) === initialSlug);
+        if (post) {
+          setSelectedPost(post);
+        } else {
+          setSelectedPost(null);
+        }
+      } else {
+        setSelectedPost(null);
+      }
+    }
+  }, [initialSlug, blogs]);
+
+  useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+    } else {
+      setSelectedCategory("All");
+    }
+  }, [initialCategory]);
+
+  // Sync state changes to URL
+  const lastSyncRef = useRef<{ slug?: string | null; category?: string | null }>({});
+
+  useEffect(() => {
+    lastSyncRef.current = { slug: initialSlug, category: initialCategory };
+  }, [initialSlug, initialCategory]);
+
+  useEffect(() => {
+    const currentSlug = selectedPost ? selectedPost.slug : null;
+    if (currentSlug !== lastSyncRef.current.slug) {
+      if (selectedPost) {
+        onViewChange?.("blog-detail", selectedPost.slug);
+      } else {
+        onViewChange?.("blog", null);
+      }
+    }
+  }, [selectedPost]);
+
+  useEffect(() => {
+    const currentCategory = selectedCategory !== "All" ? selectedCategory : null;
+    if (currentCategory !== lastSyncRef.current.category) {
+      if (selectedCategory !== "All") {
+        onViewChange?.("blog-category", selectedCategory);
+      } else {
+        onViewChange?.("blog", null);
+      }
+    }
+  }, [selectedCategory]);
 
   // Jump smoothly to the top when an article is loaded
   useEffect(() => {
@@ -261,7 +324,17 @@ export function BlogSection() {
     "Career Guidance"
   ];
 
-  const filteredBlogs = blogs.filter(post => {
+  const sortedBlogs = useMemo(() => {
+    let result = [...blogs];
+    if (initialFilter === "latest") {
+      result.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    } else if (initialFilter === "trending") {
+      result.sort((a, b) => b.views - a.views);
+    }
+    return result;
+  }, [blogs, initialFilter]);
+
+  const filteredBlogs = sortedBlogs.filter(post => {
     const matchSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         (post.primaryKeyword && post.primaryKeyword.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -273,7 +346,9 @@ export function BlogSection() {
   // Featured Article is always the first premium post (or the latest generated)
   const featuredPost = filteredBlogs.length > 0 ? filteredBlogs[0] : null;
   const otherPosts = filteredBlogs.length > 1 ? filteredBlogs.slice(1) : [];
-  const trendingPosts = blogs.slice(0, 4); // Popular side list
+  const trendingPosts = useMemo(() => {
+    return [...blogs].sort((a, b) => b.views - a.views).slice(0, 4);
+  }, [blogs]);
 
   return (
     <div ref={articleTopRef} className="max-w-7xl mx-auto px-4 py-8 space-y-12">

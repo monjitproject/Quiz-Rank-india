@@ -62,6 +62,20 @@ export default function App() {
     } else if (pathname === "/blog") {
       setActiveView("blog");
       setActiveViewArg(null);
+    } else if (pathname.startsWith("/blog/")) {
+      const slug = pathname.replace("/blog/", "");
+      setActiveView("blog-detail");
+      setActiveViewArg(slug);
+    } else if (pathname.startsWith("/category/")) {
+      const category = decodeURIComponent(pathname.replace("/category/", ""));
+      setActiveView("blog-category");
+      setActiveViewArg(category);
+    } else if (pathname === "/latest") {
+      setActiveView("blog-latest");
+      setActiveViewArg(null);
+    } else if (pathname === "/trending") {
+      setActiveView("blog-trending");
+      setActiveViewArg(null);
     } else if (pathname.startsWith("/static-page/")) {
       const pageId = pathname.replace("/static-page/", "");
       setActiveView("static-page");
@@ -92,6 +106,10 @@ export default function App() {
       else if (view === "admin") path = "/admin";
       else if (view === "leaderboard") path = "/leaderboard";
       else if (view === "blog") path = "/blog";
+      else if (view === "blog-detail") path = `/blog/${arg}`;
+      else if (view === "blog-category") path = `/category/${encodeURIComponent(arg)}`;
+      else if (view === "blog-latest") path = "/latest";
+      else if (view === "blog-trending") path = "/trending";
       else if (view === "static-page") path = `/static-page/${arg}`;
       else if (view === "quiz-player" && arg) path = `/quiz/${arg.id}`;
       
@@ -500,7 +518,28 @@ export default function App() {
       case "leaderboard":
         return <LeaderboardSection />;
       case "blog":
-        return <BlogSection />;
+      case "blog-detail":
+      case "blog-category":
+      case "blog-latest":
+      case "blog-trending":
+        return (
+          <BlogSection
+            initialSlug={activeView === "blog-detail" ? activeViewArg : null}
+            initialCategory={activeView === "blog-category" ? activeViewArg : null}
+            initialFilter={
+              activeView === "blog-latest" ? "latest" : activeView === "blog-trending" ? "trending" : null
+            }
+            onViewChange={(newView, arg) => {
+              if (newView === "blog-detail") {
+                changeView("blog-detail", arg);
+              } else if (newView === "blog-category") {
+                changeView("blog-category", arg);
+              } else {
+                changeView("blog");
+              }
+            }}
+          />
+        );
       default:
         return renderHomeView();
     }

@@ -1,8 +1,23 @@
 import dbData from "../../data.json";
 import { getVirtualQuiz, getVirtualQuestions } from "../../src/data/virtualGenerator";
+import { PREMIUM_BLOG_POSTS } from "../../src/data/premiumBlogs";
 
 // In-memory clone of database to simulate writes
 const db: any = JSON.parse(JSON.stringify(dbData));
+
+// Completely purge old low-quality blog posts and seed with pristine premium posts
+if (!db.blogs || db.blogs.length === 0 || !db.blogs.some((b: any) => b.id.startsWith("premium-"))) {
+  db.blogs = PREMIUM_BLOG_POSTS;
+} else {
+  // Retain only premium or newly dynamic generated articles
+  db.blogs = db.blogs.filter((b: any) => b.id.startsWith("premium-") || b.id.startsWith("gen-") || b.id.startsWith("blog-ai-"));
+  // Ensure all premium articles exist
+  for (const prem of PREMIUM_BLOG_POSTS) {
+    if (!db.blogs.some((b: any) => b.id === prem.id)) {
+      db.blogs.push(prem);
+    }
+  }
+}
 
 export const onRequest = async (context: {
   request: Request;
@@ -13,12 +28,15 @@ export const onRequest = async (context: {
   const pathSegments = context.params.path as string[] || [];
   const method = context.request.method;
   
-  // Headers with CORS and JSON
+  // Headers with CORS, JSON, and Cache Control to prevent stale dynamic content
   const headers = new Headers({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS, DELETE, PUT",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0"
   });
 
   if (method === "OPTIONS") {
