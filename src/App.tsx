@@ -41,65 +41,6 @@ export default function App() {
   const [activeView, setActiveView] = useState<string>("home");
   const [activeViewArg, setActiveViewArg] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [envStatus, setEnvStatus] = useState<{ hasGeminiKey: boolean; checked: boolean }>({
-    hasGeminiKey: true,
-    checked: false
-  });
-
-  const syncRouteFromUrl = (currentQuizzes: Quiz[]) => {
-    if (typeof window === "undefined") return;
-    const pathname = window.location.pathname;
-    
-    if (pathname === "/dashboard") {
-      setActiveView("dashboard");
-      setActiveViewArg(null);
-    } else if (pathname === "/admin") {
-      setActiveView("admin");
-      setActiveViewArg(null);
-    } else if (pathname === "/leaderboard") {
-      setActiveView("leaderboard");
-      setActiveViewArg(null);
-    } else if (pathname === "/blog") {
-      setActiveView("blog");
-      setActiveViewArg(null);
-    } else if (pathname.startsWith("/static-page/")) {
-      const pageId = pathname.replace("/static-page/", "");
-      setActiveView("static-page");
-      setActiveViewArg(pageId);
-    } else if (pathname.startsWith("/quiz/")) {
-      const quizId = pathname.replace("/quiz/", "");
-      const selected = currentQuizzes.find(q => q.id === quizId);
-      if (selected) {
-        setActiveView("quiz-player");
-        setActiveViewArg(selected);
-      } else {
-        setActiveView("home");
-        setActiveViewArg(null);
-      }
-    } else {
-      setActiveView("home");
-      setActiveViewArg(null);
-    }
-  };
-
-  const changeView = (view: string, arg: any = null, pushState = true) => {
-    setActiveView(view);
-    setActiveViewArg(arg);
-    
-    if (pushState && typeof window !== "undefined") {
-      let path = "/";
-      if (view === "dashboard") path = "/dashboard";
-      else if (view === "admin") path = "/admin";
-      else if (view === "leaderboard") path = "/leaderboard";
-      else if (view === "blog") path = "/blog";
-      else if (view === "static-page") path = `/static-page/${arg}`;
-      else if (view === "quiz-player" && arg) path = `/quiz/${arg.id}`;
-      
-      if (window.location.pathname !== path) {
-        window.history.pushState(null, "", path);
-      }
-    }
-  };
 
   const loadQuizzes = () => {
     fetch("/api/quizzes")
@@ -110,23 +51,6 @@ export default function App() {
 
   useEffect(() => {
     setLoading(true);
-    
-    // Check environment status
-    fetch("/api/health")
-      .then(res => res.json())
-      .then(data => {
-        setEnvStatus({
-          hasGeminiKey: !!data.hasGeminiKey,
-          checked: true
-        });
-      })
-      .catch(() => {
-        setEnvStatus({
-          hasGeminiKey: true,
-          checked: true
-        });
-      });
-
     // Fetch initial datasets including premium blogs
     Promise.all([
       fetch("/api/quizzes").then(res => res.json()),
@@ -142,21 +66,12 @@ export default function App() {
           setBlogs(PREMIUM_BLOG_POSTS);
         }
         setLoading(false);
-        syncRouteFromUrl(quizzesData);
       })
       .catch(err => {
         console.error("Initial load failed:", err);
         setLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-    const handlePopState = () => {
-      syncRouteFromUrl(quizzes);
-    };
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, [quizzes]);
 
   useEffect(() => {
     try {
@@ -169,7 +84,8 @@ export default function App() {
   const handleSelectQuiz = async (quizId: string) => {
     const selected = quizzes.find(q => q.id === quizId);
     if (selected) {
-      changeView("quiz-player", selected);
+      setActiveView("quiz-player");
+      setActiveViewArg(selected);
       return;
     }
 
@@ -180,7 +96,8 @@ export default function App() {
         if (res.ok) {
           const fetchedQuiz = await res.json();
           setQuizzes(prev => [...prev, fetchedQuiz]);
-          changeView("quiz-player", fetchedQuiz);
+          setActiveView("quiz-player");
+          setActiveViewArg(fetchedQuiz);
         } else {
           console.error("Failed to load virtual quiz:", quizId);
         }
@@ -217,33 +134,6 @@ export default function App() {
   const renderHomeView = () => {
     return (
       <div className="space-y-12">
-        {envStatus.checked && !envStatus.hasGeminiKey && (
-          <div className="max-w-7xl mx-auto px-4 pt-6">
-            <div className="bg-amber-50/90 border border-amber-200/60 rounded-3xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm shadow-amber-500/5">
-              <div className="flex gap-4 items-start">
-                <div className="bg-amber-100 p-3 rounded-2xl text-amber-700 mt-1 md:mt-0">
-                  <AlertTriangle className="w-6 h-6 animate-pulse" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-900 text-sm md:text-base">Gemini API Key Required</h3>
-                  <p className="text-slate-500 text-xs mt-1 max-w-2xl">
-                    Our dynamic current affairs pipeline, subject quizzes, and premium article generator rely on the Gemini API. 
-                    Please set your <code className="bg-amber-100/50 border border-amber-200 px-1.5 py-0.5 rounded font-mono font-bold text-amber-700">GEMINI_API_KEY</code> environment variable in your server configuration panel.
-                  </p>
-                </div>
-              </div>
-              <a 
-                href="https://aistudio.google.com/" 
-                target="_blank" 
-                rel="noreferrer"
-                className="bg-amber-600 hover:bg-amber-700 text-white font-black text-xs px-5 py-3 rounded-2xl cursor-pointer shadow-sm shadow-amber-600/20 whitespace-nowrap transition-all self-end md:self-center"
-              >
-                Get API Key
-              </a>
-            </div>
-          </div>
-        )}
-
         {/* Premium Hero block */}
         <HeroSection
           categories={categories}
@@ -254,6 +144,14 @@ export default function App() {
           quizzes={quizzes}
           onSelectQuiz={handleSelectQuiz}
         />
+
+        {/* AdSense Top Leaderboard Ad Slot */}
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-4 text-center text-[10px] tracking-wider text-slate-400 font-mono font-semibold uppercase relative overflow-hidden">
+            <span className="absolute top-1 left-2 text-[8px] opacity-40">AdSense Unit (Responsive 728x90)</span>
+            <div className="py-4">Recommended Exam Prep Books & Guides - Google Ads Placement Zone</div>
+          </div>
+        </div>
 
         {/* Explore 20+ Exam Categories section */}
         <ExploreCategories
@@ -272,6 +170,14 @@ export default function App() {
           onSelectCategory={setSelectedCategory}
           onSelectQuiz={handleSelectQuiz}
         />
+
+        {/* AdSense Mid-Page Inline Banner Ad Slot */}
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-4 text-center text-[10px] tracking-wider text-slate-400 font-mono font-semibold uppercase relative overflow-hidden">
+            <span className="absolute top-1 left-2 text-[8px] opacity-40">AdSense Unit (Responsive Rectangle)</span>
+            <div className="py-8">Aspirant Coaching Admissions Open - High Speed Mock Prep Banner Slot</div>
+          </div>
+        </div>
 
         {/* Most Popular Government Exams directories */}
         <PopularExams
@@ -324,7 +230,7 @@ export default function App() {
               <p className="text-slate-400 text-xs mt-0.5">Stay informed with the latest syllabus frameworks and job openings.</p>
             </div>
             <button
-              onClick={() => changeView("blog")}
+              onClick={() => setActiveView("blog")}
               className="text-indigo-600 hover:text-indigo-700 font-extrabold text-xs inline-flex items-center gap-1.5 hover:underline cursor-pointer"
             >
               View Full Notice Blog <ArrowRight className="w-4 h-4" />
@@ -335,7 +241,7 @@ export default function App() {
             {blogs.slice(0, 3).map((post) => (
               <div
                 key={post.id}
-                onClick={() => changeView("blog")}
+                onClick={() => setActiveView("blog")}
                 className="bg-white rounded-3xl border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100/40 transition-all overflow-hidden cursor-pointer flex flex-col justify-between group"
               >
                 <div>
@@ -469,7 +375,7 @@ export default function App() {
             quiz={activeViewArg}
             userName={userName}
             onFinished={(res) => setResults(prev => [...prev, res])}
-            onBack={() => { changeView("home"); loadQuizzes(); }}
+            onBack={() => { setActiveView("home"); loadQuizzes(); }}
           />
         );
       case "dashboard":
@@ -494,7 +400,7 @@ export default function App() {
         return (
           <StaticPages
             pageId={activeViewArg}
-            onBack={() => changeView("home")}
+            onBack={() => setActiveView("home")}
           />
         );
       case "leaderboard":
@@ -514,7 +420,8 @@ export default function App() {
           userName={userName}
           onSetUserName={setUserName}
           onNavigate={(view, arg) => {
-            changeView(view, arg);
+            setActiveView(view);
+            if (arg !== undefined) setActiveViewArg(arg);
           }}
           quizzes={quizzes}
           onSelectQuiz={handleSelectQuiz}
@@ -529,7 +436,8 @@ export default function App() {
       {/* Elegant Disclosures and Compliance Footer */}
       <Footer
         onNavigateStatic={(pageId) => {
-          changeView("static-page", pageId);
+          setActiveView("static-page");
+          setActiveViewArg(pageId);
           window.scrollTo(0,0);
         }}
       />

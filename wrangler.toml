@@ -1,9 +1,0 @@
-# Wrangler configuration for QuizRank India - Production Cloudflare Deployment
-name = "quizrank-india"
-pages_build_output_dir = "dist"
-compatibility_date = "2024-03-01"
-compatibility_flags = ["nodejs_compat"]
-
-[vars]
-NODE_VERSION = "20"
-NODE_ENV = "production"
