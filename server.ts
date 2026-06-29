@@ -2837,99 +2837,113 @@ app.post("/api/current-affairs/rss-trigger", async (req: Request, res: Response)
   }
 });
 
+// Helper function to fetch news from RSS feed, filter for items within last 7 days, and store unique ones.
+export async function runRssSyncInternal() {
+  const rssUrl = "https://news.google.com/rss/search?q=government+schemes+india+PIB&hl=en-IN&gl=IN&ceid=IN:en";
+  console.log(`[SYNC] Fetching news RSS feed: ${rssUrl}`);
+
+  const response = await fetch(rssUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch RSS feed for sync: ${response.statusText}`);
+  }
+  const xmlText = await response.text();
+
+  const rawItems = parseRssFeed(xmlText);
+  console.log(`[SYNC] Parsed ${rawItems.length} news items from RSS feed`);
+
+  const now = new Date();
+  const validItems: any[] = [];
+  const discardedItems: any[] = [];
+
+  for (const item of rawItems) {
+    const pubDate = new Date(item.pubDate);
+    const isDateValid = !isNaN(pubDate.getTime());
+
+    let reason = "";
+    let isValid = false;
+
+    if (!isDateValid) {
+      reason = "Invalid pubDate format";
+    } else {
+      const diffTime = Math.abs(now.getTime() - pubDate.getTime());
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
+      if (diffDays <= 7) {
+        isValid = true;
+      } else {
+        reason = `Item is ${diffDays.toFixed(1)} days old (Exceeds 7-day rule limit)`;
+      }
+    }
+
+    if (isValid) {
+      validItems.push(item);
+    } else {
+      discardedItems.push({
+        title: item.title,
+        pubDate: item.pubDate,
+        reason
+      });
+    }
+  }
+
+  const db = loadDB();
+  if (!db.currentAffairsEvents) {
+    db.currentAffairsEvents = [];
+  }
+
+  let newlyStoredCount = 0;
+  const storedItems: any[] = [];
+
+  for (const item of validItems) {
+    const isUnique = !db.currentAffairsEvents.some((e: any) => e.title.trim() === item.title.trim());
+    if (isUnique) {
+      const newEvent = {
+        id: "evt-sync-" + Date.now() + "-" + Math.random().toString(36).substr(2, 5),
+        title: item.title,
+        description: item.description || "आरएसएस सरकारी विज्ञप्ति से प्राप्त नवीनतम विवरण।",
+        date: item.pubDate ? new Date(item.pubDate).toISOString().split("T")[0] : now.toISOString().split("T")[0],
+        source: "RSS Feed / Press Release",
+        category: "सरकारी नीतियां",
+        createdAt: new Date().toISOString()
+      };
+      db.currentAffairsEvents.unshift(newEvent);
+      storedItems.push(newEvent);
+      newlyStoredCount++;
+    }
+  }
+
+  // Keep events array within a healthy limit
+  db.currentAffairsEvents = db.currentAffairsEvents.slice(0, 50);
+
+  // Save DB
+  saveDB(db);
+
+  return {
+    totalFetched: rawItems.length,
+    passed7DayRule: validItems.length,
+    discardedCount: discardedItems.length,
+    newlyStoredUniqueCount: newlyStoredCount,
+    storedItems,
+    discardedItems
+  };
+}
+
 // Route: Fetches daily government news via RSS feed, filters for items within the last 7 days, and stores unique items in the database
 app.all("/api/current-affairs/sync", async (req: Request, res: Response) => {
   try {
-    const rssUrl = "https://news.google.com/rss/search?q=government+schemes+india+PIB&hl=en-IN&gl=IN&ceid=IN:en";
-    console.log(`[SYNC] Fetching news RSS feed: ${rssUrl}`);
-
-    const response = await fetch(rssUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch RSS feed for sync: ${response.statusText}`);
-    }
-    const xmlText = await response.text();
-
-    const rawItems = parseRssFeed(xmlText);
-    console.log(`[SYNC] Parsed ${rawItems.length} news items from RSS feed`);
-
-    const now = new Date();
-    const validItems: any[] = [];
-    const discardedItems: any[] = [];
-
-    for (const item of rawItems) {
-      const pubDate = new Date(item.pubDate);
-      const isDateValid = !isNaN(pubDate.getTime());
-
-      let reason = "";
-      let isValid = false;
-
-      if (!isDateValid) {
-        reason = "Invalid pubDate format";
-      } else {
-        const diffTime = Math.abs(now.getTime() - pubDate.getTime());
-        const diffDays = diffTime / (1000 * 60 * 60 * 24);
-        if (diffDays <= 7) {
-          isValid = true;
-        } else {
-          reason = `Item is ${diffDays.toFixed(1)} days old (Exceeds 7-day rule limit)`;
-        }
-      }
-
-      if (isValid) {
-        validItems.push(item);
-      } else {
-        discardedItems.push({
-          title: item.title,
-          pubDate: item.pubDate,
-          reason
-        });
-      }
-    }
-
+    const result = await runRssSyncInternal();
     const db = loadDB();
-    if (!db.currentAffairsEvents) {
-      db.currentAffairsEvents = [];
-    }
-
-    let newlyStoredCount = 0;
-    const storedItems: any[] = [];
-
-    for (const item of validItems) {
-      const isUnique = !db.currentAffairsEvents.some((e: any) => e.title.trim() === item.title.trim());
-      if (isUnique) {
-        const newEvent = {
-          id: "evt-sync-" + Date.now() + "-" + Math.random().toString(36).substr(2, 5),
-          title: item.title,
-          description: item.description || "आरएसएस सरकारी विज्ञप्ति से प्राप्त नवीनतम विवरण।",
-          date: item.pubDate ? new Date(item.pubDate).toISOString().split("T")[0] : now.toISOString().split("T")[0],
-          source: "RSS Feed / Press Release",
-          category: "सरकारी नीतियां",
-          createdAt: new Date().toISOString()
-        };
-        db.currentAffairsEvents.unshift(newEvent);
-        storedItems.push(newEvent);
-        newlyStoredCount++;
-      }
-    }
-
-    // Keep events array within a healthy limit
-    db.currentAffairsEvents = db.currentAffairsEvents.slice(0, 50);
-
-    // Save DB
-    saveDB(db);
-
     res.json({
       success: true,
-      message: `Sync operation completed. Processed ${rawItems.length} feed items.`,
+      message: `Sync operation completed. Processed ${result.totalFetched} feed items.`,
       stats: {
-        totalFetched: rawItems.length,
-        passed7DayRule: validItems.length,
-        discardedCount: discardedItems.length,
-        newlyStoredUniqueCount: newlyStoredCount,
+        totalFetched: result.totalFetched,
+        passed7DayRule: result.passed7DayRule,
+        discardedCount: result.discardedCount,
+        newlyStoredUniqueCount: result.newlyStoredUniqueCount,
         totalEventsInDatabase: db.currentAffairsEvents.length
       },
-      storedItems,
-      discardedItems: discardedItems.slice(0, 10)
+      storedItems: result.storedItems,
+      discardedItems: result.discardedItems.slice(0, 10)
     });
   } catch (err: any) {
     console.error("RSS Sync API failure:", err);
@@ -3183,27 +3197,31 @@ export async function checkAndRunScheduledPipeline(): Promise<void> {
     const istOffset = 5.5 * 60 * 60 * 1000;
     const istTime = new Date(now.getTime() + istOffset);
 
-    const year = istTime.getUTCFullYear();
-    const month = istTime.getUTCMonth() + 1;
-    const date = istTime.getUTCDate();
-    const hour = istTime.getUTCHours();
+    const scheduledHours = [5, 10, 16, 21];
+    const dueSlots: Array<{ id: string; time: Date }> = [];
     
-    // We target 05:00 AM IST.
-    // If current time >= 05:00 AM IST, today's slot is the target.
-    // If current time < 05:00 AM IST, yesterday's slot is target.
-    let targetYear = year;
-    let targetMonth = month;
-    let targetDate = date;
-    
-    if (hour < 5) {
-      const yesterdayIST = new Date(istTime.getTime() - 24 * 60 * 60 * 1000);
-      targetYear = yesterdayIST.getUTCFullYear();
-      targetMonth = yesterdayIST.getUTCMonth() + 1;
-      targetDate = yesterdayIST.getUTCDate();
+    // Check today and yesterday to find due slots
+    for (const offsetDays of [0, 1]) {
+      const targetDay = new Date(istTime.getTime() - offsetDays * 24 * 60 * 60 * 1000);
+      const ty = targetDay.getUTCFullYear();
+      const tm = targetDay.getUTCMonth(); // 0-indexed
+      const td = targetDay.getUTCDate();
+      
+      for (const sh of scheduledHours) {
+        // Construct UTC equivalent of the slot's IST time
+        const slotUtcTime = Date.UTC(ty, tm, td, sh, 0, 0) - istOffset;
+        const slotTime = new Date(slotUtcTime);
+        
+        if (slotTime.getTime() <= now.getTime()) {
+          const slotId = `pipeline-slot-${ty}-${(tm + 1).toString().padStart(2, '0')}-${td.toString().padStart(2, '0')}-${sh.toString().padStart(2, '0')}:00`;
+          dueSlots.push({ id: slotId, time: slotTime });
+        }
+      }
     }
     
-    const slotId = `daily-05:00-${targetYear}-${targetMonth.toString().padStart(2, '0')}-${targetDate.toString().padStart(2, '0')}`;
-    
+    // Sort due slots: newest first
+    dueSlots.sort((a, b) => b.time.getTime() - a.time.getTime());
+
     if (!db.currentAffairsStats) {
       db.currentAffairsStats = {
         questionsGeneratedToday: 0,
@@ -3219,66 +3237,108 @@ export async function checkAndRunScheduledPipeline(): Promise<void> {
     
     const lastRunSlots = db.currentAffairsStats.lastRunSlots || [];
     
-    // Calculate Next Scheduled Run (today's or tomorrow's 05:00 AM IST)
-    let nextScheduledRunStr = "";
-    if (hour < 5) {
-      nextScheduledRunStr = `${year}-${month.toString().padStart(2, '0')}-${date.toString().padStart(2, '0')} 05:00 AM IST`;
-    } else {
-      const tomorrowIST = new Date(istTime.getTime() + 24 * 60 * 60 * 1000);
-      const ty = tomorrowIST.getUTCFullYear();
-      const tm = tomorrowIST.getUTCMonth() + 1;
-      const td = tomorrowIST.getUTCDate();
-      nextScheduledRunStr = `${ty}-${tm.toString().padStart(2, '0')}-${td.toString().padStart(2, '0')} 05:00 AM IST`;
+    // Calculate Next Scheduled Run (using [5, 10, 16, 21] slots)
+    const candidateNextSlots: Date[] = [];
+    for (const offsetDays of [0, 1]) {
+      const targetDay = new Date(istTime.getTime() + offsetDays * 24 * 60 * 60 * 1000);
+      const ty = targetDay.getUTCFullYear();
+      const tm = targetDay.getUTCMonth(); // 0-indexed
+      const td = targetDay.getUTCDate();
+      for (const sh of scheduledHours) {
+        const slotUtcTime = Date.UTC(ty, tm, td, sh, 0, 0) - istOffset;
+        const slotTime = new Date(slotUtcTime);
+        if (slotUtcTime > now.getTime()) {
+          candidateNextSlots.push(slotTime);
+        }
+      }
+    }
+    candidateNextSlots.sort((a, b) => a.getTime() - b.getTime());
+    let nextScheduledRunStr = "N/A";
+    if (candidateNextSlots.length > 0) {
+      const nextSlot = candidateNextSlots[0];
+      const nextSlotIst = new Date(nextSlot.getTime() + istOffset);
+      const ny = nextSlotIst.getUTCFullYear();
+      const nm = nextSlotIst.getUTCMonth() + 1;
+      const nd = nextSlotIst.getUTCDate();
+      const nh = nextSlotIst.getUTCHours();
+      const ampm = nh >= 12 ? "PM" : "AM";
+      const displayHour = nh % 12 === 0 ? 12 : nh % 12;
+      nextScheduledRunStr = `${ny}-${nm.toString().padStart(2, '0')}-${nd.toString().padStart(2, '0')} ${displayHour.toString().padStart(2, '0')}:00 ${ampm} IST`;
     }
     
     db.currentAffairsStats.nextScheduledRun = nextScheduledRunStr;
     saveDB(db);
     
-    if (!lastRunSlots.includes(slotId)) {
-      console.log(`[Scheduler] Slot ${slotId} is due and has not run. Triggering daily pipeline...`);
+    if (dueSlots.length > 0) {
+      const latestDue = dueSlots[0];
+      const slotId = latestDue.id;
       
-      // Update status to Generating
-      const genDB = loadDB();
-      if (genDB.currentAffairsStats) {
-        genDB.currentAffairsStats.automationStatus = "Generating";
-        saveDB(genDB);
-      }
-      
-      try {
-        await runCurrentAffairsPipelineWithRetry(false);
+      if (!lastRunSlots.includes(slotId)) {
+        console.log(`[Scheduler] Slot ${slotId} is due and has not run. Triggering daily pipeline...`);
         
-        // Reload to safely log success
-        const updatedDB = loadDB();
-        if (!updatedDB.currentAffairsStats) {
-          updatedDB.currentAffairsStats = {
-            questionsGeneratedToday: 0,
-            questionsPublished: 0,
-            questionsRejected: 0,
-            duplicateCount: 0,
-            latestUpdateTime: new Date().toISOString(),
-            automationStatus: "Active",
-            cronJobStatus: "Healthy",
-            lastRunSlots: []
-          };
+        // Update status to Generating
+        const genDB = loadDB();
+        if (genDB.currentAffairsStats) {
+          genDB.currentAffairsStats.automationStatus = "Generating";
+          saveDB(genDB);
         }
-        if (!updatedDB.currentAffairsStats.lastRunSlots) {
-          updatedDB.currentAffairsStats.lastRunSlots = [];
-        }
-        updatedDB.currentAffairsStats.lastRunSlots.push(slotId);
-        updatedDB.currentAffairsStats.automationStatus = "Active";
-        updatedDB.currentAffairsStats.cronJobStatus = "Healthy";
-        updatedDB.currentAffairsStats.lastSuccessfulUpdate = new Date().toISOString();
-        saveDB(updatedDB);
-        console.log(`[Scheduler] Daily pipeline successfully executed and logged for slot ${slotId}`);
-      } catch (pipelineErr: any) {
-        console.error(`[Scheduler] Daily pipeline failed for slot ${slotId}:`, pipelineErr);
         
-        const updatedDB = loadDB();
-        if (updatedDB.currentAffairsStats) {
+        try {
+          // 1. Run RSS sync first to fetch the latest news from government feed
+          console.log(`[Scheduler] Auto-syncing RSS feed prior to pipeline run...`);
+          const syncResult = await runRssSyncInternal();
+          console.log(`[Scheduler] RSS auto-sync results:`, syncResult);
+
+          // 2. Run current affairs quiz generation pipeline
+          await runCurrentAffairsPipelineWithRetry(false);
+          
+          // Reload to safely log success
+          const updatedDB = loadDB();
+          if (!updatedDB.currentAffairsStats) {
+            updatedDB.currentAffairsStats = {
+              questionsGeneratedToday: 0,
+              questionsPublished: 0,
+              questionsRejected: 0,
+              duplicateCount: 0,
+              latestUpdateTime: new Date().toISOString(),
+              automationStatus: "Active",
+              cronJobStatus: "Healthy",
+              lastRunSlots: []
+            };
+          }
+          if (!updatedDB.currentAffairsStats.lastRunSlots) {
+            updatedDB.currentAffairsStats.lastRunSlots = [];
+          }
+          
+          // Mark all older due slots as completed so we don't duplicate/backlog
+          for (const s of dueSlots) {
+            if (!updatedDB.currentAffairsStats.lastRunSlots.includes(s.id)) {
+              updatedDB.currentAffairsStats.lastRunSlots.push(s.id);
+            }
+          }
+          
+          updatedDB.currentAffairsStats.lastRunSlots = updatedDB.currentAffairsStats.lastRunSlots.slice(-100);
           updatedDB.currentAffairsStats.automationStatus = "Active";
-          updatedDB.currentAffairsStats.cronJobStatus = "Degraded";
-          updatedDB.currentAffairsStats.lastFailedUpdate = new Date().toISOString();
+          updatedDB.currentAffairsStats.cronJobStatus = "Healthy";
+          updatedDB.currentAffairsStats.lastSuccessfulUpdate = new Date().toISOString();
           saveDB(updatedDB);
+          console.log(`[Scheduler] Daily pipeline successfully executed and logged for slot ${slotId}`);
+        } catch (pipelineErr: any) {
+          console.error(`[Scheduler] Daily pipeline failed for slot ${slotId}:`, pipelineErr);
+          
+          const updatedDB = loadDB();
+          if (updatedDB.currentAffairsStats) {
+            updatedDB.currentAffairsStats.automationStatus = "Active";
+            updatedDB.currentAffairsStats.cronJobStatus = "Degraded";
+            updatedDB.currentAffairsStats.lastFailedUpdate = new Date().toISOString();
+            if (!updatedDB.currentAffairsStats.lastRunSlots) {
+              updatedDB.currentAffairsStats.lastRunSlots = [];
+            }
+            if (!updatedDB.currentAffairsStats.lastRunSlots.includes(slotId)) {
+              updatedDB.currentAffairsStats.lastRunSlots.push(slotId);
+            }
+            saveDB(updatedDB);
+          }
         }
       }
     }
