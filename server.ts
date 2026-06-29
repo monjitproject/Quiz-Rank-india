@@ -66,20 +66,16 @@ function validateEnvironment() {
   if (missingVars.length > 0) {
     const errorMsg = `
 ${separator}
-🚨 STARTUP ENVIRONMENT VALIDATION ERROR 🚨
+🚨 STARTUP ENVIRONMENT VALIDATION WARNING 🚨
 The following required environment variable(s) are missing:
 ${missingVars.map(v => `   - ${v}`).join("\n")}
 
 Please configure these variables in your settings:
 - In Google AI Studio: Add them in Settings -> Secrets.
-- In Production (Cloudflare/Netlify/Vercel): Add them in the dashboard.
+- In Production: Add them in the settings dashboard.
 ${separator}
 `;
     console.error(errorMsg);
-    
-    if (process.env.NODE_ENV === "production") {
-      throw new Error(`Production Startup Failure: Missing environment variables: ${missingVars.join(", ")}`);
-    }
   } else {
     console.log("✅ Environment validation succeeded! Required secrets are loaded.");
   }
@@ -284,6 +280,50 @@ function cleanAndParseJSON(text: string): any {
 }
 
 const dbData = loadDB();
+
+let geminiRateLimitedUntil = 0;
+
+function isGeminiSuspended(): boolean {
+  return Date.now() < geminiRateLimitedUntil;
+}
+
+function isQuotaError(err: any): boolean {
+  if (!err) return false;
+  const errStr = typeof err === "string" ? err : (err.message || "") + " " + JSON.stringify(err);
+  const normalized = errStr.toLowerCase();
+  
+  // Detect standard rate limit / quota exhaustion (429)
+  const isQuota = (
+    err.status === 429 ||
+    err.statusCode === 429 ||
+    err.code === 429 ||
+    normalized.includes("429") ||
+    normalized.includes("quota") ||
+    normalized.includes("limit") ||
+    normalized.includes("resource_exhausted")
+  );
+  
+  // Detect temporary unavailability / high demand (503)
+  const isUnavailable = (
+    err.status === 503 ||
+    err.statusCode === 503 ||
+    err.code === 503 ||
+    normalized.includes("503") ||
+    normalized.includes("unavailable") ||
+    normalized.includes("high demand") ||
+    normalized.includes("temporary")
+  );
+
+  if (isQuota) {
+    geminiRateLimitedUntil = Date.now() + 5 * 60 * 1000; // Suspend Gemini for 5 minutes
+    console.warn(`[GEMINI LIMIT] 429 Rate Limit hit. Suspending Gemini queries until: ${new Date(geminiRateLimitedUntil).toLocaleTimeString()}`);
+  } else if (isUnavailable) {
+    geminiRateLimitedUntil = Date.now() + 2 * 60 * 1000; // Suspend Gemini for 2 minutes for high demand
+    console.warn(`[GEMINI LIMIT] 503 High Demand hit. Suspending Gemini queries until: ${new Date(geminiRateLimitedUntil).toLocaleTimeString()}`);
+  }
+  
+  return isQuota || isUnavailable;
+}
 
 // Initialize Gemini Client
 const ai = process.env.GEMINI_API_KEY
@@ -1813,30 +1853,7 @@ function isDuplicateQuestion(text: string, existingQuestions: Question[]): boole
   });
 }
 
-let geminiRateLimitedUntil = 0;
-
-function isGeminiSuspended(): boolean {
-  return Date.now() < geminiRateLimitedUntil;
-}
-
-function isQuotaError(err: any): boolean {
-  if (!err) return false;
-  const errStr = typeof err === "string" ? err : (err.message || "") + " " + JSON.stringify(err);
-  const normalized = errStr.toLowerCase();
-  const isQuota = (
-    err.status === 429 ||
-    err.statusCode === 429 ||
-    err.code === 429 ||
-    normalized.includes("429") ||
-    normalized.includes("quota") ||
-    normalized.includes("limit") ||
-    normalized.includes("resource_exhausted")
-  );
-  if (isQuota) {
-    geminiRateLimitedUntil = Date.now() + 5 * 60 * 1000; // Suspend Gemini for 5 minutes
-  }
-  return isQuota;
-}
+// Gemini rate limiting and suspension helpers moved to top of file
 
 async function generateUniqueQuestionsViaGemini(
   testType: string,

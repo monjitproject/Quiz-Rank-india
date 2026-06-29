@@ -15,6 +15,7 @@ import { LeaderboardSection } from "./components/LeaderboardSection";
 import { BlogSection } from "./components/BlogSection";
 import { Quiz, Category, Result, BlogPost } from "./types";
 import { PREMIUM_BLOG_POSTS } from "./data/premiumBlogs";
+import { INITIAL_CATEGORIES, INITIAL_QUIZZES } from "./data/initialData";
 import { ExploreCategories } from "./components/ExploreCategories";
 import { PopularExams } from "./components/PopularExams";
 import { SubjectPractice } from "./components/SubjectPractice";
@@ -130,37 +131,48 @@ export default function App() {
     }
   };
 
+  const safeFetchJson = async <T,>(url: string, fallback: T): Promise<T> => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        console.warn(`SafeFetch: ${url} returned status ${res.status}`);
+        return fallback;
+      }
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+        return data as T;
+      }
+      console.warn(`SafeFetch: ${url} did not return JSON, got content-type: ${contentType}`);
+      return fallback;
+    } catch (e) {
+      console.error(`SafeFetch: Error fetching ${url}:`, e);
+      return fallback;
+    }
+  };
+
   const loadQuizzes = () => {
-    fetch("/api/quizzes")
-      .then(res => res.json())
-      .then(data => setQuizzes(data))
-      .catch(err => console.error("Error loading quizzes:", err));
+    safeFetchJson<Quiz[]>("/api/quizzes", INITIAL_QUIZZES)
+      .then(data => setQuizzes(data));
   };
 
   useEffect(() => {
     setLoading(true);
     
     // Check environment status
-    fetch("/api/health")
-      .then(res => res.json())
+    safeFetchJson<{ hasGeminiKey?: boolean }>("/api/health", { hasGeminiKey: true })
       .then(data => {
         setEnvStatus({
           hasGeminiKey: !!data.hasGeminiKey,
-          checked: true
-        });
-      })
-      .catch(() => {
-        setEnvStatus({
-          hasGeminiKey: true,
           checked: true
         });
       });
 
     // Fetch initial datasets including premium blogs
     Promise.all([
-      fetch("/api/quizzes").then(res => res.json()),
-      fetch("/api/categories").then(res => res.json()),
-      fetch("/api/blogs").then(res => res.json()).catch(() => PREMIUM_BLOG_POSTS)
+      safeFetchJson<Quiz[]>("/api/quizzes", INITIAL_QUIZZES),
+      safeFetchJson<Category[]>("/api/categories", INITIAL_CATEGORIES),
+      safeFetchJson<BlogPost[]>("/api/blogs", PREMIUM_BLOG_POSTS)
     ])
       .then(([quizzesData, categoriesData, blogsData]) => {
         setQuizzes(quizzesData);
@@ -174,7 +186,7 @@ export default function App() {
         syncRouteFromUrl(quizzesData);
       })
       .catch(err => {
-        console.error("Initial load failed:", err);
+        console.error("Initial load failed in Promise.all:", err);
         setLoading(false);
       });
   }, []);
