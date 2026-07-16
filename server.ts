@@ -3383,6 +3383,11 @@ function startCurrentAffairsCron() {
 // Start current affairs background automation daemon
 startCurrentAffairsCron();
 
+// 404 fallback for unmatched API requests to prevent returning index.html
+app.all("/api/*", (req: Request, res: Response) => {
+  res.status(404).json({ error: "API route not found" });
+});
+
 // Serve frontend assets
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {

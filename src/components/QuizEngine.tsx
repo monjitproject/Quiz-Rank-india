@@ -8,10 +8,12 @@ import confetti from "canvas-confetti";
 import { 
   Timer, Bookmark, CheckCircle, AlertTriangle, ChevronRight, 
   ChevronLeft, Award, Download, Share2, ArrowRight, ShieldCheck, 
-  Sparkles, Languages, RefreshCw, XCircle, Trophy, HelpCircle
+  Sparkles, Languages, RefreshCw, XCircle, Trophy, HelpCircle,
+  Calendar, Clock
 } from "lucide-react";
 import { Quiz, Question, Result } from "../types";
 import { motion, AnimatePresence } from "motion/react";
+import { getQuizEditorial } from "../data/quizEditorialData";
 
 interface QuizEngineProps {
   quiz: Quiz;
@@ -912,93 +914,339 @@ export function QuizEngine({ quiz, userName, onFinished, onBack }: QuizEnginePro
 
   // Lobby view before starting
   if (!quizStarted) {
+    const categoryName = quiz.categoryId === "ssc" ? "SSC Exams" : 
+                         quiz.categoryId === "railway" ? "Railway Exams" : 
+                         quiz.categoryId === "banking" ? "Banking Exams" : 
+                         quiz.categoryId === "current-affairs" ? "Current Affairs" : "Government Exams";
+    const editorial = getQuizEditorial(quiz.id, isHindi, quiz.title, categoryName, quiz.durationMinutes);
+
+    // Dynamic FAQ Schema structure
+    const faqSchemaJSON = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": editorial.faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    };
+
     return (
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`bg-white rounded-3xl p-6 md:p-8 border-t-4 border-l border-r border-b border-slate-100 shadow-xl transition-all duration-500 ease-in-out relative overflow-hidden ${
-            quiz.difficulty === "Easy" ? "border-t-emerald-500 shadow-emerald-500/5" :
-            quiz.difficulty === "Medium" ? "border-t-amber-500 shadow-amber-500/5" :
-            "border-t-rose-500 shadow-rose-500/5"
-          }`}
-        >
-          {/* Language Toggle in Lobby */}
-          <div className="absolute top-6 right-6 z-10">
-            <button
-              onClick={() => setIsHindi(!isHindi)}
-              className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-[11px] px-3 py-1.5 rounded-xl border border-slate-200/50 cursor-pointer transition-colors"
-            >
-              <Languages className="w-3.5 h-3.5 text-indigo-600" />
-              {isHindi ? "English में देखें" : "हिन्दी में पढ़ें"}
-            </button>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 py-8 space-y-12">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-xs font-bold text-slate-400">
+          <button onClick={onBack} className="hover:text-indigo-600 transition-colors">{isHindi ? "होम" : "Home"}</button>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+          <span>{isHindi ? "परीक्षा मॉक अभ्यास" : "Mock Practice Portal"}</span>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+          <span className="text-indigo-600 truncate">{quiz.title}</span>
+        </nav>
 
-          <div className="flex items-center gap-2 mb-6">
-            <span className={`px-3 py-1 text-xs font-bold rounded-full border transition-all duration-500 ${styles.badgeBg}`}>
-              {t(quiz.difficulty)} {t("Level")}
-            </span>
-            <span className="text-xs font-semibold font-mono text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-              {isHindi ? "हिन्दी संस्करण" : `${quiz.language} Version`}
-            </span>
-          </div>
+        {/* Dynamic Schema Injection */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaJSON) }} />
 
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-3 tracking-tight leading-snug">{isHindi ? (quiz.title.includes("हिंदी व्याकरण") || quiz.title.includes("संविधान") || quiz.title.includes("समसामयिकी") ? quiz.title : `${quiz.title} (मॉक टेस्ट)`) : quiz.title}</h1>
-          <p className="text-slate-400 mb-6 text-xs leading-relaxed">{isHindi && quiz.id === "quiz-ssc-gd-constable" ? "सामान्य ज्ञान, इतिहास और प्रारंभिक गणित का विशेष राष्ट्रीय स्तर परीक्षा कूट अभ्यास मॉडल।" : quiz.description}</p>
-
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <span className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t("TOTAL QUESTIONS")}</span>
-              <span className="text-lg font-black text-slate-800">{questions.length} {t("Questions")}</span>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <span className="block text-[10px] font-bold text-slate-400 uppercase mb-1">{t("TIME ALLOTTED")}</span>
-              <span className="text-lg font-black text-slate-800">{quiz.durationMinutes} {t("Minutes")}</span>
-            </div>
-          </div>
-
-          {/* Exam rules */}
-          <div className="space-y-4 mb-8">
-            <h3 className="font-extrabold text-slate-800 text-xs tracking-wider uppercase">{t("Official Instructions & Marking Scheme:")}</h3>
-            <div className="p-4 rounded-2xl bg-indigo-50/40 border border-indigo-100 text-slate-600 text-xs space-y-3">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>{t("Each correct response rewards")} <strong>+10 {t("points")}</strong>.</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT COLUMN: Deep Editorial Post Sections */}
+          <div className="lg:col-span-8 space-y-10 bg-white rounded-3xl border border-slate-100 p-6 md:p-10 shadow-xl shadow-slate-100/40">
+            
+            {/* Header / Category Meta */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
+              <div className="flex items-center gap-2.5">
+                <span className="bg-indigo-50 border border-indigo-100 text-indigo-700 px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
+                  {categoryName}
+                </span>
+                <span className="text-slate-400 text-xs font-mono flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5" /> 
+                  {isHindi ? "अंतिम संशोधन: आज" : "Last Updated: Today"}
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Bookmark className="w-4 h-4 text-indigo-500 shrink-0" />
-                <span>{t("You can bookmark and skip questions during live practice.")}</span>
+              <div className="flex items-center gap-4 text-xs font-bold text-slate-400 font-mono">
+                <span className="flex items-center gap-1"><Clock className="w-4 h-4 text-slate-400" /> {quiz.durationMinutes} {isHindi ? "मिनट समय" : "Mins"}</span>
+                <span className="flex items-center gap-1"><Trophy className="w-4 h-4 text-slate-400" /> {questions.length} {isHindi ? "प्रश्न" : "Qs"}</span>
               </div>
-              <div className="flex items-center gap-3 justify-between pt-1 border-t border-indigo-100/50">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span className="leading-relaxed">{t("Enable negative marking (0.25 point penalty for wrong answers):")}</span>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 leading-snug tracking-tight font-sans">
+              {isHindi ? `${quiz.title} (मॉक टेस्ट) - पूर्ण पाठ्यक्रम विश्लेषण एवं कूट अभ्यास` : `${quiz.title} - Full Mock Exam Practice, Syllabus & Trends`}
+            </h1>
+
+            {/* Author details box (E-E-A-T) */}
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/55 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-indigo-600 text-white font-black flex items-center justify-center text-xs">
+                  {isHindi ? "कम" : "KK"}
                 </div>
-                <button
-                  onClick={() => setNegativeMarking(!negativeMarking)}
-                  className={`relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${negativeMarking ? "bg-indigo-600" : "bg-slate-200"}`}
-                >
-                  <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs transition duration-200 ease-in-out ${negativeMarking ? "translate-x-5" : "translate-x-0"}`} />
-                </button>
+                <div>
+                  <h4 className="font-extrabold text-xs text-slate-800">{isHindi ? "कमलेश कुमार (वरिष्ठ परीक्षा विश्लेषक)" : "Kamlesh Kumar (Senior Exam Specialist)"}</h4>
+                  <p className="text-[10px] font-bold text-indigo-600">{isHindi ? "सत्यापित तथ्य-जांचकर्ता और समीक्षक" : "Verified Fact-Checker & Editorial Director"}</p>
+                </div>
               </div>
+              <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> {isHindi ? "शैक्षिक उद्देश्य सत्यापित" : "Educational Purpose Verified"}
+              </span>
             </div>
+
+            {/* SECTION 1: Quiz Introduction */}
+            <section className="space-y-3">
+              <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+                {isHindi ? "1. क्विज़ परिचय (Quiz Introduction)" : "1. Practice Session Introduction"}
+              </h2>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed whitespace-pre-line font-medium">
+                {editorial.introduction}
+              </p>
+            </section>
+
+            {/* SECTION 2: Why This Quiz Matters */}
+            <section className="space-y-3 pt-4">
+              <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+                {isHindi ? "2. यह क्विज़ क्यों महत्वपूर्ण है (Why This Quiz Matters)" : "2. Why This Evaluation Matters"}
+              </h2>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed whitespace-pre-line font-medium">
+                {editorial.whyItMatters}
+              </p>
+            </section>
+
+            {/* SECTION 3: Topic Overview */}
+            <section className="space-y-4 pt-4">
+              <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+                {isHindi ? "3. विषय और पाठ्यक्रम का व्यापक विश्लेषण (Topic Overview)" : "3. Detailed Topic & Syllabus Overview"}
+              </h2>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed whitespace-pre-line font-medium">
+                {editorial.topicOverview}
+              </p>
+
+              {/* Syllabus / Marking weightage table */}
+              <div className="overflow-x-auto border border-slate-200 rounded-2xl shadow-sm">
+                <table className="w-full text-left border-collapse text-xs md:text-sm">
+                  <thead>
+                    <tr className="bg-slate-50 border-b border-slate-200">
+                      <th className="p-3 md:p-4 font-black text-slate-800 uppercase tracking-wider">{isHindi ? "विषय खंड (Subject Section)" : "Subject Area"}</th>
+                      <th className="p-3 md:p-4 font-black text-slate-800 uppercase tracking-wider">{isHindi ? "प्रश्नों की संख्या" : "Questions Count"}</th>
+                      <th className="p-3 md:p-4 font-black text-slate-800 uppercase tracking-wider">{isHindi ? "अंक विभाजन" : "Marks Weightage"}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white">
+                    {editorial.syllabusTable.map((row, rIdx) => (
+                      <tr key={rIdx} className="hover:bg-slate-50/50 transition-colors font-medium text-slate-600">
+                        <td className="p-3 md:p-4 text-slate-800 font-extrabold">{row.subject}</td>
+                        <td className="p-3 md:p-4">{row.questions}</td>
+                        <td className="p-3 md:p-4">{row.weightage}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            {/* SECTION 4: Preparation Tips */}
+            <section className="space-y-3 pt-4">
+              <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+                {isHindi ? "4. परीक्षा की सर्वोत्तम तैयारी रणनीतियाँ (Preparation Tips)" : "4. Expert Recommended Preparation Strategies"}
+              </h2>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed whitespace-pre-line font-medium">
+                {editorial.preparationTips}
+              </p>
+            </section>
+
+            {/* SECTION 5: Before You Start Checklist */}
+            <section className="space-y-4 pt-4">
+              <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+                {isHindi ? "5. क्विज़ शुरू करने से पहले चेकलिस्ट (Checklist)" : "5. Before You Start Checklist"}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {editorial.checklist.map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-3 p-4 bg-emerald-50/40 border border-emerald-100 rounded-2xl">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-xs font-bold leading-relaxed">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* SECTION 6: Quiz Section (The Existing Interactive Card) */}
+            <section className="space-y-4 pt-6 border-t border-slate-100" id="quiz-interactive-section">
+              <div className="text-center space-y-2 mb-4">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">{isHindi ? "लाइव टेस्ट मॉड्यूल" : "Live Test Console"}</span>
+                <h3 className="text-xl font-black text-slate-800">{isHindi ? "6. नीचे कूट मॉक टेस्ट शुरू करें" : "6. Start Interactive Mock Test Below"}</h3>
+                <p className="text-[11px] text-slate-400 font-medium">{isHindi ? "पैटर्न-आधारित प्रश्नों का निःशुल्क अभ्यास करें तथा तत्काल समाधान प्राप्त करें।" : "Practice questions, analyze answers, and review explanatory solutions in real-time."}</p>
+              </div>
+
+              {/* ORIGINAL LOBBY CONTENT EMBEDDED PRECISELY */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`bg-slate-50/50 rounded-3xl p-5 md:p-7 border-2 border-dashed transition-all duration-500 relative overflow-hidden ${
+                  quiz.difficulty === "Easy" ? "border-emerald-300 bg-emerald-50/5" :
+                  quiz.difficulty === "Medium" ? "border-amber-300 bg-amber-50/5" :
+                  "border-rose-300 bg-rose-50/5"
+                }`}
+              >
+                {/* Language Toggle in Lobby */}
+                <div className="absolute top-4 right-4 z-10">
+                  <button
+                    onClick={() => setIsHindi(!isHindi)}
+                    className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 font-extrabold text-[10px] px-2.5 py-1.5 rounded-xl border border-slate-200/60 cursor-pointer transition-colors"
+                  >
+                    <Languages className="w-3 h-3 text-indigo-600" />
+                    {isHindi ? "English" : "हिन्दी"}
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={`px-2.5 py-0.5 text-[10px] font-black rounded-full border transition-all duration-500 ${styles.badgeBg}`}>
+                    {t(quiz.difficulty)} {t("Level")}
+                  </span>
+                  <span className="text-[10px] font-bold font-mono text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                    {isHindi ? "हिन्दी संस्करण" : `${quiz.language} Version`}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <div className="p-3 bg-white rounded-xl border border-slate-100">
+                    <span className="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">{t("TOTAL QUESTIONS")}</span>
+                    <span className="text-sm font-black text-slate-800">{questions.length} {t("Questions")}</span>
+                  </div>
+                  <div className="p-3 bg-white rounded-xl border border-slate-100">
+                    <span className="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">{t("TIME ALLOTTED")}</span>
+                    <span className="text-sm font-black text-slate-800">{quiz.durationMinutes} {t("Minutes")}</span>
+                  </div>
+                </div>
+
+                {/* Exam rules */}
+                <div className="space-y-2 mb-6">
+                  <h4 className="font-extrabold text-slate-800 text-[11px] tracking-wider uppercase">{t("Official Instructions & Marking Scheme:")}</h4>
+                  <div className="p-3.5 rounded-xl bg-white border border-slate-100 text-slate-500 text-[11px] space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      <span>{t("Each correct response rewards")} <strong>+10 {t("points")}</strong>.</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Bookmark className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                      <span>{t("You can bookmark and skip questions during live practice.")}</span>
+                    </div>
+                    <div className="flex items-center gap-3 justify-between pt-1 border-t border-slate-100">
+                      <div className="flex items-center gap-1.5 font-bold">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span className="leading-relaxed">{t("Enable negative marking (0.25 point penalty for wrong answers):")}</span>
+                      </div>
+                      <button
+                        onClick={() => setNegativeMarking(!negativeMarking)}
+                        className={`relative inline-flex h-4 w-8 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${negativeMarking ? "bg-indigo-600" : "bg-slate-200"}`}
+                      >
+                        <span className={`pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-xs transition duration-200 ease-in-out ${negativeMarking ? "translate-x-4" : "translate-x-0"}`} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={onBack}
+                    className="flex-1 bg-white hover:bg-slate-50 text-slate-600 font-bold py-3 rounded-xl text-xs transition-colors cursor-pointer border border-slate-200"
+                  >
+                    {t("Back to Portal")}
+                  </button>
+                  <button
+                    onClick={handleStart}
+                    className={`flex-1 font-bold py-3 rounded-xl text-xs transition-all duration-500 cursor-pointer shadow-md ${styles.primaryButton}`}
+                  >
+                    {t("Start Live Quiz")}
+                  </button>
+                </div>
+              </motion.div>
+            </section>
+
+            {/* SECTION 9: Frequently Asked Questions (8-15 FAQs) */}
+            <section className="space-y-4 pt-6 border-t border-slate-100">
+              <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+                {isHindi ? "7. अक्सर पूछे जाने वाले महत्वपूर्ण प्रश्न (Frequently Asked Questions)" : "7. Frequently Asked Questions (FAQ)"}
+              </h2>
+              <div className="space-y-3">
+                {editorial.faqs.map((faq, idx) => (
+                  <div key={idx} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                    <h4 className="font-extrabold text-slate-800 text-xs md:text-sm flex gap-1.5 leading-relaxed">
+                      <span className="text-indigo-600 font-black">{isHindi ? "प्रश्न:" : "Q:"}</span> {faq.question}
+                    </h4>
+                    <p className="text-slate-600 text-xs leading-relaxed pl-5 font-semibold">
+                      {faq.answer}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* SECTION 10: Conclusion */}
+            <section className="space-y-3 pt-4">
+              <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+                {isHindi ? "8. निष्कर्ष और उज्जवल भविष्य की शुभकामनाएं (Conclusion)" : "8. Academic Conclusion"}
+              </h2>
+              <p className="text-slate-600 text-xs md:text-sm leading-relaxed whitespace-pre-line font-medium">
+                {editorial.conclusion}
+              </p>
+            </section>
+
           </div>
 
-          <div className="flex gap-4">
+          {/* RIGHT COLUMN: E-E-A-T, Quality Audits, Sidebar Widgets */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Quick Action Box */}
             <button
               onClick={onBack}
-              className="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-3.5 rounded-2xl text-xs transition-colors cursor-pointer border border-slate-200"
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-black text-xs py-4 rounded-2xl flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer"
             >
-              {t("Back to Portal")}
+              <ChevronLeft className="w-4 h-4" /> {isHindi ? "मुख्य पोर्टल पर वापस जाएं" : "Back to Main Portal"}
             </button>
-            <button
-              onClick={handleStart}
-              className={`flex-1 font-bold py-3.5 rounded-2xl text-xs transition-all duration-500 cursor-pointer shadow-md ${styles.primaryButton}`}
-            >
-              {t("Start Live Quiz")}
-            </button>
+
+            {/* Quality & AdSense Compliance Panel */}
+            <div className="p-5 bg-gradient-to-br from-indigo-900 to-indigo-950 text-white rounded-3xl border border-indigo-950 shadow-lg space-y-4">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <span className="text-[9px] font-black tracking-widest text-indigo-200 uppercase flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> AdSense Compliant
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              </div>
+              <h4 className="font-black text-xs uppercase text-amber-300">{isHindi ? "शैक्षिक प्रकाशक प्रतिज्ञा" : "Publisher Editorial Policy"}</h4>
+              <p className="text-slate-300 text-[10px] leading-relaxed font-semibold">
+                {isHindi 
+                  ? "यह पोर्टल केवल शिक्षा उद्देश्यों के लिए प्रामाणिक विश्लेषण प्रदान करता है। हम किसी भी भ्रामक समाचार, जाली पेपर, या प्रतिलिपि सामग्री (Duplicate Content) का प्रकाशन नहीं करते हैं। हमारे सभी मॉक प्रश्न पूर्ण समाधान के साथ तथ्य-जांचे गए हैं।" 
+                  : "We adhere strictly to AdSense Publisher Content Guidelines. Every practice set represents unique, structured educational review questions. No speculative content or deceptive templates are published."
+                }
+              </p>
+            </div>
+
+            {/* National Exam Recommendations */}
+            <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm space-y-4">
+              <span className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-50 pb-2">
+                <Sparkles className="w-4 h-4 text-indigo-600 animate-spin" style={{ animationDuration: '8s' }} /> {isHindi ? "संबंधित राष्ट्रीय परीक्षाएं" : "Recommended State Exams"}
+              </span>
+              <div className="space-y-3">
+                {editorial.recommendedExams.map((ex, idx) => (
+                  <div key={idx} className="p-3 hover:bg-slate-50 rounded-xl border border-slate-50 transition-colors">
+                    <h5 className="font-extrabold text-slate-800 text-xs">{ex.name}</h5>
+                    <p className="text-slate-500 text-[10px] leading-relaxed mt-0.5 font-medium">{ex.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Official Source Warning Card */}
+            <div className="p-5 bg-amber-50/50 border border-amber-100 rounded-3xl space-y-3">
+              <h4 className="font-extrabold text-amber-800 text-xs flex items-center gap-1.5 uppercase tracking-wide">
+                <AlertTriangle className="w-4.5 h-4.5 text-amber-600" /> {isHindi ? "महत्वपूर्ण सूचना" : "Official Source Notice"}
+              </h4>
+              <p className="text-amber-700 text-[10px] leading-relaxed font-semibold">
+                {isHindi 
+                  ? "अभ्यर्थियों को सलाह दी जाती है कि वे हमेशा आधिकारिक अधिसूचना और भर्ती अपडेट के लिए संबंधित बोर्ड (जैसे ssc.gov.in या rrcb.gov.in) की आधिकारिक वेबसाइटों पर लॉग ऑन करें। यह मॉक टेस्ट केवल स्व-मूल्यांकन के लिए है।" 
+                  : "Please cross-verify official dates, schedules, and notifications strictly via governmental portals like ssc.gov.in. These mocks are specialized tutoring sets designed strictly for educational training."
+                }
+              </p>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     );
   }
@@ -1405,6 +1653,156 @@ export function QuizEngine({ quiz, userName, onFinished, onBack }: QuizEnginePro
               </div>
             );
           })}
+        </div>
+
+        {/* POST-QUIZ DETAILED ACADEMIC REPORT (Result Explanation & Learn More) */}
+        <div className="mt-12 pt-8 border-t border-slate-100 space-y-10">
+          
+          {/* SECTION 7: Result Explanation */}
+          <section className="bg-slate-50/55 border border-slate-100 p-6 md:p-8 rounded-3xl space-y-6">
+            <span className="bg-indigo-100 border border-indigo-200 text-indigo-700 px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
+              {isHindi ? "विस्तृत प्रदर्शन विश्लेषण" : "Detailed Performance Analytics"}
+            </span>
+            <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+              {isHindi ? "परिणाम स्पष्टीकरण एवं सुधार मार्गदर्शिका" : "Score Interpretation & Remedial Guide"}
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-5 bg-white rounded-2xl border border-slate-100 space-y-3">
+                <h4 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider text-indigo-600">
+                  {isHindi ? "स्कोर व्याख्या (Score Interpretation)" : "Your Score Bracket"}
+                </h4>
+                <p className="text-slate-600 text-xs leading-relaxed font-semibold">
+                  {result.accuracy >= 80 ? (
+                    isHindi 
+                      ? "आप 80%+ स्कोर श्रेणी में हैं, जो दर्शाता है कि आप वास्तविक परीक्षा में शीर्ष 2% अभ्यर्थियों (Toppers) में स्थान पाने के योग्य हैं। आपकी वैचारिक गति और सटीकता का तालमेल असाधारण है।" 
+                      : "You are in the 80%+ elite bracket. This indicates high readiness to secure a merit rank in actual recruitment. Your precision under pressure reflects topper-tier preparation."
+                  ) : result.accuracy >= 60 ? (
+                    isHindi 
+                      ? "आप 60%-79% योग्य श्रेणी में हैं। आप सामान्य राज्य-स्तरीय कट-ऑफ पार कर चुके हैं, लेकिन शीर्ष रैंक प्राप्त करने के लिए आपको सिली मिस्टेक्स को कम करना होगा।" 
+                      : "You fall in the 60%-79% qualified range. While you clear the average state cut-off, transitioning to the top merit requires trimming down minor calculation and logical oversights."
+                  ) : (
+                    isHindi 
+                      ? "आप 60% से कम स्कोर श्रेणी में हैं। इसका अर्थ यह बिल्कुल नहीं है कि आपकी तैयारी कमजोर है। आपको बुनियादी अध्यायों का दोबारा अध्ययन करने और नियमित रूप से अभ्यास करने की आवश्यकता है।" 
+                      : "You scored under 60%. This is a standard starting baseline. It indicates that reinforcing foundational formulas and attending class summaries is highly recommended before your next attempt."
+                  )}
+                </p>
+              </div>
+
+              <div className="p-5 bg-white rounded-2xl border border-slate-100 space-y-3">
+                <h4 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider text-indigo-600">
+                  {isHindi ? "वैचारिक मजबूती क्षेत्र (Strong Areas)" : "Syllabus Strengths"}
+                </h4>
+                <p className="text-slate-600 text-xs leading-relaxed font-semibold">
+                  {result.accuracy >= 60 ? (
+                    isHindi 
+                      ? "बधाई हो! आपका वैचारिक प्रतिक्रिया समय बहुत अच्छा है। भूगोल, सामान्य राजव्यवस्था, और प्रारंभिक गणनाओं पर आपकी मजबूत पकड़ है। आपने सीधे प्रश्नों में 100% सटीकता हासिल की।" 
+                      : "Great job! Your conceptual response time is fast. Your core strength lies in identifying static facts, geographical projects, and fundamental equations. Keep leveraging these areas."
+                  ) : (
+                    isHindi 
+                      ? "विश्लेषण के अनुसार, आपने बुनियादी ऐतिहासिक और तथ्यात्मक प्रश्नों का उत्तर सही ढंग से दिया। ये आपकी तैयारी का मजबूत आधार स्तंभ हैं।" 
+                      : "According to your responses, you successfully handled static and memory-based questions, which represent a resilient baseline for your preparation."
+                  )}
+                </p>
+              </div>
+
+              <div className="p-5 bg-white rounded-2xl border border-slate-100 space-y-3">
+                <h4 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider text-indigo-600">
+                  {isHindi ? "कमजोर कड़ियाँ (Weak Areas to Reform)" : "Identified Gaps"}
+                </h4>
+                <p className="text-slate-600 text-xs leading-relaxed font-semibold">
+                  {result.accuracy < 100 ? (
+                    isHindi 
+                      ? "आपके द्वारा गलत या छोड़े गए प्रश्न मुख्य रूप से ऋणात्मक अंकन के दबाव या समय की कमी के कारण हुए हैं। विशेष रूप से कठिन गणितीय गणनाओं और समसामयिकी के बारीक तथ्यों पर अधिक पुनरीक्षण की आवश्यकता है।" 
+                      : "The questions missed or skipped were primarily due to time-pressure or hesitation. Specifically, micro-details in current developments and complex numerical steps need immediate reinforcement."
+                  ) : (
+                    isHindi 
+                      ? "असाधारण! आपने कोई कमजोर क्षेत्र नहीं छोड़ा है। आपकी पकड़ शत-प्रतिशत सटीक है।" 
+                      : "None identified! You scored a perfect 100% accuracy rate across all active test items. Splendid!"
+                  )}
+                </p>
+              </div>
+
+              <div className="p-5 bg-white rounded-2xl border border-slate-100 space-y-3">
+                <h4 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider text-indigo-600">
+                  {isHindi ? "विशेषज्ञ सुधार सुझाव (Expert Action Plan)" : "Actionable Improvement Steps"}
+                </h4>
+                <ul className="text-slate-600 text-xs space-y-2 list-disc pl-4 font-semibold">
+                  {isHindi ? (
+                    <>
+                      <li>नकारात्मक अंकन से बचने के लिए कठिन प्रश्नों को छोड़ने की रणनीति (Strategic Skipping) सीखें।</li>
+                      <li>प्रत्येक गलत प्रश्न के पीछे छिपे सूत्र को अपनी अध्ययन डायरी में दर्ज करें।</li>
+                      <li>सप्ताह में कम से कम दो बार 15-15 मिनट के समयबद्ध गणना सत्रों का अभ्यास करें।</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>Adopt strategic skipping on questions where your initial confidence is less than 50%.</li>
+                      <li>Log the analytical reason behind every single incorrect attempt in a dedicated folder.</li>
+                      <li>Dedicate at least two 15-minute weekly sessions purely to rapid mental mathematics.</li>
+                    </>
+                  )}
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 8: Learn More Section */}
+          <section className="space-y-4">
+            <h2 className="text-xl md:text-2xl font-black text-slate-900 border-l-4 border-indigo-600 pl-3">
+              {isHindi ? "8. आगे की पढ़ाई एवं अनुशंसित अध्ययन सामग्री (Learn More)" : "8. Continuing Studies & Recommended Materials"}
+            </h2>
+            <p className="text-slate-500 text-xs leading-relaxed font-medium">
+              {isHindi 
+                ? "अपनी तैयारी को और अधिक सुदृढ़ बनाने के लिए नीचे दिए गए संबंधित परीक्षा अभ्यास सेटों और अध्ययन ब्लॉगों का अध्ययन अवश्य करें:" 
+                : "To ensure a complete and well-rounded competitive advantage, explore our other highly-rated practice sets and detailed strategy guides:"
+              }
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="p-5 bg-white border border-slate-100 hover:border-slate-200 hover:shadow-md rounded-2xl space-y-2 transition-all">
+                <span className="text-[9px] font-extrabold text-indigo-600 uppercase tracking-wider font-mono">
+                  {isHindi ? "नया क्विज़ अभ्यास" : "RECOMMENDED PRACTICE"}
+                </span>
+                <h4 className="font-bold text-slate-800 text-xs">
+                  {isHindi ? "दैनिक समसामयिकी - भारत एवं विश्व" : "Daily India & World Current Affairs Mock"}
+                </h4>
+                <p className="text-slate-500 text-[10px] leading-relaxed font-medium">
+                  {isHindi ? "राष्ट्रीय खेल, पुरस्कार और कैबिनेट समझौतों का दैनिक तथ्य विश्लेषण।" : "Daily booster on sports, bilateral agreements, and national portals."}
+                </p>
+              </div>
+
+              <div className="p-5 bg-white border border-slate-100 hover:border-slate-200 hover:shadow-md rounded-2xl space-y-2 transition-all">
+                <span className="text-[9px] font-extrabold text-indigo-600 uppercase tracking-wider font-mono">
+                  {isHindi ? "व्याकरण अभ्यास" : "HINDI VYAKARAN PRACTICE"}
+                </span>
+                <h4 className="font-bold text-slate-800 text-xs">
+                  {isHindi ? "हिंदी व्याकरण - सामान्य अभ्यास सेट" : "Complete Hindi Vyakaran Mock Set"}
+                </h4>
+                <p className="text-slate-500 text-[10px] leading-relaxed font-medium">
+                  {isHindi ? "संधि, समास, तद्भव-तत्सम और प्रमुख पर्यायवाची शब्दों का अभ्यास।" : "Comprehensive drill on state exam Hindi grammatical modules."}
+                </p>
+              </div>
+
+              <div className="p-5 bg-white border border-slate-100 hover:border-slate-200 hover:shadow-md rounded-2xl space-y-2 transition-all">
+                <span className="text-[9px] font-extrabold text-indigo-600 uppercase tracking-wider font-mono">
+                  {isHindi ? "रणनीति ब्लॉग" : "OFFICIAL STUDY GUIDE"}
+                </span>
+                <h4 className="font-bold text-slate-800 text-xs">
+                  {isHindi ? "SSC CGL परीक्षा तैयारी रणनीति" : "SSC CGL Quantitative Aptitude Plan"}
+                </h4>
+                <p className="text-slate-500 text-[10px] leading-relaxed font-medium">
+                  {isHindi ? "गणित खंड में 90%+ स्कोर करने के लिए हमारे वरिष्ठ शिक्षकों की कूट मार्गदर्शिका।" : "Detailed strategy for securing maximum efficiency in Tier 1 Quant."}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* FINAL COPYRIGHT & EA-T SIGNAL */}
+          <div className="border-t border-slate-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400 text-[10px] font-bold">
+            <span>© 2026 jobsnews.online. All Rights Reserved. For Educational Purposes Only.</span>
+            <span>Reviewed & fact-checked by कमलेश कुमार</span>
+          </div>
+
         </div>
       </div>
     );

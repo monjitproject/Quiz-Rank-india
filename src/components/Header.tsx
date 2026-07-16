@@ -52,14 +52,24 @@ export function Header({ userName, onSetUserName, onNavigate, onSelectCategory, 
   // Fetch alerts from backend
   useEffect(() => {
     fetch("/api/notifications")
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok || !res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Invalid or non-JSON response");
+        }
+        return res.json();
+      })
       .then(data => setNotifications(data))
       .catch(err => console.error("Notif fetch failed:", err));
     
     // Poll notifications every 10 seconds for real-time update feel
     const interval = setInterval(() => {
       fetch("/api/notifications")
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok || !res.headers.get("content-type")?.includes("application/json")) {
+            throw new Error("Invalid or non-JSON response");
+          }
+          return res.json();
+        })
         .then(data => setNotifications(data))
         .catch(err => console.error(err));
     }, 10000);

@@ -92,7 +92,7 @@ export function PopularExams({ onSelectCategory }: PopularExamsProps) {
   const fetchJobs = async () => {
     try {
       const res = await fetch("/api/government-exam/jobs");
-      if (res.ok) {
+      if (res.ok && res.headers.get("content-type")?.includes("application/json")) {
         const data = await res.json();
         setJobs(data);
       }
@@ -105,9 +105,9 @@ export function PopularExams({ onSelectCategory }: PopularExamsProps) {
     try {
       setLoading(true);
       const res = await fetch("/api/government-exam/sync", { method: "POST" });
-      if (res.ok) {
+      if (res.ok && res.headers.get("content-type")?.includes("application/json")) {
         const data = await res.json();
-        if (data.success) {
+        if (data && data.success) {
           setJobs(data.storedItems || []);
           await fetchJobs();
         }

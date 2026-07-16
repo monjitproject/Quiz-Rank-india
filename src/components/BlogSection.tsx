@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { BlogPost } from "../types";
 import { PREMIUM_BLOG_POSTS } from "../data/premiumBlogs";
+import { JobPostEditorial } from "./JobPostEditorial";
 import { 
   BookOpen, 
   Calendar, 
@@ -436,6 +437,9 @@ export function BlogSection({
               <div className="prose prose-slate max-w-none">
                 <RichMarkdownRenderer content={selectedPost.content} />
               </div>
+
+              {/* Dynamic 20-Section Job Portal Editorial (E-E-A-T AdSense Compliance) */}
+              <JobPostEditorial postTitle={selectedPost.title} category={selectedPost.category} isHindi={true} />
 
               {/* FAQ Section */}
               {selectedPost.faqs && selectedPost.faqs.length > 0 && (

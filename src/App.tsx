@@ -22,6 +22,14 @@ import { SubjectPractice } from "./components/SubjectPractice";
 import { DailyCurrentAffairs } from "./components/DailyCurrentAffairs";
 import { LeaderboardPodium } from "./components/LeaderboardPodium";
 import { MockTestExplorer } from "./components/MockTestExplorer";
+import { 
+  HeroIntroduction, 
+  AboutAndExamGuide, 
+  PracticeAndHowToUse, 
+  WhyChooseAndEditorialCommitment, 
+  FrequentlyAskedQuestions, 
+  CallToActionAndDisclaimer 
+} from "./components/HomepageEditorial";
 import { Calendar, User, BookOpen, Clock, Star, Play, Sparkles, AlertTriangle, ShieldCheck, CheckCircle2, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -227,12 +235,12 @@ export default function App() {
       setLoading(true);
       try {
         const res = await fetch(`/api/quizzes/${quizId}`);
-        if (res.ok) {
+        if (res.ok && res.headers.get("content-type")?.includes("application/json")) {
           const fetchedQuiz = await res.json();
           setQuizzes(prev => [...prev, fetchedQuiz]);
           changeView("quiz-player", fetchedQuiz);
         } else {
-          console.error("Failed to load virtual quiz:", quizId);
+          console.error("Failed to load virtual quiz (not ok or not JSON):", quizId);
         }
       } catch (err) {
         console.error("Error loading virtual quiz:", err);
@@ -248,7 +256,12 @@ export default function App() {
 
   const handleDeleteQuizFromState = (quizId: string) => {
     fetch(`/api/quizzes/${quizId}`, { method: "DELETE" })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok || !res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Invalid or non-JSON response");
+        }
+        return res.json();
+      })
       .then(() => {
         setQuizzes(prev => prev.filter(q => q.id !== quizId));
       })
@@ -305,6 +318,9 @@ export default function App() {
           onSelectQuiz={handleSelectQuiz}
         />
 
+        {/* 1. Hero Introduction (Editorial Context Panel) */}
+        <HeroIntroduction onSelectCategory={setSelectedCategory} />
+
         {/* Explore 20+ Exam Categories section */}
         <ExploreCategories
           categories={categories}
@@ -327,6 +343,9 @@ export default function App() {
         <PopularExams
           onSelectCategory={setSelectedCategory}
         />
+
+        {/* 2 & 3. About Our Platform and Detailed Gov Exam Prep Guides */}
+        <AboutAndExamGuide onSelectCategory={setSelectedCategory} />
 
         {/* National Prep Leaderboard Podium */}
         <LeaderboardPodium />
@@ -360,6 +379,9 @@ export default function App() {
             quizzes={quizzes}
           />
         </div>
+
+        {/* 4 & 5. Why Daily Practice Matters (Recall Science) & step-by-step How to Use */}
+        <PracticeAndHowToUse />
 
         {/* Govt Jobs News & Updates (Notice Board) */}
         <div className="max-w-7xl mx-auto px-4 space-y-6">
@@ -424,6 +446,9 @@ export default function App() {
             ))}
           </div>
         </div>
+
+        {/* 6 & 7. Why Choose JobsNews Online & Editorial Integrity Code */}
+        <WhyChooseAndEditorialCommitment />
 
         {/* Student Success Stories & Testimonials (AUTHENTIC INDIAN RECRUITS) */}
         <div className="max-w-7xl mx-auto px-4 bg-slate-50 py-16 rounded-3xl border border-slate-100 space-y-12">
@@ -505,6 +530,12 @@ export default function App() {
             </div>
           </div>
         </div>
+
+        {/* 8. Frequently Asked Questions (FAQ list of 12 items) */}
+        <FrequentlyAskedQuestions />
+
+        {/* 9. Motivational Call To Action, Disclaimers, and contextual Footer links */}
+        <CallToActionAndDisclaimer onSelectCategory={setSelectedCategory} onNavigate={changeView} />
       </div>
     );
   };

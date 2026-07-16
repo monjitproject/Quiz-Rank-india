@@ -15,7 +15,12 @@ export function LeaderboardPodium() {
   const fetchLeaderboard = () => {
     setLoading(true);
     fetch("/api/leaderboard")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok || !res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Invalid or non-JSON response");
+        }
+        return res.json();
+      })
       .then((data) => {
         setLeaderboard(data);
         setLoading(false);

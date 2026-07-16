@@ -8,11 +8,7 @@ const API_CACHE_NAME = "quizrank-api-v1";
 
 const STATIC_ASSETS = [
   "/",
-  "/index.html",
-  "/src/main.tsx",
-  "/src/index.css",
-  "/src/App.tsx",
-  "/src/types.ts"
+  "/index.html"
 ];
 
 // Install Event: Pre-cache core shell assets

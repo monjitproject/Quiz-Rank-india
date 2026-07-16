@@ -81,9 +81,15 @@ export function DailyCurrentAffairs({ onSelectCategory, onSelectQuiz }: DailyCur
         fetch("/api/current-affairs/stats")
       ]);
 
-      const quizzesData = await quizzesRes.json();
-      const eventsData = await eventsRes.json();
-      const statsData = await statsRes.json();
+      const quizzesData = quizzesRes.ok && quizzesRes.headers.get("content-type")?.includes("application/json")
+        ? await quizzesRes.json()
+        : [];
+      const eventsData = eventsRes.ok && eventsRes.headers.get("content-type")?.includes("application/json")
+        ? await eventsRes.json()
+        : [];
+      const statsData = statsRes.ok && statsRes.headers.get("content-type")?.includes("application/json")
+        ? await statsRes.json()
+        : { questionsGeneratedToday: 0, automationStatus: "Active", cronJobStatus: "Healthy" };
 
       // Filter only current affairs quizzes
       const caQuizzes = quizzesData.filter((q: any) => q.categoryId === "current-affairs");
@@ -116,8 +122,10 @@ export function DailyCurrentAffairs({ onSelectCategory, onSelectQuiz }: DailyCur
       const res = await fetch("/api/current-affairs/trigger", {
         method: "POST"
       });
-      const data = await res.json();
-      if (data.success) {
+      const data = res.ok && res.headers.get("content-type")?.includes("application/json")
+        ? await res.json()
+        : { success: false };
+      if (data && data.success) {
         await fetchCurrentAffairsData();
       }
     } catch (err) {
