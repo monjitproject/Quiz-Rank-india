@@ -14,6 +14,8 @@ import { PREMIUM_BLOG_POSTS } from "./src/data/premiumBlogs.js";
 import { FRESH_NEWS_EVENTS, FRESH_QUESTIONS_POOL } from "./src/data/currentAffairsPool.js";
 import { Difficulty, Language, Quiz, Question, Result, LeaderboardItem, BlogPost, AppNotification } from "./src/types.js";
 import { getVirtualQuiz, getVirtualQuestions } from "./src/data/virtualGenerator.js";
+import { getEditorialCategory } from "./src/data/categoryEditorialData.js";
+import { EDITORIAL_CALENDAR, compileLongFormEditorial } from "./src/data/editorialLibrary.js";
 
 dotenv.config();
 
@@ -758,6 +760,62 @@ Ensure the article is original, highly useful, and fact-based. Deliver only the 
       res.status(500).json({ success: false, message: "Failed to generate blog: " + err.message });
     }
   }
+});
+
+// API: Bulk publish the entire 55-article Editorial Library
+app.post("/api/admin/publish-editorial-library", (req: Request, res: Response) => {
+  const db = loadDB();
+  let count = 0;
+  
+  for (const topic of EDITORIAL_CALENDAR) {
+    // Check if it's already published
+    const alreadyPublished = db.blogs.some((b: any) => b.slug === topic.slug || b.id === topic.id);
+    if (!alreadyPublished) {
+      const compiled = compileLongFormEditorial(topic);
+      db.blogs.push(compiled);
+      count++;
+    }
+  }
+  
+  if (count > 0) {
+    saveDB(db);
+  }
+  
+  res.json({ 
+    success: true, 
+    count, 
+    total: EDITORIAL_CALENDAR.length, 
+    currentlyPublished: db.blogs.filter((b: any) => b.id.startsWith("edit-") || b.id.startsWith("premium-") || b.id.startsWith("fallback-") || b.id.startsWith("gen-") || b.id.startsWith("post-")).length 
+  });
+});
+
+// API: Compile and publish a single article from the Editorial Calendar
+app.post("/api/admin/publish-editorial-single", (req: Request, res: Response) => {
+  const { topicId } = req.body;
+  if (!topicId) {
+    res.status(400).json({ error: "topicId is required" });
+    return;
+  }
+  
+  const topic = EDITORIAL_CALENDAR.find(t => t.id === topicId);
+  if (!topic) {
+    res.status(404).json({ error: "Topic not found in Editorial Calendar" });
+    return;
+  }
+  
+  const db = loadDB();
+  // Check if already exists
+  const existingIdx = db.blogs.findIndex((b: any) => b.id === topic.id || b.slug === topic.slug);
+  const compiled = compileLongFormEditorial(topic);
+  
+  if (existingIdx >= 0) {
+    db.blogs[existingIdx] = compiled; // overwrite / refresh
+  } else {
+    db.blogs.push(compiled);
+  }
+  
+  saveDB(db);
+  res.json({ success: true, post: compiled });
 });
 
 // Validation System for Quizzes and Questions
@@ -3386,6 +3444,144 @@ startCurrentAffairsCron();
 // 404 fallback for unmatched API requests to prevent returning index.html
 app.all("/api/*", (req: Request, res: Response) => {
   res.status(404).json({ error: "API route not found" });
+});
+
+// Category SEO and Editorial Content SSR Injector Route
+app.get("/category/:categoryName", (req: Request, res: Response) => {
+  const isProd = process.env.NODE_ENV === "production";
+  const indexPath = isProd 
+    ? path.join(process.cwd(), "dist", "index.html")
+    : path.join(process.cwd(), "index.html");
+    
+  try {
+    const categoryName = req.params.categoryName ? req.params.categoryName.toLowerCase() : "";
+    const editorial = getEditorialCategory(categoryName);
+    
+    if (!fs.existsSync(indexPath)) {
+      return res.status(404).send("Core index file not found");
+    }
+    
+    let html = fs.readFileSync(indexPath, "utf8");
+    
+    if (editorial) {
+      // 1. Replace title
+      html = html.replace("<title>QuizRank India</title>", `<title>${editorial.seoTitle}</title>`);
+      
+      // 2. Build meta tags & Structured Data
+      const canonicalUrl = `https://jobsnews.online/category/${categoryName}`;
+      const metaTags = `
+    <meta name="description" content="${editorial.metaDescription}" />
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:title" content="${editorial.seoTitle}" />
+    <meta property="og:description" content="${editorial.metaDescription}" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JobsNews Online" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=600" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${editorial.seoTitle}" />
+    <meta name="twitter:description" content="${editorial.metaDescription}" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=600" />
+    <script type="application/ld+json">
+    ${JSON.stringify([
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "JobsNews Online",
+        "url": "https://jobsnews.online",
+        "logo": "https://jobsnews.online/logo.png"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://jobsnews.online" },
+          { "@type": "ListItem", "position": 2, "name": editorial.name, "item": canonicalUrl }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": `${canonicalUrl}#webpage`,
+        "url": canonicalUrl,
+        "name": editorial.seoTitle,
+        "description": editorial.metaDescription,
+        "inLanguage": "en-US"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "@id": `${canonicalUrl}#collection`,
+        "url": canonicalUrl,
+        "name": `${editorial.name} Preparation Portal`,
+        "description": editorial.metaDescription
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": editorial.faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.q,
+          "acceptedAnswer": { "@type": "Answer", "text": faq.a }
+        }))
+      }
+    ])}
+    </script>
+      `;
+      
+      // Inject tags right before </head>
+      html = html.replace("</head>", `${metaTags}\n</head>`);
+      
+      // 3. Build hidden editorial content for AdSense / Search crawlers (SSR Editorial Content)
+      const ssrEditorial = `
+    <div style="display:none;" id="ssr-editorial-content" data-category="${categoryName}">
+      <h1>${editorial.seoTitle}</h1>
+      <p><strong>Published by:</strong> ${editorial.authorName} (${editorial.authorRole})</p>
+      <p><strong>Last Updated:</strong> ${editorial.lastUpdated}</p>
+      
+      <h2>1. Category Introduction</h2>
+      <div>${editorial.introduction.replace(/\n/g, "<br/>")}</div>
+      
+      <h2>2. Why This Category Matters</h2>
+      <div>${editorial.whyMatters.replace(/\n/g, "<br/>")}</div>
+      
+      <h2>3. Complete Preparation Guide</h2>
+      <div>${editorial.prepGuide.replace(/\n/g, "<br/>")}</div>
+      
+      <h2>4. Featured Resources</h2>
+      <p>${editorial.featuredResourcesIntro}</p>
+      
+      <h2>6. Learning Tips</h2>
+      <div>${editorial.learningTips.replace(/\n/g, "<br/>")}</div>
+      
+      <h2>7. Frequently Asked Questions</h2>
+      <dl>
+        ${editorial.faqs.map(faq => `
+          <dt><strong>${faq.q}</strong></dt>
+          <dd>${faq.a}</dd>
+        `).join("\n")}
+      </dl>
+      
+      <h2>8. Related Categories</h2>
+      <ul>
+        ${editorial.relatedCategories.map(rel => `<li><a href="${rel.path}">${rel.name}</a></li>`).join("\n")}
+      </ul>
+      
+      <h2>9. Editorial Note</h2>
+      <p>Verified against official sources including: ${editorial.officialReferences.join(", ")}</p>
+    </div>
+      `;
+      
+      // Inject SSR content right after <body>
+      html = html.replace("<body>", `<body>\n${ssrEditorial}`);
+    }
+    
+    res.setHeader("Content-Type", "text/html");
+    return res.status(200).send(html);
+  } catch (err) {
+    console.error("Error in SSR injection:", err);
+    return res.sendFile(indexPath);
+  }
 });
 
 // Serve frontend assets

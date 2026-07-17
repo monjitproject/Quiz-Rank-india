@@ -4,195 +4,282 @@
  */
 
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, ShieldCheck, CheckCircle2, Globe, HelpCircle, Send, Award, FileText } from "lucide-react";
+import { 
+  Mail, 
+  Phone, 
+  MapPin, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Globe, 
+  HelpCircle, 
+  Send, 
+  Award, 
+  FileText, 
+  Sparkles, 
+  ArrowRight,
+  GraduationCap,
+  Info
+} from "lucide-react";
+import { motion } from "motion/react";
 
 interface FooterProps {
   onNavigateStatic: (pageId: string) => void;
 }
 
 export function Footer({ onNavigateStatic }: FooterProps) {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail("");
-      setTimeout(() => setSubscribed(false), 4000);
+  // Scroll Entrance Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1], // easeOutQuint
+        staggerChildren: 0.12,
+        delayChildren: 0.1
+      }
     }
   };
 
+  const childVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
+  // Badge animation variants
+  const badgeVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 120,
+        damping: 12
+      }
+    }
+  };
+
+  // Card Animation Constants for hover states
+  const cardHoverStyle = {
+    y: -8,
+    boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25), 0 0 20px 2px rgba(99, 102, 241, 0.15)",
+    borderColor: "rgba(99, 102, 241, 0.4)",
+    backgroundColor: "rgba(15, 23, 42, 0.6)"
+  };
+
+  // Navigation Items
+  const navItems = [
+    {
+      id: "about",
+      label: "About Us",
+      description: "Our Vision & Mission",
+      icon: Award,
+      bgColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+      hoverBg: "from-blue-600/20 to-indigo-600/10",
+      aria: "Learn more About Us"
+    },
+    {
+      id: "contact",
+      label: "Contact Us",
+      description: "Get in Touch 24/7",
+      icon: Send,
+      bgColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      hoverBg: "from-emerald-600/20 to-teal-600/10",
+      aria: "Contact Support and Queries"
+    },
+    {
+      id: "privacy",
+      label: "Privacy Policy",
+      description: "Data Security Guards",
+      icon: ShieldCheck,
+      bgColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+      hoverBg: "from-purple-600/20 to-indigo-600/10",
+      aria: "View our Privacy Policy"
+    },
+    {
+      id: "disclaimer",
+      label: "Disclaimer",
+      description: "Official Source Guide",
+      icon: FileText,
+      bgColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+      hoverBg: "from-amber-600/20 to-orange-600/10",
+      aria: "View Site Disclaimer"
+    },
+    {
+      id: "terms",
+      label: "Terms & Conditions",
+      description: "User Agreement Rules",
+      icon: CheckCircle2,
+      bgColor: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+      hoverBg: "from-rose-600/20 to-pink-600/10",
+      aria: "View Terms and Conditions"
+    }
+  ];
+
   return (
-    <footer className="w-full mt-16 font-sans">
-      {/* 1. Purple Newsletter Ribbon */}
-      <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-800 text-white py-6 px-4 shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-center md:text-left">
-            <h3 className="text-base md:text-lg font-extrabold tracking-tight flex items-center justify-center md:justify-start gap-2">
-              <span className="text-xl">📢</span> Get Daily Exam Updates
-            </h3>
-            <p className="text-xs text-blue-100 font-medium mt-0.5">
-              Join 500K+ students receiving daily quiz alerts & exam notifications.
-            </p>
-          </div>
+    <footer id="premium-applet-footer" className="w-full mt-24 relative overflow-hidden bg-slate-950 font-sans pb-16">
+      {/* Mesh Glowing Ambient Gradients (SaaS visual design) */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-          <form onSubmit={handleSubscribe} className="flex w-full md:w-auto max-w-md gap-2 shrink-0">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full md:w-72 bg-white/10 hover:bg-white/15 focus:bg-white text-slate-800 focus:text-slate-900 placeholder:text-blue-100/70 focus:placeholder:text-slate-400 border border-white/20 focus:border-white rounded-full px-4 py-2 text-xs outline-none font-medium transition-all"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-white text-indigo-700 hover:bg-blue-50 font-extrabold text-xs px-5 py-2 rounded-full cursor-pointer transition-all shrink-0 active:scale-95 shadow-sm"
+      {/* Primary Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Main Redesigned Centered Card Footer */}
+        <motion.div
+          id="centered-footer-card"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="bg-slate-900/30 backdrop-blur-xl border border-slate-800/80 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 md:p-16 shadow-[0_30px_100px_rgba(0,0,0,0.8)] relative overflow-hidden"
+        >
+          {/* Card Border Soft Highlight */}
+          <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-slate-700/40 to-transparent pointer-events-none" />
+
+          {/* ==========================================
+              SECTION 1: Animated Logo & Website Branding
+              ========================================== */}
+          <motion.div variants={childVariants} className="flex flex-col items-center justify-center text-center space-y-4">
+            {/* Logo Wrapper (Floating Animation) */}
+            <motion.div
+              id="footer-floating-logo"
+              animate={{ y: [0, -6, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 4,
+                ease: "easeInOut"
+              }}
+              className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center font-black text-white text-2xl shadow-xl shadow-indigo-500/10 border border-indigo-500/30 hover:scale-105 transition-transform duration-300"
             >
-              {subscribed ? "Subscribed! 🎉" : "Subscribe Free"}
-            </button>
-          </form>
-        </div>
-      </div>
+              JN
+            </motion.div>
 
-      {/* 2. Main Dark Footer Directory */}
-      <div className="bg-slate-950 text-slate-400 py-12 px-4 border-t border-slate-900">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
-          
-          {/* Brand Col */}
-          <div className="space-y-4 md:col-span-1">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-extrabold text-white text-sm shadow-md">
-                Q
-              </div>
-              <div>
-                <h3 className="font-extrabold text-white text-sm tracking-tight leading-none">QuizRank India</h3>
-                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider block mt-0.5">Govt Jobs Quiz Portal</span>
+            {/* Title & Subtitle */}
+            <div className="space-y-1">
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center justify-center gap-1.5">
+                JobsNews <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Online</span>
+              </h2>
+              
+              {/* Subtitle with shimmer effect */}
+              <div className="inline-block relative">
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-blue-400 via-indigo-200 to-purple-400 bg-clip-text text-transparent animate-pulse">
+                  Trusted Educational Hub
+                </span>
               </div>
             </div>
-            <p className="text-[11px] text-slate-500 leading-relaxed max-w-xs">
-              India's most trusted government exam quiz platform. Practice daily, track progress, and get selected in your dream government job.
+          </motion.div>
+
+          {/* ==========================================
+              SECTION 2: Centered Educational Description
+              ========================================== */}
+          <motion.div variants={childVariants} className="max-w-2xl mx-auto text-center mt-6">
+            <p className="text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed font-medium">
+              JobsNews Online is a trusted educational platform helping students prepare for Government Jobs, Competitive Exams, Current Affairs, GK, Mock Tests, Study Material and Career Guidance. Our dedicated faculty crafts each quiz to perfectly align with current examination standards.
             </p>
-            
-            <div className="space-y-2 text-[11px] text-slate-400 pt-2 font-medium">
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-blue-500" />
-                <a href="mailto:support@quizrankindia.in" className="hover:text-white transition-colors">support@quizrankindia.in</a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-blue-500" />
-                <a href="tel:+919876543210" className="hover:text-white transition-colors">+91 9876543210</a>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-blue-500" />
-                <span>New Delhi, India</span>
-              </div>
+          </motion.div>
+
+          {/* ==========================================
+              SECTION 3: Animated Divider (Expanding)
+              ========================================== */}
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="w-full max-w-3xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-slate-800 to-transparent my-10 origin-center"
+          />
+
+          {/* ==========================================
+              SECTION 4: Premium Navigation Cards
+              ========================================== */}
+          <motion.div variants={childVariants} className="w-full max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {navItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => onNavigateStatic(item.id)}
+                    aria-label={item.aria}
+                    whileHover={cardHoverStyle}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                    className="group flex flex-col items-center p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 text-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  >
+                    {/* Icon Container with Pastel Soft Background */}
+                    <motion.div
+                      whileHover={{ 
+                        scale: 1.08, 
+                        rotate: 6,
+                        boxShadow: "0 0 15px rgba(59, 130, 246, 0.4)"
+                      }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                      className={`w-10 h-10 rounded-xl ${item.bgColor} border flex items-center justify-center mb-3 transition-colors`}
+                    >
+                      <IconComponent className="w-5 h-5 transition-all group-hover:stroke-[2.5]" />
+                    </motion.div>
+
+                    {/* Navigation Link Label with Underline and Letter Spacing Animation */}
+                    <span className="font-bold text-slate-200 text-xs sm:text-sm tracking-tight relative pb-0.5 group-hover:text-white transition-all duration-300 group-hover:tracking-wide">
+                      {item.label}
+                      <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-blue-500 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+                    </span>
+                    <span className="text-[10px] text-slate-500 mt-1 font-medium group-hover:text-slate-400 transition-colors">
+                      {item.description}
+                    </span>
+                  </motion.button>
+                );
+              })}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Top Exams Column */}
-          <div className="space-y-3">
-            <h4 className="text-white font-extrabold text-[11px] uppercase tracking-wider border-b border-slate-900 pb-1.5">Top Exams</h4>
-            <ul className="space-y-1.5 text-[11px] text-slate-500 font-semibold">
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">SSC CGL 2025</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">SSC GD Constable</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">SSC CHSL</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">RRB NTPC</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">RRB Group D</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">IBPS PO</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">SBI Clerk</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">UPSC CSE</button></li>
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">UP Police</button></li>
-            </ul>
-          </div>
 
-          {/* Quiz Categories Column */}
-          <div className="space-y-3">
-            <h4 className="text-white font-extrabold text-[11px] uppercase tracking-wider border-b border-slate-900 pb-1.5">Quiz Categories</h4>
-            <ul className="space-y-1.5 text-[11px] text-slate-500 font-semibold">
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Current Affairs</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">General Knowledge</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Reasoning</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Mathematics</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">English Grammar</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Hindi Vyakaran</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Computer</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Science</button></li>
-            </ul>
-          </div>
 
-          {/* Quick Links Column */}
-          <div className="space-y-3">
-            <h4 className="text-white font-extrabold text-[11px] uppercase tracking-wider border-b border-slate-900 pb-1.5">Quick Links</h4>
-            <ul className="space-y-1.5 text-[11px] text-slate-500 font-semibold">
-              <li><button onClick={() => onNavigateStatic("exams")} className="hover:text-white cursor-pointer transition-colors text-left">Free Mock Tests</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Daily Quiz</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Leaderboard</button></li>
-              <li><button className="hover:text-white cursor-pointer transition-colors text-left">Blog & News</button></li>
-              <li><button onClick={() => onNavigateStatic("editorial")} className="hover:text-white cursor-pointer transition-colors text-left">Exam Calendar</button></li>
-              <li><button onClick={() => onNavigateStatic("disclaimer")} className="hover:text-white cursor-pointer transition-colors text-left text-amber-500">Admit Cards</button></li>
-              <li><button onClick={() => onNavigateStatic("disclaimer")} className="hover:text-white cursor-pointer transition-colors text-left">Results</button></li>
-              <li><button onClick={() => onNavigateStatic("disclaimer")} className="hover:text-white cursor-pointer transition-colors text-left">Answer Keys</button></li>
-            </ul>
-          </div>
+          {/* ==========================================
+              SECTION 5: E-E-A-T Compliance & Policy Links
+              ========================================== */}
+          <motion.div 
+            variants={childVariants} 
+            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t border-slate-800/80 pt-8 mt-10 text-xs font-bold text-slate-400"
+          >
+            <button onClick={() => onNavigateStatic("editorial")} className="hover:text-blue-400 transition-colors cursor-pointer">Editorial Policy</button>
+            <span className="text-slate-800 hidden sm:inline">•</span>
+            <button onClick={() => onNavigateStatic("fact-check")} className="hover:text-blue-400 transition-colors cursor-pointer">Fact-Checking Policy</button>
+            <span className="text-slate-800 hidden sm:inline">•</span>
+            <button onClick={() => onNavigateStatic("corrections")} className="hover:text-blue-400 transition-colors cursor-pointer">Corrections Policy</button>
+            <span className="text-slate-800 hidden sm:inline">•</span>
+            <button onClick={() => onNavigateStatic("dmca")} className="hover:text-blue-400 transition-colors cursor-pointer">DMCA Compliance</button>
+            <span className="text-slate-800 hidden sm:inline">•</span>
+            <button onClick={() => onNavigateStatic("cookie")} className="hover:text-blue-400 transition-colors cursor-pointer">Cookie Preferences</button>
+          </motion.div>
 
-          {/* Company Column */}
-          <div className="space-y-3">
-            <h4 className="text-white font-extrabold text-[11px] uppercase tracking-wider border-b border-slate-900 pb-1.5">Company</h4>
-            <ul className="space-y-1.5 text-[11px] text-slate-500 font-semibold">
-              <li><button onClick={() => onNavigateStatic("about")} className="hover:text-white cursor-pointer transition-colors text-left">About Us</button></li>
-              <li><button onClick={() => onNavigateStatic("contact")} className="hover:text-white cursor-pointer transition-colors text-left">Contact Us</button></li>
-              <li><button onClick={() => onNavigateStatic("privacy")} className="hover:text-white cursor-pointer transition-colors text-left">Privacy Policy</button></li>
-              <li><button onClick={() => onNavigateStatic("terms")} className="hover:text-white cursor-pointer transition-colors text-left">Terms & Conditions</button></li>
-              <li><button onClick={() => onNavigateStatic("disclaimer")} className="hover:text-white cursor-pointer transition-colors text-left font-bold text-orange-500">Disclaimer</button></li>
-              <li><button onClick={() => onNavigateStatic("dmca")} className="hover:text-white cursor-pointer transition-colors text-left">DMCA Policy</button></li>
-              <li><button onClick={() => onNavigateStatic("editorial")} className="hover:text-white cursor-pointer transition-colors text-left">Editorial Policy</button></li>
-              <li><button onClick={() => onNavigateStatic("fact-check")} className="hover:text-white cursor-pointer transition-colors text-left">Fact Check Policy</button></li>
-              <li><button onClick={() => onNavigateStatic("cookie")} className="hover:text-white cursor-pointer transition-colors text-left">Cookie Policy</button></li>
-              <li><button onClick={() => onNavigateStatic("faq")} className="hover:text-white cursor-pointer transition-colors text-left">FAQ</button></li>
-              <li><button onClick={() => onNavigateStatic("help-center")} className="hover:text-white cursor-pointer transition-colors text-left font-bold text-blue-500">Help Center</button></li>
-            </ul>
-          </div>
+          {/* ==========================================
+              SECTION 6: Copyright & Independent Badges
+              ========================================= */}
+          <motion.div variants={childVariants} className="w-full pt-6 space-y-6">
+            {/* Final Legal Footprint */}
+            <div className="space-y-1 text-center">
+              <p className="text-[11px] text-slate-500 font-bold tracking-wider uppercase">
+                © 2026 JobsNews Online. All Rights Reserved.
+              </p>
+              <p className="text-[10px] text-slate-600 font-semibold uppercase tracking-wide">
+                Built with Honor for Future Officers
+              </p>
+            </div>
+          </motion.div>
 
-        </div>
-
-        {/* 3. Visual Trust Badge Ribbon */}
-        <div className="max-w-7xl mx-auto pt-6 pb-4 border-t border-slate-900 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-center text-[10px] text-slate-500 font-bold tracking-tight">
-          <div className="bg-slate-950/80 border border-slate-900 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 hover:text-white transition-colors">
-            <span>🔒</span> SSL Secured
-          </div>
-          <div className="bg-slate-950/80 border border-slate-900 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 hover:text-white transition-colors">
-            <span>✅</span> Adsense Approved
-          </div>
-          <div className="bg-slate-950/80 border border-slate-900 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 hover:text-white transition-colors">
-            <span>📱</span> Mobile Friendly
-          </div>
-          <div className="bg-slate-950/80 border border-slate-900 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 hover:text-white transition-colors">
-            <span>⚡</span> Fast Loading
-          </div>
-          <div className="bg-slate-950/80 border border-slate-900 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 hover:text-white transition-colors">
-            <span>♿</span> Accessible
-          </div>
-          <div className="bg-slate-950/80 border border-slate-900 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 hover:text-white transition-colors">
-            <span>🔍</span> SEO Optimized
-          </div>
-        </div>
-
-        {/* 4. Bottom Legal Coordinates & Disclosures */}
-        <div className="max-w-7xl mx-auto pt-4 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-slate-600 font-medium text-center md:text-left">
-          <div className="space-y-1">
-            <p>© {new Date().getFullYear()} QuizRank India Portal. All rights reserved.</p>
-            <p className="max-w-3xl text-[9px] leading-relaxed text-slate-700 font-medium uppercase tracking-wide">
-              Disclaimer: QuizRank India is an independent educational platform and is not affiliated with any government organization, department, board or commissions like UPSC, SSC, RRB, IBPS etc. Quiz content is for practice purpose only. Always verify official notifications.
-            </p>
-          </div>
-          <div className="shrink-0 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span className="font-semibold text-slate-600">Secure Candidate Portal</span>
-          </div>
-        </div>
-
+        </motion.div>
       </div>
     </footer>
   );

@@ -11,6 +11,7 @@ import { QuizEngine } from "./components/QuizEngine";
 import { UserDashboard } from "./components/UserDashboard";
 import { AdminPanel } from "./components/AdminPanel";
 import { StaticPages } from "./components/StaticPages";
+import { AuthorProfileView } from "./components/AuthorProfileView";
 import { LeaderboardSection } from "./components/LeaderboardSection";
 import { BlogSection } from "./components/BlogSection";
 import { Quiz, Category, Result, BlogPost } from "./types";
@@ -22,6 +23,7 @@ import { SubjectPractice } from "./components/SubjectPractice";
 import { DailyCurrentAffairs } from "./components/DailyCurrentAffairs";
 import { LeaderboardPodium } from "./components/LeaderboardPodium";
 import { MockTestExplorer } from "./components/MockTestExplorer";
+import { CategoryPublisherPage } from "./components/CategoryPublisherPage";
 import { 
   HeroIntroduction, 
   AboutAndExamGuide, 
@@ -79,7 +81,8 @@ export default function App() {
       const category = decodeURIComponent(pathname.replace("/category/", ""));
       const quizCategories = [
         "ssc", "upsc", "railway", "banking", "teaching", "police", "defence",
-        "state-psc", "judiciary", "nursing", "engineering", "agriculture", "current-affairs", "gk"
+        "state-psc", "judiciary", "nursing", "engineering", "agriculture", "current-affairs", "gk",
+        "quiz", "mock-tests", "latest-jobs", "admit-cards", "results", "syllabus"
       ];
       if (quizCategories.includes(category.toLowerCase())) {
         setSelectedCategory(category.toLowerCase());
@@ -100,6 +103,14 @@ export default function App() {
       const pageId = pathname.replace("/static-page/", "");
       setActiveView("static-page");
       setActiveViewArg(pageId);
+    } else if (pathname.startsWith("/author/")) {
+      const authorId = pathname.replace("/author/", "");
+      setActiveView("author-profile");
+      setActiveViewArg(authorId);
+    } else if (pathname.startsWith("/authors/")) {
+      const authorId = pathname.replace("/authors/", "");
+      setActiveView("author-profile");
+      setActiveViewArg(authorId);
     } else if (pathname.startsWith("/quiz/")) {
       const quizId = pathname.replace("/quiz/", "");
       const selected = currentQuizzes.find(q => q.id === quizId);
@@ -131,6 +142,7 @@ export default function App() {
       else if (view === "blog-latest") path = "/latest";
       else if (view === "blog-trending") path = "/trending";
       else if (view === "static-page") path = `/static-page/${arg}`;
+      else if (view === "author-profile") path = `/authors/${arg}`;
       else if (view === "quiz-player" && arg) path = `/quiz/${arg.id}`;
       
       if (window.location.pathname !== path) {
@@ -278,6 +290,20 @@ export default function App() {
 
   // Render Homepage Contents
   const renderHomeView = () => {
+    if (selectedCategory) {
+      return (
+        <CategoryPublisherPage
+          category={selectedCategory}
+          categories={categories}
+          onSelectCategory={setSelectedCategory}
+          onSelectQuiz={handleSelectQuiz}
+          quizzes={quizzes}
+          blogs={blogs}
+          changeView={changeView}
+        />
+      );
+    }
+
     return (
       <div className="space-y-12">
         {envStatus.checked && !envStatus.hasGeminiKey && (
@@ -578,6 +604,16 @@ export default function App() {
             onBack={() => changeView("home")}
           />
         );
+      case "author-profile":
+        return (
+          <AuthorProfileView
+            authorId={activeViewArg}
+            onBack={() => changeView("home")}
+            onSelectQuiz={handleSelectQuiz}
+            changeView={changeView}
+            blogs={blogs}
+          />
+        );
       case "leaderboard":
         return <LeaderboardSection />;
       case "blog":
@@ -597,6 +633,8 @@ export default function App() {
                 changeView("blog-detail", arg);
               } else if (newView === "blog-category") {
                 changeView("blog-category", arg);
+              } else if (newView === "author-profile") {
+                changeView("author-profile", arg);
               } else {
                 changeView("blog");
               }
