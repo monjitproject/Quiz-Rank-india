@@ -1,0 +1,13 @@
+User-agent: *
+
+Allow: /
+
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /login/
+Disallow: /register/
+
+Sitemap: https://jobsnews.online/sitemap_index.xml
+
+Host: https://jobsnews.online
