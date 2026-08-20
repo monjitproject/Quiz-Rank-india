@@ -3441,6 +3441,195 @@ function startCurrentAffairsCron() {
 // Start current affairs background automation daemon
 startCurrentAffairsCron();
 
+// Dynamic XML Sitemap Route (post-sitemap.xml)
+app.get("/post-sitemap.xml", (req: Request, res: Response) => {
+  try {
+    const db = loadDB();
+    const blogs = db.blogs || [];
+    const quizzes = db.quizzes || [];
+
+    const urls: Array<{
+      loc: string;
+      lastmod: string;
+      changefreq: string;
+      priority: string;
+    }> = [];
+
+    // Helper: Escape XML characters
+    const escapeXml = (unsafe: string): string => {
+      return unsafe.replace(/[<>&'"]/g, (c) => {
+        switch (c) {
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '&': return '&amp;';
+          case '\'': return '&apos;';
+          case '"': return '&quot;';
+          default: return c;
+        }
+      });
+    };
+
+    // Helper: Standardize date format to ISO-8601 YYYY-MM-DD
+    const formatSitemapDate = (dateStr?: string): string => {
+      if (!dateStr) return new Date().toISOString().split("T")[0];
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) {
+          return new Date().toISOString().split("T")[0];
+        }
+        return d.toISOString().split("T")[0];
+      } catch {
+        return new Date().toISOString().split("T")[0];
+      }
+    };
+
+    // 1. Add Homepage (will set its lastmod to the latest of all URLs)
+    let latestDate = "2026-07-17"; // Default fallback
+    
+    // 2. Process Blog Posts
+    const processedBlogUrls = new Set<string>();
+    blogs.forEach((blog: any) => {
+      // Filter out draft or private posts
+      if (blog.isDraft || blog.status === "draft" || blog.status === "private" || !blog.slug) {
+        return;
+      }
+
+      const loc = `https://jobsnews.online/blog/${blog.slug}`;
+      if (processedBlogUrls.has(loc)) return;
+      processedBlogUrls.add(loc);
+
+      const lastmod = formatSitemapDate(blog.lastUpdatedDate || blog.publishedAt);
+      if (lastmod > latestDate) {
+        latestDate = lastmod;
+      }
+
+      const catLower = (blog.category || "").toLowerCase();
+      let priority = "0.80";
+      let changefreq = "weekly";
+
+      // Government Job Posts: priority 0.90, daily changefreq
+      if (
+        catLower.includes("job") ||
+        catLower.includes("vacancy") ||
+        catLower.includes("recruitment") ||
+        catLower.includes("notification") ||
+        catLower === "latest-jobs" ||
+        catLower === "admit-cards" ||
+        catLower === "results" ||
+        catLower === "syllabus"
+      ) {
+        priority = "0.90";
+        changefreq = "daily";
+      }
+      // Current Affairs: priority 0.90, daily changefreq
+      else if (
+        catLower.includes("current affairs") ||
+        catLower.includes("current-affairs") ||
+        catLower.includes("ca ") ||
+        catLower === "ca"
+      ) {
+        priority = "0.90";
+        changefreq = "daily";
+      }
+      // Editorial/Guides: priority 0.80, weekly changefreq
+      else if (
+        catLower.includes("editorial") ||
+        catLower.includes("guide") ||
+        blog.id.startsWith("edit-topic-")
+      ) {
+        priority = "0.80";
+        changefreq = "weekly";
+      }
+
+      urls.push({ loc, lastmod, changefreq, priority });
+    });
+
+    // 3. Process Quiz Pages
+    const processedQuizUrls = new Set<string>();
+    quizzes.forEach((quiz: any) => {
+      if (!quiz.id) return;
+      
+      const loc = `https://jobsnews.online/quiz/${quiz.id}`;
+      if (processedQuizUrls.has(loc)) return;
+      processedQuizUrls.add(loc);
+
+      // Quizzes are evergreen practice modules, but current affairs updates daily.
+      // Let's use a stable/recent lastmod date.
+      let lastmod = formatSitemapDate(new Date().toISOString());
+      
+      let priority = "0.80";
+      let changefreq = "weekly";
+
+      if (quiz.categoryId === "current-affairs") {
+        priority = "0.90";
+        changefreq = "daily";
+      } else if (
+        quiz.categoryId === "ssc" ||
+        quiz.categoryId === "upsc" ||
+        quiz.categoryId === "railway" ||
+        quiz.categoryId === "banking"
+      ) {
+        // These are important govt exam practice guides/quizzes
+        priority = "0.80";
+        changefreq = "weekly";
+      }
+
+      urls.push({ loc, lastmod, changefreq, priority });
+    });
+
+    // 4. Process Static Pages (about, contact, privacy, disclaimer, terms, dmca, editorial)
+    const staticPages = [
+      "about",
+      "contact",
+      "privacy",
+      "disclaimer",
+      "terms",
+      "dmca",
+      "editorial"
+    ];
+    staticPages.forEach((pageId) => {
+      const loc = `https://jobsnews.online/static-page/${pageId}`;
+      urls.push({
+        loc,
+        lastmod: formatSitemapDate("2026-07-17"),
+        changefreq: pageId === "editorial" ? "weekly" : "monthly",
+        priority: pageId === "editorial" ? "0.80" : "0.50"
+      });
+    });
+
+    // Add homepage to the very top with the latest date among all items
+    urls.unshift({
+      loc: "https://jobsnews.online/",
+      lastmod: latestDate,
+      changefreq: "daily",
+      priority: "1.0"
+    });
+
+    // Generate XML output
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<?xml-stylesheet type="text/xsl" href="https://jobsnews.online/main-sitemap.xsl"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+    urls.forEach((u) => {
+      xml += `  <url>\n`;
+      xml += `    <loc>${escapeXml(u.loc)}</loc>\n`;
+      xml += `    <lastmod>${escapeXml(u.lastmod)}</lastmod>\n`;
+      xml += `    <changefreq>${escapeXml(u.changefreq)}</changefreq>\n`;
+      xml += `    <priority>${escapeXml(u.priority)}</priority>\n`;
+      xml += `  </url>\n`;
+    });
+
+    xml += `</urlset>\n`;
+
+    res.header("Content-Type", "application/xml; charset=utf-8");
+    res.header("Cache-Control", "public, max-age=3600, s-maxage=14400"); // 1 hour browser cache, 4 hours CDN cache
+    return res.status(200).send(xml);
+  } catch (err: any) {
+    console.error("Error generating post sitemap:", err);
+    return res.status(500).send("<?xml version=\"1.0\" encoding=\"UTF-8\"?><error>Internal Server Error</error>");
+  }
+});
+
 // 404 fallback for unmatched API requests to prevent returning index.html
 app.all("/api/*", (req: Request, res: Response) => {
   res.status(404).json({ error: "API route not found" });
